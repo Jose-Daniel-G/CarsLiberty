@@ -1,0 +1,123 @@
+<div class="card shadow-lg mt-2">
+    <div class="badge-primary card-header">
+        <h4><b>Configuración</b></h4>
+    </div>
+    <div class="card-header">
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#myProfile">Mi perfil</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#manageUsers">Usuarios</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="myProfile">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="card-header">
+                                <form id="frm_UploadImage" method="POST">
+                                    <div class="text-center">
+                                        <div class="font-weight-bold" style="font-size: 18px;">Nombre Completo</div>
+                                        <input type="hidden" name="userID" id="userID" value="">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="imagen_usuario" class="d-flex justify-content-center">
+                                                <div class="img__wrap border border-dark btn btn-outline-white d-flex justify-content-center">
+                                                    <img class="img__img" src="../../public/img/svg/upload-user.svg" />
+                                                </div>
+                                            </label>
+                                            <input type="file" class="subirArchivo" name="imagen_usuario" id="imagen_usuario" accept="image/png, image/jpeg" style="display: none;">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg">
+                            <div class="row pt-3">
+                                <div class="col-sm"><label for="email_user">Correo Electrónico</label></div>
+                                <div class="col-sm"><span>correo@ejemplo.com</span></div>
+                                <div class="col-sm"><button class="btn btn-primary" data-toggle="modal" data-target="#emailModal">cambiar</button></div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-sm"><b>Nombre</b></div>
+                                <div class="col-sm"><span>Nombre Completo</span></div>
+                                <div class="col-sm"><button class="btn btn-primary" id="editName">cambiar</button></div>
+                            </div>
+                            <form id="form_editName" method="POST" style="display: none;">
+                                <div class="row pt-3">
+                                    <div class="col-lg"><label class="pt-2" for="names">Nombre</label></div>
+                                    <div class="col-lg"><input type="text" class="form-control" name="names" id="names" value=""></div>
+                                    <div class="col-lg"><label class="pt-2" for="lastName">Apellidos</label></div>
+                                    <div class="col-lg"><input type="text" class="form-control" name="lastName" id="lastName" value=""></div>
+                                </div>
+                                <div class="row pt-3 justify-content-end">
+                                    <div class="col-lg"><input type="button" class="btn btn-secondary" id="cancelEditName" value="Cancelar"></div>
+                                    <div class="col-lg"><button type="submit" class="btn btn-primary">Guardar</button></div>
+                                </div>
+                            </form>
+                            <form id="form_Edit_Password" method="post">
+                                <div class="row pt-3">
+                                    <div class="col-sm"><label for="actual_password">Actual Contraseña</label></div>
+                                    <div class="col-sm"><input type="password" name="actual_password" id="actual_password" class="form-control" required></div>
+                                </div>
+                                <div class="row pt-3">
+                                    <div class="col-sm"><label for="new_password">Nueva Contraseña</label></div>
+                                    <div class="col-sm"><input type="password" name="new_password" id="new_password" class="form-control" required></div>
+                                </div>
+                                <div class="row pt-3">
+                                    <div class="col-sm"><label for="confirm_password">Confirmar Contraseña</label></div>
+                                    <div class="col-sm"><input type="password" name="confirm_password" id="confirm_password" class="form-control" required></div>
+                                </div>
+                                <div class="row pt-3">
+                                    <div class="col-sm d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="manageUsers">
+                <div class="container-fluid">
+                    <div class="row">
+                        <label for="nameUser">Name User</label>
+                        <input type="text" name="nameUser" id="nameUser" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MODIFICAR CORREO ELECTRÓNICO -->
+<div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><b>Cambiar correo electrónico</b></h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <form id="form_Edit_Email" method="POST">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm"><span>Cambie el correo electrónico para su personal.</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 pt-2">Correo Nuevo</div>
+                            <div class="col-sm-9">
+                                <input type="email" name="upDateEmail" id="upDateEmail" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary text-light">Cambiar Correo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

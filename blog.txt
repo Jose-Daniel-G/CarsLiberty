@@ -1,0 +1,384 @@
+php artisan make:migration create_cliente_curso_table --create=cliente_curso
+
+Administrador y Secretaria: Podrían ver las inasistencias completas.
+Cliente: Solo debería poder ver sus propias inasistencias.
+Profesor: Podría ver las inasistencias de los clientes relacionados a sus eventos.
+
+SELECT 
+    events.id,
+    events.profesor_id,
+    events.curso_id,
+    events.start AS hora_inicio,
+    events.end AS hora_fin,
+    DATE_FORMAT(events.start, '%Y-%m-%d %H:%i:%s') AS created_at,
+    DATE_FORMAT(events.updated_at, '%Y-%m-%d %H:%i:%s') AS updated_at,
+    DAYNAME(events.start) AS dia
+FROM 
+    events
+JOIN 
+    profesors ON events.profesor_id = profesors.id
+JOIN 
+    cursos ON events.curso_id = cursos.id
+JOIN 
+    cliente_curso ON events.curso_id = cliente_curso.curso_id
+JOIN 
+    clientes ON cliente_curso.cliente_id = clientes.id
+WHERE 
+    events.curso_id = 1 -- Reemplaza ? por el ID del curso deseado
+    AND events.start >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) -- Inicio de la semana (lunes)
+    AND events.start < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY) -- Fin de la semana (domingo)
+GROUP BY 
+    events.id LIMIT 100
+ public function show_datos_cursos($id)
+    {
+        try {
+            if (Auth::user()->hasRole('superAdmin') Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
+                $horarios = Horario::with('profesor', 'curso')->where('curso_id', $id)->get();
+            } else {
+                
+                $horarios = CalendarEvent::select(
+                    'events.id',
+                    'events.profesor_id',
+                    'events.curso_id',
+                    'events.start AS hora_inicio',
+                    'events.end AS hora_fin',
+                    'events.created_at',
+                    'events.updated_at'
+                )
+                ->selectRaw('DAYNAME(events.start) AS dia')
+                ->join('profesors', 'events.profesor_id', '=', 'profesors.id')
+                ->join('cursos', 'events.curso_id', '=', 'cursos.id')
+                ->join('cliente_curso', 'events.curso_id', '=', 'cliente_curso.curso_id')
+                ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
+                ->where('events.curso_id', $id) // Usa la variable $id para el filtro
+                ->distinct() // Para evitar duplicados
+                ->get();
+            }
+    
+            // Traducir los días al español
+            $horarios = $horarios->map(function ($horario) {
+                $horario->dia = $this->traducir_dia($horario->dia); // Traduce el día al español
+                return $horario;
+            });
+    
+            return view('admin.horarios.show_datos_cursos', compact('horarios'));
+        } catch (\Exception $exception) {
+            return response()->json(['mesaje' => 'Error']);
+        }
+    }
+    
+    private function traducir_dia($dia)
+    {
+        $dias = [
+            'Monday' => 'LUNES',
+            'Tuesday' => 'MARTES',
+            'Wednesday' => 'MIERCOLES',
+            'Thursday' => 'JUEVES',
+            'Friday' => 'VIERNES',
+            'Saturday' => 'SABADO',
+            'Sunday' => 'DOMINGO',
+        ];
+        return $dias[$dia] ?? $dia; // Cambiado para devolver el día original si no se encuentra
+    }
+SELECT 
+    h.*, 
+    p.nombres AS profesor_nombres, 
+    p.apellidos AS profesor_apellidos, 
+    c.nombre AS curso_nombre, 
+    cl.nombres AS cliente_nombre
+FROM 
+    events h
+JOIN 
+    profesors p ON h.profesor_id = p.id
+JOIN 
+    cursos c ON h.curso_id = c.id
+JOIN 
+    cliente_curso cc ON h.curso_id = cc.curso_id
+JOIN 
+    clientes cl ON cc.cliente_id = cl.id
+WHERE 
+    h.curso_id = 1
+LIMIT 100
+//tabla tutorial, en el video se ve con style no se porque no se visualiza de esa forma
+$(function () {
+    $('#example1').DataTable({
+        "pageLength": 5,
+        "language": {
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Pagos",
+            "infoEmpty": "Mostrando 0 a 0 de 0 Pagos",
+            "infoFiltered": "(Filtrado de _MAX_ total Pagos)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Pagos",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscador:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+        "responsive": true,
+        "lengthChange": true,
+        "autoWidth": false,
+        buttons: [{
+            extend: 'collection',
+            text: 'Reportes',
+            orientation: 'landscape',
+            buttons: [
+                {
+                    text: 'Copiar',
+                    extend: 'copy'
+                },
+                {
+                    extend: 'pdf'
+                },
+                {
+                    extend: 'csv'
+                },
+                {
+                    extend: 'excel'
+                },
+                {
+                    text: 'Imprimir',
+                    extend: 'print'
+                }
+            ]
+        },
+        {
+            extend: 'colvis',
+            text: 'Visor de columnas',
+            collectionLayout: 'fixed three-column'
+        }]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+});
+//DESEO PONER ESTE INPUT AUN NO SE COMO HACER QUE funciones
+                 <div class="input-group">
+                <div class="input-group-prepend">
+                <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+                </span>
+                </div>
+                <input type="text" class="form-control" name="fecha_reserva"
+                id="fecha_reserva" value="<?php echo date('Y-m-d'); ?>">
+                </div>
+
+php artisan make:model Post -m
+php artisan make:model Category -m
+php artisan make:factory PostFactory
+php artisan make:factory CategoryFactory
+php artisan make:factory TagFactory
+php artisan make:factory ImageFactory
+php artisan make:seeder UserSeeder
+php artisan make:seeder PostSeeder 
+php artisan make:factory VehiculoFactory --model=Vehiculo
+php artisan make:factory PicoyPlacaFactory --model=PicoyPlaca
+
+
+
+<!-- 
+##posts
+##users
+##Category 
+ -->"# laravel9blog" 
+ <!-- para que sirva el slug tiene que estar el plugin jQuery-Plugin-stringToSlug-1.3 en public/vendor 
+ DESPUES PONER
+    <script src="{{asset('vendor/jQuery-Plugin-stringToSlug-1.3/jquery.stringToSlug.min.js')}}"></script>
+   <script>
+        $(document).ready(function() {
+            $('#name').stringToSlug({
+                setEvents: 'keyup keydown blur',
+                getPut: '#slug',
+                space:'-'
+            });
+        });
+    </script>
+ -->
+
+
+ <!-- php artisan make:controller Admin/CategoryController --model=Category -r
+
+De esa forma crea el controlador, y le asigna el modelo Category, entonces ya incluye al modelo y lo define como el tipo de variable de en los parámetros de las funciones -->
+
+despues del usuario porgramar la clase, que indique recuerda que no puedes faltar a tu clase, si faltas a las clases sin justificacion se cobran 20 mil pesos por hora no vista
+
+si el cliente falta auna clases ya  quien deberia agendar una clase seria la secretaria  o aministrador 
+una vez haya cancelado la penalidad, que la plataforma solo le deje programar la cantiad de horas que puede ver por curso
+el usuario solo podra agendar las clases correspondientes a la del curso que esta realizando NOTA: no puede elegir ninguna otra 
+
+
+15 motos
+20 carro b1
+30 carro publico
+
+VERSION ESTABLE-- schedule fixed
+--ERRORES EN ADMIN ASIGNAR AGENDA
+
+<form action="{{ route('admin.events.store') }}" method="POST">
+    @csrf
+    <div class="modal fade" id="claseModal" tabindex="-1" aria-labelledby="claseModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="claseModal">Profesores</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        @can('listUsers')
+                            <div class="col-md-12">
+                                <div class="form-group"><label for="cliente_id">Estudiante</label>
+                                    <select name="cliente_id" class="form-control">
+                                        <option value="" selected disabled>Seleccione un Estudiante
+                                        </option>
+                                        @foreach ($clientes as $cliente)
+                                            <option value="{{ $cliente->id }}">
+                                                {{ $cliente->nombres . ' ' . $cliente->apellidos }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('cliente_id')
+                                        <small class="bg-danger text-white p-1">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endcan
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select name="cursoid" class="form-control" id="cursoid">
+                                <option value="" selected disabled>Seleccione un Curso</option>
+                                @foreach ($cursos as $curso)
+                                    <option value="{{ $curso->id }}">
+                                        {{ $curso->nombre . ' - ' . $curso->descripcion }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('cursoid')
+                                <small class="bg-danger text-white p-1">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"><label for="profesorid">Profesor</label>
+                                <select name="profesorid" class="form-control" id="profesorid">
+                                    <option value="" selected disabled>Seleccione un Profesor</option>
+                                </select>
+                                @error('profesorid')
+                                    <small class="bg-danger text-white p-1">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="col-md-12">
+                            <div class="form-group"><label for="profesorid">Profesor</label>
+                                <select name="profesorid" class="form-control">
+                                    <option value="" selected disabled>Selecione un Profesor
+                                    </option>
+                                    @foreach ($profesores as $profesore)
+                                        <option value="{{ $profesore->id }}">
+                                            {{ $profesore->nombres . ' ' . $profesore->apellidos . ' - ' . $profesore->especialidad }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('profesorid')
+                                    <small class="bg-danger text-white p-1">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div> --}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"><label for="profesor">Fecha de reserva</label>
+                                <input type="date" class="form-control" name="fecha_reserva" id="fecha_reserva"
+                                    value="<?php echo date('Y-m-d'); ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"><label for="hora_inicio">Hora inicio</label>
+                                <input type="time" class="form-control" name="hora_inicio" id="hora_inicio">
+                                @error('hora_inicio')
+                                    <small class="bg-danger text-white p-1">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"><label for="hora_fin">Hora fin</label>
+                                <input type="time" class="form-control" name="hora_fin" id="hora_fin">
+                                @error('hora_fin')
+                                    <small class="bg-danger text-white p-1">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section('js')
+    <script>
+        $(document).ready(function() {
+            // Establece el evento para llamar a la función cargarProfesores al cambiar el curso
+            $('#cursoid').on('change', function() {
+                var cursoid = $(this).val(); // Obtén el valor seleccionado
+                // Función para cargar profesores
+                if (!cursoid) return; // Salir si no hay curso seleccionado
+                var url = "{{ route('obtenerProfesores', ':id') }}";
+                url = url.replace(':id', cursoid);
+                // alert('url ' + url);
+
+                // Realizar una llamada AJAX para obtener los profesores disponibles
+                $.ajax({
+                    url: url, // URL a la que se realiza la solicitud
+                    method: 'GET',
+
+                    success: function(data) {
+                        // console.log('Profesores: ',
+                        // data); // Debería mostrar la lista de profesores
+
+                        // Verifica si hay profesores y si es un array
+                        if (data && Array.isArray(data)) {
+                            // Limpia el select de profesores antes de llenarlo
+                            $('#profesorid').empty().append(
+                                '<option value="" selected disabled>Seleccione un Profesor</option>'
+                                );
+
+                            data.forEach(function(profesor) {
+                                $('#profesorid').append(
+                                    `<option value="${profesor.id}">${profesor.nombres} ${profesor.apellidos}</option>`
+                                );
+                            });
+                        } else {
+                            alert('No se encontraron profesores.');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error al cargar los profesores:', xhr.responseText);
+                        alert('Error al cargar los profesores. Intenta nuevamente.');
+                    }
+                });
+            });
+        });
+    </script>
+@stop
+SELECT users.id, users.name, roles.name AS role_name
+FROM users
+JOIN model_has_roles ON users.id = model_has_roles.model_id
+JOIN roles ON model_has_roles.role_id = roles.id
+WHERE users.id = 2;

@@ -1,0 +1,19 @@
+CLIENTES ELIMINAR CAMPOS
+nro seguro, Fecha de nacimiento*, 
+
+SECRETARIO
+CAMBIAR: Registro de nueva secretaria = Creacion del programador
+
+PROFESORES 
+Especialidad: categoria
+
+CURSO
+DESCRIPCION = HORAS
+
+varios calendarios segun la cantidad de profesores que dicten el curso	
+
+error al editar usuario
+
+Carro max horas = 4 && , min = 2 no se puede 3 horas
+
+moto max horas = 4 && , min = 2 
