@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AsistenciaController extends Controller
 {
-    public function index()// verFormulario()
+    public function index() // verFormulario()
     {
         $clientes = Cliente::all();
 
@@ -24,10 +24,10 @@ class AsistenciaController extends Controller
 
         // ================ [ TEMPORAL ] ===================
         $asistencias = Asistencia::with('event', 'cliente')
-        ->get()
-        ->keyBy(function ($item) {
-            return $item->evento_id . '-' . $item->cliente_id;
-        });
+            ->get()
+            ->keyBy(function ($item) {
+                return $item->evento_id . '-' . $item->cliente_id;
+            });
         // ================ [ FINAL/CODIGO CORRECTO ] ===================
         // Obtener las asistencias del día actual y organizarlas en un array con clave 'evento_id-cliente_id'
         // $asistencias = Asistencia::with('event', 'cliente')
@@ -39,7 +39,7 @@ class AsistenciaController extends Controller
         //         return $item->evento_id . '-' . $item->cliente_id;
         //     });
 
-    
+
         // Obtener eventos basados en el rol del usuario
         if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('superAdmin')) {
             $events = CalendarEvent::whereDate('start', '>=', now())
@@ -55,14 +55,14 @@ class AsistenciaController extends Controller
                 ->select('events.*')
                 ->get();
         }
-                    // Calcular las horas penalizadas en PHP
-            foreach ($clientes as $cliente) {
-                $start = new \DateTime($cliente->start);
-                $end = new \DateTime($cliente->end);
-                $diff = $start->diff($end);
-                $hours = $diff->h + ($diff->i / 60); // Calcular horas con minutos convertidos a horas
-                $cliente->cant_horas = round($hours, 2); // Asignar la cantidad de horas calculadas
-            }
+        // Calcular las horas penalizadas en PHP
+        foreach ($clientes as $cliente) {
+            $start = new \DateTime($cliente->start);
+            $end = new \DateTime($cliente->end);
+            $diff = $start->diff($end);
+            $hours = $diff->h + ($diff->i / 60); // Calcular horas con minutos convertidos a horas
+            $cliente->cant_horas = round($hours, 2); // Asignar la cantidad de horas calculadas
+        }
         return view('admin.asistencias.index', compact('events', 'asistencias'));
     }
 
@@ -74,41 +74,41 @@ class AsistenciaController extends Controller
                 'cliente_id' => 'required|exists:clientes,id',
                 'asistio' => 'nullable|boolean', // Puede ser null si no está marcado
             ])->validate();
-    
+
             // Añadimos el evento_id al array de datos validados
             $validatedData['evento_id'] = $eventoId;
             $validatedData['asistio'] = isset($validatedData['asistio']) ? $validatedData['asistio'] : 0; // Asignamos 0 si no está marcado el checkbox de 'asistió'
-    
+
             // Obtener el evento para calcular la duración
             $event = CalendarEvent::find($eventoId);
             if ($event) {
                 $start = Carbon::parse($event->start);
                 $end = Carbon::parse($event->end);
-    
+
                 // Calcular la duración en horas
                 $duracionHoras = $end->diffInHours($start);
                 $validatedData['penalidad'] = $validatedData['asistio'] == 0 ? $duracionHoras * 20000 : 0;
             } else {
                 continue;
             }
-    
+
             // Verificar si ya existe una asistencia para este cliente y evento
             $asistenciaExistente = Asistencia::where('cliente_id', $validatedData['cliente_id'])
                 ->where('evento_id', $eventoId)
                 ->first();
-    
+
             if ($asistenciaExistente) {
                 $asistenciaExistente->update($validatedData);
             } else {
                 Asistencia::create($validatedData);
             }
-    
+
             // Verificar si el registro en cliente_curso existe, y crearlo si no existe
             $clienteCurso = DB::table('cliente_curso')
                 ->where('cliente_id', $validatedData['cliente_id'])
                 ->where('curso_id', $event->curso_id)
                 ->first();
-    
+
             if (!$clienteCurso) {
                 DB::table('cliente_curso')->insert([
                     'cliente_id' => $validatedData['cliente_id'],
@@ -118,7 +118,7 @@ class AsistenciaController extends Controller
                     'updated_at' => now(),
                 ]);
             }
-    
+
             // Incrementar o decrementar horas realizadas solo si el cliente asistió
             if ($validatedData['asistio']) {
                 DB::table('cliente_curso')
@@ -132,21 +132,36 @@ class AsistenciaController extends Controller
                     ->decrement('horas_realizadas', $duracionHoras);
             }
         }
-    
+
         return response()->json(['message' => 'Evento actualizado correctamente']);
     }
-    
+
 
     // Función para la secretaria de ver inasistencias y habilitar cliente
     public function show() //verInasistencias() //INASISTENCIAS
     {
         // Filtra los clientes que tengan inasistencias con penalidad
         if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('superAdmin')) {
-            $clientes = Cliente::select('clientes.id', 'clientes.nombres AS nombre', 'clientes.apellidos AS apellido', 'asistencias.id AS asistencia_id', 'events.title AS nombre_evento', DB::raw('DATE(events.start) AS date'), DB::raw('TIME(events.start) AS start'), DB::raw('TIME(events.end) AS end'), 'asistio', 'penalidad', 'liquidado', 'fecha_pago_multa')
+            $clientes = Cliente::select(
+                'clientes.id',
+                'clientes.nombres AS nombre',
+                'clientes.apellidos AS apellido',
+                'asistencias.id AS asistencia_id',
+                'events.title AS nombre_evento',
+                DB::raw('DATE(events.start) AS date'),
+                DB::raw('TIME(events.start) AS start'),
+                DB::raw('TIME(events.end) AS end'),
+                'asistencias.asistio',
+                'asistencias.penalidad',
+                'asistencias.liquidado',
+                'asistencias.fecha_pago_multa'
+            )
                 ->join('asistencias', 'clientes.id', '=', 'asistencias.cliente_id')
                 ->join('events', 'asistencias.evento_id', '=', 'events.id')
                 ->get();
-            // dd($clientes);
+
+            // 🚀 Depurar antes de retornar la vista
+            // dd($clientes->toArray());
             // Calcular las horas penalizadas en PHP
             foreach ($clientes as $cliente) {
                 $start = new \DateTime($cliente->start);

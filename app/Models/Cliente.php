@@ -24,13 +24,6 @@ class Cliente extends Model
     {
         return $this->hasMany(Event::class);
     }
-    // public function cursos()
-    // {
-    //     // return $this->belongsToMany(Curso::class, 'cliente_curso');
-    //     // return $this->belongsToMany(Curso::class, 'cliente_curso')
-    //     // ->withPivot('horas_realizadas', 'fecha_realizacion')
-    //     // ->withTimestamps();
-    // }
     public function cursos()
     {
         return $this->belongsToMany(Curso::class, 'cliente_curso')

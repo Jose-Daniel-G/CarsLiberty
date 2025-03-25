@@ -31,14 +31,14 @@ class ClienteController extends Controller
             'cc' => 'required|max:11',
             'genero' => 'required',
             'celular' => 'required|max:11',
-            'correo' => 'required|email|max:250|unique:clientes',
+            'correo' => 'required|email|max:250|unique:users,email',
             'direccion' => 'required',
             'contacto_emergencia' => 'required|max:11',
         ]);
 
         try {      
-            
             // dd($request->cursos);
+            
             $usuario = User::create([
                 'name' => $request->nombres,
                 'email' => $request->correo,
@@ -46,6 +46,7 @@ class ClienteController extends Controller
             ]);
 
             $usuario->assignRole('cliente');
+
             $validatedData['user_id'] = $usuario->id;
             // $validatedData['fecha_nacimiento'] = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
             
