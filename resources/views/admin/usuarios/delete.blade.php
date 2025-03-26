@@ -23,7 +23,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Nombre del usuario </label><b>*</b>
+                                        <label for="name">Nombre del usuario </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="name" value="{{ $usuario->name}}" disable>
                                         @error('nombre')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="email">Email</label><b>*</b>
+                                        <label for="email">Email</label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="email"  value="{{ $usuario->email)}}" disable>
                                     </div>
                                     @error('email')

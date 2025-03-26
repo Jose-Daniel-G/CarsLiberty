@@ -126,7 +126,7 @@
                                     </div>
                                 </div> --}}
                             {{-- <div class="form-group">
-                                <label for="logo">Logo</label><b>*</b>
+                                <label for="logo">Logo</label><b class="text-danger">*</b>
                                 <input type="file" id="file" class="form-control" name="logo" required>
                                 <div class="text-center"><output id="list"></output></div>
                                 @error('logo')

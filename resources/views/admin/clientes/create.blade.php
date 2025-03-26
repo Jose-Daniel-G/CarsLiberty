@@ -24,7 +24,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="nombres">Nombres </label><b>*</b>
+                                        <label for="nombres">Nombres </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="nombres"
                                             value="{{ old('nombres') }}" required>
                                         @error('nombres')
@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="apellidos">Apellidos </label><b>*</b>
+                                        <label for="apellidos">Apellidos </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="apellidos"
                                             value="{{ old('apellidos') }}" required>
                                         @error('apellidos')
@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="cc">Cc </label><b>*</b>
+                                        <label for="cc">Cc </label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="cc"
                                             value="{{ old('cc') }}" required>
                                         @error('cc')
@@ -57,7 +57,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="celular">Celular </label><b>*</b>
+                                        <label for="celular">Celular </label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="celular"
                                             value="{{ old('celular') }}" required>
                                         @error('celular')
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="genero">Sexo </label><b>*</b>
+                                        <label for="genero">Sexo </label><b class="text-danger">*</b>
                                         <select name="genero" id="genero" class="form-control">
                                             <!-- Opción por defecto -->
                                             <option value="" selected disabled>Seleccione una opción</option>
@@ -84,7 +84,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="correo">Correo </label><b>*</b>
+                                        <label for="correo">Correo </label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="correo"
                                             value="{{ old('correo') }}" required>
                                         @error('correo')
@@ -96,7 +96,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="direccion">Direccion </label><b>*</b>
+                                        <label for="direccion">Direccion </label><b class="text-danger">*</b>
                                         <input type="address" class="form-control" name="direccion"
                                             value="{{ old('direccion') }}" required>
                                         @error('direccion')
@@ -107,7 +107,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contacto_emergencia">Contacto Emergencia</label><b>*</b>
+                                        <label for="contacto_emergencia">Contacto Emergencia</label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="contacto_emergencia"
                                             value="{{ old('contacto_emergencia') }}" required>
                                     </div>
@@ -119,7 +119,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="password">Contrasena </label><b>*</b>
+                                        <label for="password">Contrasena </label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password"
                                             value="{{ old('password') }}">
                                         @error('password')
@@ -130,7 +130,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="password_confirmation">Verificacion de contrasena </label><b>*</b>
+                                        <label for="password_confirmation">Verificacion de contrasena </label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password_confirmation"
                                             value="{{ old('password_confirmation') }}">
                                         @error('password_confirmation')

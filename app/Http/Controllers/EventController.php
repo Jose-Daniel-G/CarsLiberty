@@ -17,7 +17,8 @@ use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
 {
-    public function index() {} public function create() {}
+    public function index() {}
+    public function create() {}
 
     public function store(Request $request)
     {
@@ -40,19 +41,19 @@ class EventController extends Controller
         $cursoid = $request->cursoid;
 
         // Obtener el cliente para verificar asistencia
-        $cliente_id = Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || 
-                      Auth::user()->hasRole('secretaria') ? $request->cliente_id : Auth::user()->cliente->id;
+        $cliente_id = Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') ||
+            Auth::user()->hasRole('secretaria') ? $request->cliente_id : Auth::user()->cliente->id;
 
         // Verificar si el cliente tiene un evento anterior y si asistió
         $asistencia = Asistencia::join('events', 'asistencias.evento_id', '=', 'events.id')
-                    ->select('events.start', 'asistencias.*')
-                    ->where('asistencias.cliente_id', $cliente_id) // Filtrar por cliente
-                    ->orderBy('events.start', 'desc') // Ordenar por fecha para obtener el evento más reciente
-                    ->first(); // Obtener solo el último evento
+            ->select('events.start', 'asistencias.*')
+            ->where('asistencias.cliente_id', $cliente_id) // Filtrar por cliente
+            ->orderBy('events.start', 'desc') // Ordenar por fecha para obtener el evento más reciente
+            ->first(); // Obtener solo el último evento
 
         // Si hay asistencia y no asistió
         if ($asistencia && $asistencia->asistio === 0) {
-        // if ($asistencia && (!$asistencia->asistio || Carbon::parse($asistencia->start)->isFuture())) {
+            // if ($asistencia && (!$asistencia->asistio || Carbon::parse($asistencia->start)->isFuture())) {
             return redirect()->back()->with([
                 'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último evento.',
                 'icono' => 'error',
@@ -68,20 +69,45 @@ class EventController extends Controller
         $hora_inicio_formato = $fecha_hora_inicio->format('H:i:s');
         $hora_fin_formato    = $fecha_hora_fin->format('H:i:s');
 
-        // Consultar los horarios disponibles del profesor
+        // Consultar si el profesor tiene disponibilidad en el intervalo
         $horarios = Horario::where('profesor_id', $profesor->id)
             ->where('dia', $dia_de_reserva)
             ->where('hora_inicio', '<=', $hora_inicio_formato)
             ->where('hora_fin', '>=', $hora_fin_formato)
-            ->exists();
+            ->get(); // Obtener todos los horarios en lugar de solo verificar existencia
 
-        if (!$horarios) {
+        // Si no hay horarios disponibles, retornar mensaje de error
+        if ($horarios->isEmpty()) {
             return redirect()->back()->with([
                 'info' => 'El profesor no está disponible en ese horario.',
                 'icono' => 'error',
                 'hora_inicio' => 'El profesor no está disponible en ese horario.',
             ]);
         }
+
+        // Verificar si en los horarios encontrados está agendado solo el curso solicitado
+        $cursoEncontrado = false;
+        $otrosCursos = false;
+
+        foreach ($horarios as $horario) {
+            if ($horario->curso_id == $cursoid) {
+                $cursoEncontrado = true;
+            } else {
+                $otrosCursos = true; // Hay otro curso en el mismo intervalo
+            }
+        }
+
+        // Si el profesor tiene el curso, pero también otros cursos en el mismo intervalo
+        if ($cursoEncontrado && $otrosCursos) {
+            return redirect()->back()->with([
+                'info' => 'El profesor ya tiene otro curso agendado en ese horario.',
+                'icono' => 'error',
+                'hora_inicio' => 'El profesor no puede atender múltiples cursos en el mismo horario.',
+            ]);
+        }
+
+        // Si el profesor solo tiene el curso solicitado, se puede continuar normalmente
+
 
         // Validar si existen eventos duplicados
         $eventos_duplicados = CalendarEvent::where('profesor_id', $profesor->id)
@@ -99,7 +125,7 @@ class EventController extends Controller
         $curso = Curso::find($cursoid);
         // Crear una nueva instancia de CalendarEvent
         $evento = new CalendarEvent();
-        $evento->title = $curso->nombre; // Asegúrate de que estás usando la variable correcta
+        $evento->title = $curso->nombre;
         $evento->start = $fecha_hora_inicio;
         $evento->end = $fecha_hora_fin;
         $evento->color = '#e82216';
@@ -118,19 +144,21 @@ class EventController extends Controller
             'cliente_id' => $evento->cliente_id,
             'evento_id' => $evento->id,
             'asistio' => false,  // Inasistencia por defecto
-            'penalidad' => 20000*$request->hora_fin,  // Penalidad por inasistencia
+            'penalidad' => 20000 * $request->hora_fin,  // Penalidad por inasistencia
             'liquidado' => false,
             'fecha_pago_multa' => null,
         ]);
         // Redirigir con un mensaje de éxito
-        return redirect()->route('admin.index')->with(['title', 'Se ha agendado de forma correcta.'
-            ,'info', 'Recuerda que no puedes faltar a tu clase, si faltas a las clases sin justificación se cobran 20 mil pesos por hora no vista.'
-            ,'icono', 'success'] );
+        return redirect()->back()->with([
+            'info' => 'Recuerda que no puedes faltar a tu clase, si faltas a las clases sin justificación se cobran 20 mil pesos por hora no vista.',
+            'icono' => 'success',
+            'title' => 'Se ha agendado de forma correcta.',
+        ]);
     }
 
     private function traducir_dia($dia)
     {
-        $dias = ['Monday' => 'LUNES','Tuesday' => 'MARTES','Wednesday' => 'MIERCOLES','Thursday' => 'JUEVES','Friday' => 'VIERNES','Saturday' => 'SABADO','Sunday' => 'DOMINGO',];
+        $dias = ['Monday' => 'LUNES', 'Tuesday' => 'MARTES', 'Wednesday' => 'MIERCOLES', 'Thursday' => 'JUEVES', 'Friday' => 'VIERNES', 'Saturday' => 'SABADO', 'Sunday' => 'DOMINGO',];
         return $dias[$dia] ?? $dias;
     }
 
@@ -157,8 +185,8 @@ class EventController extends Controller
 
     public function destroy(CalendarEvent $evento)
     {
-        $evento->delete(); 
-        return redirect()->back()->with(['mensaje' => 'Se eliminó la reserva de manera correcta','icono' => 'success',]);
+        $evento->delete();
+        return redirect()->back()->with(['mensaje' => 'Se eliminó la reserva de manera correcta', 'icono' => 'success',]);
     }
     ///================ [ NO SE ESTAN USANDO ]================
 

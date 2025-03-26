@@ -27,6 +27,7 @@ class HomeController extends Controller
         $total_usuarios = User::count();
         $total_secretarias = Secretaria::count();
         $total_clientes = Cliente::count();
+        // $total_cursos = Curso::count();
         $total_cursos = Curso::count();
         $total_profesores = Profesor::count();
         $total_horarios = Horario::count();

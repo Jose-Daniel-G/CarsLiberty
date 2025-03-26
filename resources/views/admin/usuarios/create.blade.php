@@ -23,7 +23,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="name">Nombre del usuario </label><b>*</b>
+                                        <label for="name">Nombre del usuario </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="name" value="{{ old('name')}}" required>
                                         @error('name')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="email">Email</label><b>*</b>
+                                        <label for="email">Email</label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="email"  value="{{ old('email')}}" required>
                                     </div>
                                     @error('email')
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="password">Contrasena</label><b>*</b>
+                                        <label for="password">Contrasena</label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password"  value="{{ old('password')}}" required>
                                     </div>
                                     @error('password')
@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="password_confirmation">Verificacion de contrasena</label><b>*</b>
+                                        <label for="password_confirmation">Verificacion de contrasena</label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password_confirmation"  value="{{ old('password_confirmation')}}" required>
                                     </div>
                                     @error('password_confirmation')

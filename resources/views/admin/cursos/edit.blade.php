@@ -28,7 +28,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="nombre">Nombre del curso </label><b>*</b>
+                                        <label for="nombre">Nombre del curso </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="nombre"
                                             value="{{ $curso->nombre }}" required>
                                         @error('nombre')
@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="descripcion">Descripcion </label><b>*</b>
+                                        <label for="descripcion">Descripcion </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="descripcion"
                                             value="{{ $curso->descripcion }}" required>
                                         @error('descripcion')
@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="horas_requeridas">horas requeridas </label><b>*</b>
+                                        <label for="horas_requeridas">horas requeridas </label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="horas_requeridas"
                                             value="{{ $curso->horas_requeridas }}" required>
                                         @error('horas_requeridas')
@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="estado">Estado </label><b>*</b>
+                                        <label for="estado">Estado </label><b class="text-danger">*</b>
                                         <select name="estado" id="" class="form-control" name="estado">
                                             <!-- Opción por defecto -->
                                             <option value="" selected disabled>{{ $curso->estado == 'A' ? 'Activo' : 'Inactivo' }}</option>

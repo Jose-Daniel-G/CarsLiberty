@@ -26,7 +26,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="nombres">Nombres </label><b>*</b>
+                                        <label for="nombres">Nombres </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="nombres"
                                             value="{{ $cliente->nombres }}" required>
                                         @error('nombres')
@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="apellidos">Apellidos </label><b>*</b>
+                                        <label for="apellidos">Apellidos </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="apellidos"
                                             value="{{ $cliente->apellidos }}" required>
                                         @error('apellidos')
@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="cc">Cc </label><b>*</b>
+                                        <label for="cc">Cc </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="cc"
                                             value="{{ $cliente->cc }}" required>
                                         @error('cc')
@@ -58,7 +58,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="celular">Celular </label><b>*</b>
+                                        <label for="celular">Celular </label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="celular"
                                             value="{{ $cliente->celular }}" required>
                                         @error('celular')
@@ -70,7 +70,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="genero">Sexo </label><b>*</b>
+                                        <label for="genero">Sexo </label><b class="text-danger">*</b>
                                         <select name="genero" id="" class="form-control" name="genero">
                                             <!-- Opción por defecto -->
                                             @if ($cliente->genero == 'M')
@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="correo">Correo </label><b>*</b>
+                                        <label for="correo">Correo </label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="correo"
                                             value="{{ $cliente->correo }}" required>
                                         @error('correo')
@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="direccion">Direccion </label><b>*</b>
+                                        <label for="direccion">Direccion </label><b class="text-danger">*</b>
                                         <input type="address" class="form-control" name="direccion"
                                             value="{{ $cliente->direccion }}" required>
                                         @error('direccion')
@@ -110,7 +110,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contacto_emergencia">Contacto Emergencia</label><b>*</b>
+                                        <label for="contacto_emergencia">Contacto Emergencia</label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="contacto_emergencia"
                                             value="{{ $cliente->contacto_emergencia }}" required>
                                     </div>
