@@ -29,10 +29,10 @@ class CursoController extends Controller
         // Validación de los datos
         $request->validate([
             'nombre' => 'required',
-            // 'descripcion' => 'required',
             'horas_requeridas' => 'required|integer|min:1',
             'estado' => 'required|in:A,I', // Asegúrate de que el estado sea válido
             'ubicacion' => 'nullable',
+            // 'descripcion' => 'required',
         ]);
 
         // Crear un nuevo curso

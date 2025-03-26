@@ -61,7 +61,7 @@
                                             <a href="{{ route('admin.secretarias.edit', $secretaria->id) }}"
                                                 class="btn btn-success btn-sm"><i class="fas fa-edit"></i>
                                             </a>
-                                            <form id="delete-form-{{ $secretaria->id }}"
+                                            {{-- <form id="delete-form-{{ $secretaria->id }}"
                                                 action="{{ route('admin.secretarias.destroy', $secretaria->id) }}"
                                                 method="POST">
                                                 @csrf
@@ -69,7 +69,7 @@
                                                 <button type="button" class="btn btn-danger"
                                                     onclick="confirmDelete({{ $secretaria->id }})"><i
                                                         class="fas fa-trash"></i></button>
-                                            </form>
+                                            </form> --}}
 
                                         </div>
                                     </td>

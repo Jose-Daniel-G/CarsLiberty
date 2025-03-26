@@ -35,11 +35,11 @@
                                 <th>Apellidos</th>
                                 <th>cc</th>
                                 <th>Celular</th>
-                                {{-- <th>Fecha de Nacimiento</th> --}}
                                 <th>Direccion</th>
-                                {{-- <th>Email</th> --}}
                                 <th>Acciones</th>
                                 <th>Activo</th>
+                                {{-- <th>Email</th> --}}
+                                {{-- <th>Fecha de Nacimiento</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -64,7 +64,6 @@
                                                 </a>
                                             </div>
                                         </div>
-
                                     </td>
                                     <td scope="row">
                                         <div class="text-center">
@@ -74,15 +73,17 @@
                                                 @csrf
                                                 @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
                                                 <button type="submit"
-                                                    class="btn {{ $cliente->user->status ? 'btn-success' : 'btn-danger'  }}">
+                                                    class="btn {{ $cliente->user->status ? 'btn-success' : 'btn-danger' }}">
                                                     {!! $cliente->user->status
                                                         ? '<i class="fa-solid fa-square-check"></i>'
                                                         : '<i class="fa-solid fa-circle-xmark"></i>' !!}
                                                 </button>
                                             </form>
                                         </div>
-
-                                        {{-- <form id="delete-form-{{ $cliente->id }}"
+                                    </td>
+                                </tr>
+                            @endforeach
+                            {{-- <form id="delete-form-{{ $cliente->id }}"
                                                 action="{{ route('admin.clientes.destroy', $cliente->id) }}"
                                                 method="POST">
                                                 @csrf
@@ -91,16 +92,11 @@
                                                     onclick="confirmDelete({{ $cliente->id }})"><i
                                                         class="fas fa-trash"></i></button>
                                             </form> --}}
-
+                        </tbody>
+                    </table>
                 </div>
-                </td>
-                </tr>
-                @endforeach
-                </tbody>
-                </table>
             </div>
         </div>
-    </div>
     </div>
 @stop
 

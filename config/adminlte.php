@@ -355,17 +355,17 @@ return [
 
         ['header' => 'ADMINISTRADOR', 'can' => 'admin.secretarias.index',],
         [
-            'text' => 'Secretarias',
+            'text' => 'Programador',
             'icon' => 'fas fa-laptop',
             'can' => 'admin.secretarias.index',
             'submenu' => [
                 [
-                    'text' => 'Creacion de secretarias',
+                    'text' => 'Creacion de programador',
                     'icon'        => 'far fa-circle nav-icon',
                     'route' => 'admin.secretarias.create',
                 ],
                 [
-                    'text' => 'Listado de secretarias',
+                    'text' => 'Listado de programador',
                     'icon'        => 'far fa-circle nav-icon',
                     'route' => 'admin.secretarias.index',
                 ],
