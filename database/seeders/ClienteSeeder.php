@@ -59,7 +59,7 @@ class ClienteSeeder extends Seeder
             'user_id' => '9',
         ]);
         // Relacionar con los cursos (asumiendo que los cursos ya existen)
-        $cursos = Curso::whereIn('id', [1, 3])->get(); // Obtener los cursos con ID 1 y 2
+        $cursos = Curso::whereIn('id', [1, 3])->get(); // Obtener los cursos con ID 1 y 3
         $cliente->cursos()->attach($cursos); // Crear las relaciones
         
         User::create([
@@ -69,7 +69,7 @@ class ClienteSeeder extends Seeder
             'password' => bcrypt('123123123'),
         ])->assignRole('cliente');
 
-        Cliente::create([
+        $cliente = Cliente::create([
             'nombres' => 'ARGEMIRO',
             'apellidos' => 'ESCOBAR',
             'cc' => '2354765',
@@ -81,7 +81,29 @@ class ClienteSeeder extends Seeder
             'observaciones' => 'migrana',
             'user_id' => '10',
         ]);
-        $cursos = Curso::whereIn('id', [3])->get(); // Obtener los cursos con ID 1 y 2
+        $cursos = Curso::whereIn('id', [3])->get(); // Obtener los cursos con ID 3
+        $cliente->cursos()->attach($cursos); // Crear las relaciones
+
+        User::create([
+            'name' => 'Gaspar',
+            'email' => 'gaspar@email.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('123123123'),
+        ])->assignRole('cliente');
+
+        $cliente = Cliente::create([
+            'nombres' => 'Gaspar',
+            'apellidos' => 'Ijaji',
+            'cc' => '23547657',
+            'genero' => 'M',
+            'celular' => '987654321',
+            'correo' => 'gaspar@email.com',
+            'direccion' => 'Cll 7 oeste',
+            'contacto_emergencia' => '65495113',
+            'observaciones' => 'migrana',
+            'user_id' => '10',
+        ]);
+        $cursos = Curso::whereIn('id', [2])->get(); // Obtener los cursos con ID 1 y 2
         $cliente->cursos()->attach($cursos); // Crear las relaciones
         //    //-------------[ USUARIOS ]----------------]
         //         User::create([
