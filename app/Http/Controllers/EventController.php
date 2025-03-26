@@ -76,35 +76,36 @@ class EventController extends Controller
             ->where('hora_fin', '>=', $hora_fin_formato)
             ->get(); // Obtener todos los horarios en lugar de solo verificar existencia
 
+        // dd($horarios);
         // Si no hay horarios disponibles, retornar mensaje de error
         if ($horarios->isEmpty()) {
             return redirect()->back()->with([
                 'info' => 'El profesor no está disponible en ese horario.',
                 'icono' => 'error',
-                'hora_inicio' => 'El profesor no está disponible en ese horario.',
+                'title' => 'Oh!.',
             ]);
         }
 
-        // Verificar si en los horarios encontrados está agendado solo el curso solicitado
-        $cursoEncontrado = false;
-        $otrosCursos = false;
+        // // Verificar si alguno de los horarios coincide con el curso seleccionado
+        // $curso_encontrado = $horarios->where('curso_id', $cursoid);
 
-        foreach ($horarios as $horario) {
-            if ($horario->curso_id == $cursoid) {
-                $cursoEncontrado = true;
-            } else {
-                $otrosCursos = true; // Hay otro curso en el mismo intervalo
-            }
-        }
+        // // Si el profesor está disponible pero no tiene asignado ese curso
+        // if ($curso_encontrado->isEmpty()) {
+        //     return redirect()->back()->with([
+        //         'info' => 'El profesor no tiene asignado este curso en este horario.',
+        //         'icono' => 'error',
+        //         'title' => 'Oh!.',
+        //     ]);
+        // }
 
-        // Si el profesor tiene el curso, pero también otros cursos en el mismo intervalo
-        if ($cursoEncontrado && $otrosCursos) {
-            return redirect()->back()->with([
-                'info' => 'El profesor ya tiene otro curso agendado en ese horario.',
-                'icono' => 'error',
-                'hora_inicio' => 'El profesor no puede atender múltiples cursos en el mismo horario.',
-            ]);
-        }
+        // // Verificar si hay más de un curso en el mismo intervalo
+        // if ($horarios->count() > 1) {
+        //     return redirect()->back()->with([
+        //         'info' => 'No es posible agendar en este intervalo, hay otros cursos en el mismo horario.',
+        //         'icono' => 'error',
+        //         'title' => 'Oh!.',
+        //     ]);
+        // }
 
         // Si el profesor solo tiene el curso solicitado, se puede continuar normalmente
 
