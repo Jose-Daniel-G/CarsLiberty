@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 class FortifyServiceProvider extends ServiceProvider
 {
     /**
@@ -41,6 +43,23 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        });
+        Fortify::authenticateUsing(function ($request) {
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => __('Las credenciales no coinciden con nuestros registros.'),
+                ]);
+            }
+
+            if ($user->status == 0) { // Verifica si el usuario está deshabilitado
+                throw ValidationException::withMessages([
+                    'email' => __('Tu cuenta ha sido desactivada. Contacta al administrador.'),
+                ]);
+            }
+
+            return $user;
         });
     }
 }

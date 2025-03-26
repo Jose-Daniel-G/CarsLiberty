@@ -39,6 +39,7 @@
                                 <th>Direccion</th>
                                 {{-- <th>Email</th> --}}
                                 <th>Acciones</th>
+                                <th>Activo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,15 +53,36 @@
                                     <td scope="row">{{ $cliente->celular }}</td>
                                     <td scope="row">{{ $cliente->direccion }}</td>
                                     {{-- <td scope="row">{{ $cliente->user->email }}</td> --}}
+                                    <td scope="row ">
+                                        <div class="text-center">
+                                            <div class="btn-group" role="group" aria-label="basic example">
+                                                <a href="{{ route('admin.clientes.show', $cliente->id) }}"
+                                                    class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('admin.clientes.edit', $cliente->id) }}"
+                                                    class="btn btn-success btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </td>
                                     <td scope="row">
-                                        <div class="btn-group" role="group" aria-label="basic example">
-                                            <a href="{{ route('admin.clientes.show', $cliente->id) }}"
-                                                class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                            <a href="{{ route('admin.clientes.edit', $cliente->id) }}"
-                                                class="btn btn-success btn-sm">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                        <div class="text-center">
                                             <form id="delete-form-{{ $cliente->id }}"
+                                                action="{{ route('admin.clientes.toggleStatus', $cliente->user->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
+                                                <button type="submit"
+                                                    class="btn {{ $cliente->user->status ? 'btn-success' : 'btn-danger'  }}">
+                                                    {!! $cliente->user->status
+                                                        ? '<i class="fa-solid fa-square-check"></i>'
+                                                        : '<i class="fa-solid fa-circle-xmark"></i>' !!}
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        {{-- <form id="delete-form-{{ $cliente->id }}"
                                                 action="{{ route('admin.clientes.destroy', $cliente->id) }}"
                                                 method="POST">
                                                 @csrf
@@ -68,32 +90,32 @@
                                                 <button type="button" class="btn btn-danger"
                                                     onclick="confirmDelete({{ $cliente->id }})"><i
                                                         class="fas fa-trash"></i></button>
-                                            </form>
+                                            </form> --}}
 
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
                 </div>
+                </td>
+                </tr>
+                @endforeach
+                </tbody>
+                </table>
             </div>
         </div>
+    </div>
     </div>
 @stop
 
 @section('js')
-    
-    
-    
+
+
+
 
     <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     <script>
         new DataTable('#clientes', {
             responsive: true,
@@ -129,22 +151,22 @@
 
         });
 
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¿Estás seguro de que deseas eliminar este cliente?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
+        // function confirmDelete(id) {
+        //     Swal.fire({
+        //         title: '¿Estás seguro?',
+        //         text: "¿Estás seguro de que deseas eliminar este cliente?",
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: 'Sí, eliminar',
+        //         cancelButtonText: 'Cancelar'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             // Si el usuario confirma, se envía el formulario.
+        //             document.getElementById('delete-form-' + id).submit();
+        //         }
+        //     });
+        // }
     </script>
 @stop

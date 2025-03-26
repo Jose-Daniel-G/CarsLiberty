@@ -17,11 +17,10 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\HistorialController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PicoyplacaController;
-use App\Http\Controllers\UsuarioController;
-
 
 Route::get("/", [HomeController::class, "index"])->name("admin.home")->middleware('can:admin.home');
 Route::resource('users', UserController::class)->only(['index', 'edit', 'update'])->names('admin.users');
+Route::patch('/users/{id}/toggle-status', [ClienteController::class, 'toggleStatus'])->name('admin.clientes.toggleStatus');
 
 //RUTAS ADMIN
 Route::get('/admin', [HomeController::class, 'index'])->name('admin.index')->middleware('auth');
@@ -29,7 +28,7 @@ Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->nam
 
 
 //RUTAS USUARIOS ADMIN
-Route::resource('/usuarios', UsuarioController::class)->names('admin.usuarios')->middleware('auth', 'can:admin.usuarios');
+// Route::resource('/usuarios', UsuarioController::class)->names('admin.usuarios')->middleware('auth', 'can:admin.usuarios');
 
 //RUTAS CONFIGURACIONES ADMIN
 Route::resource('/config', ConfigController::class)->names('admin.config')->middleware('auth', 'can:admin.config');

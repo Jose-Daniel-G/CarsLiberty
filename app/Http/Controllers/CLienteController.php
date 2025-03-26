@@ -95,12 +95,12 @@ class ClienteController extends Controller
             'nombres' => 'required',
             'apellidos' => 'required',
             'cc' => 'required|unique:clientes,cc,' . $cliente->id,
-            // 'fecha_nacimiento' => 'required',
             'genero' => 'required',
             'celular' => 'required',
             'correo' => 'required|email|max:250|unique:clientes,correo,' . $cliente->id,
             'direccion' => 'required',
             'contacto_emergencia' => 'required',
+            // 'fecha_nacimiento' => 'required',
         ]);
         // $validatedData['fecha_nacimiento'] = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
 
@@ -119,17 +119,24 @@ class ClienteController extends Controller
             ->with(['title', 'Exito', 'info', 'Cliente actualizado correctamente.', 'icono', 'success']);
     }
 
-
-
-    public function destroy(Cliente $Cliente)
+    public function toggleStatus($id) //DEACTIVATE
     {
-        if ($Cliente->user) {// Si existe un usuario asociado, eliminarlo
-            $Cliente->user->delete(); 
-        }
-        // Eliminar el Cliente
-        $Cliente->delete();
-
-        return redirect()->route('admin.clientes.index')
-            ->with(['title', 'Exito', 'info', 'El Cliente se eliminó con éxito', 'icono', 'success']);
+        $user = User::findOrFail($id);
+        $user->status = !$user->status;
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Estado del usuario actualizado.');
     }
+
+    // public function destroy(Cliente $Cliente)
+    // {
+    //     if ($Cliente->user) {// Si existe un usuario asociado, eliminarlo
+    //         $Cliente->user->delete(); 
+    //     }
+    //     // Eliminar el Cliente
+    //     $Cliente->delete();
+
+    //     return redirect()->route('admin.clientes.index')
+    //         ->with(['title', 'Exito', 'info', 'El Cliente se eliminó con éxito', 'icono', 'success']);
+    // }
 }
