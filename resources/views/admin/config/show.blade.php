@@ -21,21 +21,21 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre de la CLinica/Hospital </label><b>*</b>
+                                    <label for="nombre">Nombre de la CLinica/Hospital </label><b class="text-danger">*</b>
                                     <p>{{ $config->nombre }}</p>
 
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="direccion">Direccion </label><b>*</b>
+                                    <label for="direccion">Direccion </label><b class="text-danger">*</b>
                                     <p>{{ $config->direccion }}</p>
 
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="telefono">Telefono </label><b>*</b>
+                                    <label for="telefono">Telefono </label><b class="text-danger">*</b>
                                     <p>{{ $config->telefono }}</p>
                                 </div>
                             </div>
@@ -43,14 +43,14 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="correo">Correo </label><b>*</b>
+                                    <label for="correo">Correo </label><b class="text-danger">*</b>
                                     <p>{{ $config->correo }}</p>
 
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="logo">Logo </label><b>*</b>
+                                    <label for="logo">Logo </label><b class="text-danger">*</b>
                                     <p>{{ $config->logo }}</p>
                                 </div>
                             </div>

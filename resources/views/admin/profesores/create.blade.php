@@ -23,7 +23,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="nombres">Nombre del profesor </label><b>*</b>
+                                        <label for="nombres">Nombre del profesor </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="nombres"
                                             value="{{ old('nombres') }}" required>
                                         @error('nombres')
@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="apellidos">Apellidos </label><b>*</b>
+                                        <label for="apellidos">Apellidos </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="apellidos"
                                             value="{{ old('apellidos') }}" required>
                                         @error('apellidos')
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="telefono">Telefono </label><b>*</b>
+                                        <label for="telefono">Telefono </label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="telefono"
                                             value="{{ old('telefono') }}" required>
                                         @error('telefono')
@@ -54,7 +54,7 @@
 
                                 {{-- <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="especialidad">Especialidad </label><b>*</b>
+                                        <label for="especialidad">Especialidad </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="especialidad"
                                             value="{{ old('especialidad') }}" required>
                                         @error('especialidad')
@@ -66,7 +66,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="email">Email </label><b>*</b>
+                                        <label for="email">Email </label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="email"
                                             value="{{ old('email') }}" required>
                                         @error('email')
@@ -77,7 +77,7 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="password">Contrasena </label><b>*</b>
+                                        <label for="password">Contrasena </label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password"
                                             value="{{ old('password') }}" required>
                                         @error('password')
@@ -88,7 +88,7 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="password_confirmation">Verificacion de contrasena </label><b>*</b>
+                                        <label for="password_confirmation">Verificacion de contrasena </label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password_confirmation"
                                             value="{{ old('password_confirmation') }}" required>
                                         @error('password_confirmation')

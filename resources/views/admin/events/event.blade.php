@@ -37,7 +37,7 @@
                                 <option value="" selected disabled>Seleccione un Curso</option>
                                 @foreach ($cursos as $curso)
                                     <option value="{{ $curso->id }}">
-                                        {{ $curso->nombre . ' - ' . $curso->descripcion }}
+                                        {{ $curso->nombre}}
                                     </option>
                                 @endforeach
                             </select>

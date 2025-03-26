@@ -191,7 +191,7 @@
                             <h3 class="card-title">Calendario de atencion de profesores </h3>
                         </div>
                         <div class="col-md-4 d-flex justify-content-end">
-                            <label for="curso_id">Cursos </label><b>*</b>
+                            <label for="curso_id">Cursos </label><b class="text-danger">*</b>
                         </div>
                         <div class="col-md-4">
                             <select name="curso_id" id="profesor_select" class="form-control">
@@ -352,8 +352,10 @@
             HoraIncioInput.addEventListener('change', function() {
                 let selectedTime = this.value; // Obtener la hora seleccionada (formato HH:MM)
                 let now = new Date(); // Obtener la fecha y hora actual
-
                 if (selectedTime) {
+                    selectedTime = selectedTime.split(':'); //Dividir la cadena en horas y minutos
+                    selectedTime = selectedTime[0] + ':00'; //conservar la hora, ignorar los minutos
+                    this.value = selectedTime; // Establecer la hora modificada en el campo de entrada
                     // Dividir la hora seleccionada en horas y minutos
                     let [selectedHour, selectedMinutes] = selectedTime.split(':').map(Number);
 

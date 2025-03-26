@@ -87,7 +87,7 @@
                             <h3 class="card-title">Calendario de atencion de Profesores</h3>
                         </div>
                         <div class="col-md-4 d-flex justify-content-end">
-                            <label for="curso_id">Cursos </label><b>*</b>
+                            <label for="curso_id">Cursos </label><b class="text-danger">*</b>
                         </div>
                         <div class="col-md-4">
                             <select name="curso_id" id="curso_select" class="form-control">

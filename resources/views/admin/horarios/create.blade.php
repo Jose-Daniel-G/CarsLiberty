@@ -22,7 +22,7 @@
                         <form action="{{ route('admin.horarios.store') }}" method="POST" autocomplete="off">
                             @csrf
                             <div class="form-group">
-                                <label for="profesor_id">Profesores </label><b>*</b>
+                                <label for="profesor_id">Profesores </label><b class="text-danger">*</b>
                                 <select class="form-control" name="profesor_id" id="profesor_id">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($profesores as $profesor)
@@ -36,7 +36,7 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="curso_id">Cursos </label><b>*</b>
+                                <label for="curso_id">Cursos </label><b class="text-danger">*</b>
                                 <select name="curso_id" id="curso_select" class="form-control">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($cursos as $curso)
@@ -54,7 +54,7 @@
 
 
                             <div class="form-group">
-                                <label for="dia">Dia </label><b>*</b>
+                                <label for="dia">Dia </label><b class="text-danger">*</b>
                                 <select class="form-control" name="dia" id="dia">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     <option value="LUNES">LUNES</option>
@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="hora_inicio">Hora Inicio </label><b>*</b>
+                                <label for="hora_inicio">Hora Inicio </label><b class="text-danger">*</b>
                                 <input type="time" class="form-control" name="hora_inicio" id="hora_inicio"
                                     value="{{ old('hora_inicio') }}" required>
                                 @error('hora_inicio')
@@ -79,7 +79,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="hora_fin">Hora Final </label><b>*</b>
+                                <label for="hora_fin">Hora Final </label><b class="text-danger">*</b>
                                 <input type="time" class="form-control" name="hora_fin" id="hora_fin"
                                     value="{{ old('hora_fin') }}" required>
                                 @error('hora_fin')

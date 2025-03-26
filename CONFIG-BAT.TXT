@@ -28,8 +28,7 @@ REM Iniciar Apache y MySQL desde la línea de comandos
 start "" "C:\xampp\mysql\bin\mysqld.exe"
 "C:\xampp\apache\bin\httpd.exe"
 
-echo Servidor Laravel iniciado correctamente.
-pause
+exit
 
 --------------------------------------------------
 ----------[   CARSLIBERTY.BAT  ]------------------

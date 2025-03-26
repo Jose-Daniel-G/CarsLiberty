@@ -27,7 +27,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="nombre">Nombre del profesor </label><b>*</b>
+                                        <label for="nombre">Nombre del profesor </label><b class="text-danger">*</b>
                                         <p>
                                             {{ $profesor->nombre }}
                                         </p>
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="ubicacion">Ubicacion </label><b>*</b>
+                                        <label for="ubicacion">Ubicacion </label><b class="text-danger">*</b>
                                         <p>
                                             {{ $profesor->ubicacion }}
                                         </p>
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="capacidad">Capacidad </label><b>*</b>
+                                        <label for="capacidad">Capacidad </label><b class="text-danger">*</b>
                                         <p>
                                             {{ $profesor->capacidad }}
                                         </p>
@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="telefono">Telefono </label><b>*</b>
+                                        <label for="telefono">Telefono </label><b class="text-danger">*</b>
                                         <p>
                                             {{ $profesor->telefono }}
                                         </p>
@@ -61,7 +61,7 @@
                             <div class="row">
                                 {{-- <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="especialidad">Especialidad </label><b>*</b>
+                                        <label for="especialidad">Especialidad </label><b class="text-danger">*</b>
                                         <p>
                                             {{ $profesor->especialidad }}
                                         </p>
@@ -70,7 +70,7 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="estado">Estado </label><b>*</b>
+                                        <label for="estado">Estado </label><b class="text-danger">*</b>
                                             <!-- Opción por defecto -->
                                             <p>{{ $profesor->estado == 'A' ? 'Activo' : 'Inactivo' }}</p>
                                     </div>

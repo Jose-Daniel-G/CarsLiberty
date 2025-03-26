@@ -22,20 +22,20 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre del curso </label><b>*</b>
+                                    <label for="nombre">Nombre del curso </label><b class="text-danger">*</b>
                                     <p>
                                         {{ $curso->nombre }}</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="descripcion">Descripcion </label><b>*</b>
+                                    <label for="descripcion">Descripcion </label><b class="text-danger">*</b>
                                     <p>{{ $curso->descripcion }}</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="horas_requeridas">horas_requeridas </label><b>*</b>
+                                    <label for="horas_requeridas">horas_requeridas </label><b class="text-danger">*</b>
                                     <p>{{ $curso->horas_requeridas }}</p>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="estado">Estado </label><b>*</b>
+                                    <label for="estado">Estado </label><b class="text-danger">*</b>
                                     <p>{{ $curso->estado }}</p>
                                 </div>
                             </div>

@@ -25,7 +25,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="nombres">Nombres </label><b>*</b>
+                                        <label for="nombres">Nombres </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="nombres"
                                             value="{{ old('nombres') }}" required>
                                         @error('nombres')
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="apellidos">Apellidos </label><b>*</b>
+                                        <label for="apellidos">Apellidos </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="apellidos"
                                             value="{{ old('apellidos') }}" required>
                                         @error('apellidos')
@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="cc">Cc </label><b>*</b>
+                                        <label for="cc">Cc </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="cc"
                                             value="{{ old('cc') }}" required>
                                         @error('cc')
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="celular">Celular </label><b>*</b>
+                                        <label for="celular">Celular </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="celular"
                                             value="{{ old('celular') }}" required>
                                         @error('celular')
@@ -67,7 +67,7 @@
                             <div class="row ">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="fecha_nacimiento">Fecha de Nacimientos </label><b>*</b>
+                                        <label for="fecha_nacimiento">Fecha de Nacimientos </label><b class="text-danger">*</b>
                                         <input type="date" class="form-control" name="fecha_nacimiento"
                                             value="{{ old('fecha_nacimiento') }}" required>
                                         @error('fecha_nacimiento')
@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <label for="direccion">Direccion </label><b>*</b>
+                                        <label for="direccion">Direccion </label><b class="text-danger">*</b>
                                         <input type="address" class="form-control" name="direccion"
                                             value="{{ old('direccion') }}" required>
                                         @error('direccion')
@@ -89,7 +89,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="email">Email</label><b>*</b>
+                                        <label for="email">Email</label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="email"
                                             value="{{ old('email') }}" required>
                                     </div>
@@ -100,7 +100,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="password">Contrasena</label><b>*</b>
+                                        <label for="password">Contrasena</label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password"
                                             value="{{ old('password') }}" required>
                                     </div>
@@ -110,7 +110,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="password_confirmation">Verificacion de contrasena</label><b>*</b>
+                                        <label for="password_confirmation">Verificacion de contrasena</label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password_confirmation"
                                             value="{{ old('password_confirmation') }}" required>
                                     </div>

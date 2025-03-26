@@ -84,7 +84,7 @@ class CursoController extends Controller
                  // // Asegurarte de reemplazar 'Curso' y 'ClienteCurso' con los nombres de tus modelos.
                 $cursosCompletados = DB::table('cursos')
                 ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-                ->select('cursos.id', 'cursos.nombre', 'cursos.descripcion', 'cursos.horas_requeridas', 'cliente_curso.horas_realizadas')
+                ->select('cursos.id', 'cursos.nombre', 'cursos.horas_requeridas', 'cliente_curso.horas_realizadas')//'cursos.descripcion'
                 ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas') // Compara las horas realizadas con las horas totales
                 ->get();
                 // dd($cursosCompletados);
@@ -101,7 +101,7 @@ class CursoController extends Controller
             // Muestra la consulta SQL generada
             $cursosCompletados = DB::table('cursos')
                 ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-                ->select('cursos.id', 'cursos.nombre', 'cursos.descripcion', 'cursos.horas_requeridas', 'cliente_curso.horas_realizadas')
+                ->select('cursos.id', 'cursos.nombre', 'cursos.horas_requeridas', 'cliente_curso.horas_realizadas')//, 'cursos.descripcion'
                 ->where('cliente_curso.cliente_id', $clienteId->id) // Filtra por el cliente específico
                 ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas') // Compara las horas realizadas con las requeridas
                 ->get();
