@@ -8,8 +8,16 @@ moto max horas = 4 && , min = 2
 
 EVITAR QUE AGENDE UNA CLASE DE OTRO CURSO SI YA ESTA REALIZANDO uno
 EVITAR ABRIR MODAL PARA AGENDAR SI AUN NO VE CLASE AGENDADA
-
+hasta el domingo poder registrar en agenda
+no esta registrando el cliente
+eliminar programado
+agendar cantidad de horas del curso 
+error al admin agendar a cliente no permite visualizar horario profesores === debido a que no tiene esa clase agedada
 
 -----------------------------------------
  PROGRAMADOR PODER CANCELARLA O A FUTURO SOLICITAR CANCELACION DE CLASE
- 
+se esta disparando error al obtener dtos del profesro
+
+se le esta pintando al profesor que no le corresponde
+agendar varios cursos para el mismo horario para el profesor
+ no esta pintando si es B1

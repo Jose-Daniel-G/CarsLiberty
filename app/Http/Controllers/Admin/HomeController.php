@@ -38,7 +38,7 @@ class HomeController extends Controller
         $profesores = Profesor::all();
         $events = CalendarEvent::all(); // dd(Auth::user()->getRoleNames());
 
-        if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') || Auth::user()->hasRole('profesor')) {
+        if (Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') || Auth::user()->hasRole('profesor')) {
             $cursos = Curso::all();
             $clientes = Cliente::all();
             $profesorSelect =  DB::table('profesors')
