@@ -13,9 +13,10 @@ SECRETARIA/ADMIN Agendar cantidad de horas del curso
 Asistencia pendiente ==== si falta una clase inhabilitar las otras clases
 
 -----------------------------------------
-se esta disparando error al obtener dtos del profesro
+-si se selecciona un dia despues esta tomando como si fuera el mismo dia, es decir esta arrojando un error
+-se esta disparando error al obtener dtos del profesro - en computador de CARSLIBERTY alejo
 
-se le esta pintando al profesor que no le corresponde
+
 agendar varios cursos para el mismo horario para el profesor
  no esta pintando si es B1
 

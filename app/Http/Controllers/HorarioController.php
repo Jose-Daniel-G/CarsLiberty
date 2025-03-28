@@ -35,8 +35,6 @@ class HorarioController extends Controller
         try {
             // Obtener horarios con profesor y curso
             $horarios = Horario::with('curso')->whereHas('profesor', fn($query) => $query->where('id', $id))->get();
-
-    
             $horarios_asignados = CalendarEvent::select([
                 'events.id AS evento_id',
                 'events.profesor_id',
@@ -63,7 +61,7 @@ class HorarioController extends Controller
                 $horario->dia = traducir_dia($horario->dia); // Traduce el día al español
                 return $horario;
             });
-    
+            // dd($horarios_asignados);
             return view('admin.horarios.show_datos_cursos', compact('horarios', 'horarios_asignados'));
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error']);

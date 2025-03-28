@@ -1,8 +1,7 @@
 {{-- Verifica los datos que están llegando a la vista --}}
-<pre>
-    {{-- {{ print_r($horarios, true) }}
-    {{ print_r('asigndos'.$horarios_asignados, true) }} --}}
-</pre><div class="table-responsive">
+    {{-- <pre>{{ print_r($horarios, true) }}
+    {{ print_r('asigndos'.$horarios_asignados, true) }}</pre> --}}
+<div class="table-responsive">
     <table class="table table-striped table-bordered table-hover table-sm">
         <thead>
             <tr>
@@ -36,7 +35,12 @@
                 ];
                 $diasSemana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'];
             @endphp
-
+        @php
+        // function colorCliente($user_id) {
+        //     $colores = ['table-primary', 'table-secondary', 'table-success', 'table-danger', 'table-warning', 'table-info'];
+        //     return $colores[$user_id % count($colores)];
+        // }
+        @endphp
             @foreach ($horas as $hora)
                 @php
                     [$hora_inicio, $hora_fin] = explode(' - ', $hora);
@@ -50,6 +54,8 @@
                             $nombre_profesor = '';
                             $agendado = false; // Inicializa la variable $agendado en false
                             $course_name = '';
+                            $es_del_usuario = '';
+
                             // Recorremos los horarios disponibles
                             foreach ($horarios as $horario) {
                                 $horario_inicio_24 = date('H:i', strtotime($horario->hora_inicio));
@@ -70,7 +76,7 @@
                                         $asignado_inicio_24 = date('H:i', strtotime($horario_asignado->hora_inicio));
                                         $asignado_fin_24 = date('H:i', strtotime($horario_asignado->hora_fin));
                                         $asignado_dia = strtoupper($horario_asignado->dia);
-
+                                        $agendado = false;
                                         // Comparación con mayor flexibilidad (solapamiento)
                                         if (
                                             $asignado_dia == $dia &&
@@ -78,7 +84,7 @@
                                             $hora_fin_24 > $asignado_inicio_24
                                         ) {
                                             $agendado = true; // Cambia a verdadero si hay coincidencia
-                                            $es_del_usuario = auth()->check() && auth()->user()->id == $horario_asignado->user_id;
+                                            $es_del_usuario = auth()->user()->id == $horario_asignado->user_id;
                                             break; // Salir del bucle si se encuentra coincidencia
                                         }
                                     }
@@ -87,9 +93,11 @@
                             }
                         @endphp
                                     <td class="{{ $agendado ? ($es_del_usuario ? 'table-success' : 'table-primary') : '' }}">
+                                        {{-- {{ $horario_asignado->user_id }}  --}}
                                         {{ $nombre_profesor }} 
                                         {{ $course_name }}
                                     </td>
+                                    
                     @endforeach
                 </tr>
             @endforeach
