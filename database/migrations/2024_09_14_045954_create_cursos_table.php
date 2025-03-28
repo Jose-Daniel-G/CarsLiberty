@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->integer('horas_requeridas');
             $table->string('estado');
-            $table->string('ubicacion')->nullable();
+            // $table->string('ubicacion')->nullable();
             // $table->string('descripcion');
             // $table->string('capacidad');
             // $table->string('telefono')->nullable();

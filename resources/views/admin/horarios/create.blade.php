@@ -63,6 +63,7 @@
                                     <option value="JUEVES">JUEVES</option>
                                     <option value="VIERNES">VIERNES</option>
                                     <option value="SABADO">SABADO</option>
+                                    <option value="DOMINGO">DOMINGO</option>
                                 </select>
                                 @error('dia')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>

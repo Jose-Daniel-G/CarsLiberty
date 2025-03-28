@@ -66,7 +66,7 @@
                                         <label for="dia">Día </label><b class="text-danger">*</b>
                                         <select class="form-control" name="dia" id="dia">
                                             <option value="" disabled {{ old('dia', $horario->dia) == null ? 'selected' : '' }}>Seleccione una opción</option>
-                                            @foreach (['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'] as $dia)
+                                            @foreach (['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'] as $dia)
                                                 <option value="{{ $dia }}" {{ old('dia', $horario->dia) == $dia ? 'selected' : '' }}>{{ $dia }}</option>
                                             @endforeach
                                         </select>

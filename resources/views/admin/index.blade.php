@@ -314,10 +314,10 @@
                         let selectedTime = this.value;
                         this.value = selectedTime;
 
-                        if (parseInt(selectedTime) > 4) {
+                        if (parseInt(selectedTime) > 4 || parseInt(selectedTime) < 2) {
                             this.value = null;
                             Swal.fire({
-                                text: "Solo puede agendar hasta máximo 4 horas",
+                                text: "Solo puede agendar hasta máximo 4 horas y minimo 2",
                                 icon: "error"
                             });
                         }
@@ -500,7 +500,6 @@
     </script>
 
     <script>
-        //NOTA: NO SE ESTA VISUALIZANDO 
         new DataTable('#reservas', {
             responsive: true,
             autoWidth: false,
@@ -572,6 +571,43 @@
                     error: function(xhr) {
                         console.error('Error al cargar los profesores:', xhr.responseText);
                         alert('Error al cargar los profesores. Intenta nuevamente.');
+                    }
+                });
+            });
+            $('#cliente_id').on('change', function() {
+                var cliente_id = $(this).val(); // Obtén el valor seleccionado
+                // Función para cargar profesores
+                if (!cliente_id) return; // Salir si no hay curso seleccionado
+                var url = "{{ route('obtenerCursos', ':id') }}";
+                url = url.replace(':id', cliente_id);
+                // alert('url ' + url);
+
+                // Realizar una llamada AJAX para obtener los curso disponibles
+                $.ajax({
+                    url: url, // URL a la que se realiza la solicitud
+                    method: 'GET',
+
+                    success: function(data) {
+
+                        // Verifica si hay cursos y si es un array
+                        if (data && Array.isArray(data)) {
+                            // Limpia el select de cursos antes de llenarlo
+                            $('#cursoid').empty().append(
+                                '<option value="" selected disabled>Seleccione un Curso</option>'
+                            );
+
+                            data.forEach(function(curso) {
+                                $('#cursoid').append(
+                                    `<option value="${curso.id}">${curso.nombre}</option>`
+                                );
+                            });
+                        } else {
+                            alert('No se encontraron cursos.');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error al cargar los cursos:', xhr.responseText);
+                        alert('Error al cargar los cursos. Intenta nuevamente.');
                     }
                 });
             });

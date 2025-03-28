@@ -1,7 +1,18 @@
 <?php 
 
-// use App\Models\Setting;
+if (!function_exists('traducir_dia')) {
+    function traducir_dia($dia)
+    {
+        $dias = [
+            'Monday' => 'LUNES',
+            'Tuesday' => 'MARTES',
+            'Wednesday' => 'MIERCOLES',
+            'Thursday' => 'JUEVES',
+            'Friday' => 'VIERNES',
+            'Saturday' => 'SABADO',
+            'Sunday' => 'DOMINGO',
+        ];
+        return $dias[$dia] ?? $dia; 
+    }
+}
 
-// function get_setting($key, $default = null) {
-//     return Setting::where('key', $key)->value('value') ?? $default;
-// }

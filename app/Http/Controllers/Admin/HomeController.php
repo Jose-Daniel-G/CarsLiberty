@@ -38,24 +38,26 @@ class HomeController extends Controller
         $profesores = Profesor::all();
         $events = CalendarEvent::all(); // dd(Auth::user()->getRoleNames());
 
-        if (Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') || Auth::user()->hasRole('profesor')) {
+        if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') || Auth::user()->hasRole('profesor')) {
             $cursos = Curso::all();
             $clientes = Cliente::all();
-            $profesorSelect =  DB::table('profesors')
-            ->join('horarios', 'horarios.profesor_id', '=', 'profesors.id')
-            ->join('cursos', 'horarios.curso_id', '=', 'cursos.id')
-            ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-            ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
-            ->join('users', 'clientes.user_id', '=', 'users.id')
-            ->select(
-                'profesors.id', 
-                'profesors.nombres', 
-                'profesors.apellidos', 
-                DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
-            )
-            ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
-            ->limit(100)
-            ->get();
+
+
+            $profesorSelect =  DB::table('profesors') // SE EJECUTA PARA DESPLEGAR EL SCHEDULE DE LA SEMANA DE LOS PROFESORES EN INDEX!
+                ->join('horarios', 'horarios.profesor_id', '=', 'profesors.id')
+                ->join('cursos', 'horarios.curso_id', '=', 'cursos.id')
+                ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
+                ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
+                ->join('users', 'clientes.user_id', '=', 'users.id')
+                ->select(
+                    'profesors.id',
+                    'profesors.nombres',
+                    'profesors.apellidos',
+                    DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+                )
+                ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
+                ->limit(100)
+                ->get();
             $role = 'admin'; // Asegúrate de tener un campo 'role'
 
             return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'events', 'total_configuraciones', 'role'));
@@ -64,32 +66,24 @@ class HomeController extends Controller
             // dd($cliente);    
             $cursos = $cliente->cursos; // Cursos del cliente
 
-            $profesores = Profesor::distinct()
-                ->join('events', 'profesors.id', '=', 'events.profesor_id')
-                ->join('clientes', 'clientes.id', '=', 'events.cliente_id')
+            $profesorSelect =  DB::table('profesors')
+                ->join('horarios', 'horarios.profesor_id', '=', 'profesors.id')
+                ->join('cursos', 'horarios.curso_id', '=', 'cursos.id')
+                ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
+                ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
                 ->join('users', 'clientes.user_id', '=', 'users.id')
-                ->where('clientes.user_id', Auth::id())
-                ->select('profesors.*')
+                ->where('users.id', Auth::id())
+                ->select(
+                    'profesors.id',
+                    'profesors.nombres',
+                    'profesors.apellidos',
+                    DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+                )
+                ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
+                ->limit(100)
                 ->get();
 
-            $profesorSelect =  DB::table('profesors')
-            ->join('horarios', 'horarios.profesor_id', '=', 'profesors.id')
-            ->join('cursos', 'horarios.curso_id', '=', 'cursos.id')
-            ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-            ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
-            ->join('users', 'clientes.user_id', '=', 'users.id')
-            ->where('users.id', Auth::id())
-            ->select(
-                'profesors.id', 
-                'profesors.nombres', 
-                'profesors.apellidos', 
-                DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
-            )
-            ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
-            ->limit(100)
-            ->get();
-
-            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesores', 'profesorSelect', 'events', 'total_configuraciones'));
+            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesorSelect', 'events', 'total_configuraciones'));
         }
     }
 
@@ -114,12 +108,12 @@ class HomeController extends Controller
             } else {
 
                 $events = CalendarEvent::with(['profesor', 'cliente'])
-                ->join('users as profesores', 'profesores.id', '=', 'events.profesor_id')
-                ->join('clientes', 'clientes.id', '=', 'events.cliente_id')
-                ->join('users as clientes_users', 'clientes.user_id', '=', 'clientes_users.id')
-                ->where('clientes.user_id', Auth::id())
-                ->select('events.*')
-                ->get();
+                    ->join('users as profesores', 'profesores.id', '=', 'events.profesor_id')
+                    ->join('clientes', 'clientes.id', '=', 'events.cliente_id')
+                    ->join('users as clientes_users', 'clientes.user_id', '=', 'clientes_users.id')
+                    ->where('clientes.user_id', Auth::id())
+                    ->select('events.*')
+                    ->get();
 
                 return response()->json($events);
             }

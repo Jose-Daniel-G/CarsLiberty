@@ -43,27 +43,31 @@ class EventController extends Controller
         // Obtener el cliente para verificar asistencia
         $cliente_id = Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') ||
             Auth::user()->hasRole('secretaria') ? $request->cliente_id : Auth::user()->cliente->id;
+            
+        if (Auth::user()->hasRole('cliente')) {
+            // Verificar si el cliente tiene un evento anterior y si asistió
+            $asistencia = Asistencia::join('events', 'asistencias.evento_id', '=', 'events.id')
+                ->select('events.start', 'asistencias.*')
+                ->where('asistencias.cliente_id', $cliente_id) // Filtrar por cliente
+                ->orderBy('events.start', 'desc') // Ordenar por fecha para obtener el evento más reciente
+                ->first(); // Obtener solo el último evento
 
-        // Verificar si el cliente tiene un evento anterior y si asistió
-        $asistencia = Asistencia::join('events', 'asistencias.evento_id', '=', 'events.id')
-            ->select('events.start', 'asistencias.*')
-            ->where('asistencias.cliente_id', $cliente_id) // Filtrar por cliente
-            ->orderBy('events.start', 'desc') // Ordenar por fecha para obtener el evento más reciente
-            ->first(); // Obtener solo el último evento
-
-        // Si hay asistencia y no asistió
-        if ($asistencia && $asistencia->asistio === 0) {
-            // if ($asistencia && (!$asistencia->asistio || Carbon::parse($asistencia->start)->isFuture())) {
-            return redirect()->back()->with([
-                'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último evento.',
-                'icono' => 'error',
-                'title' => 'Asistencia pendiente',
-            ]);
+            // Si hay asistencia y no asistió
+            if ($asistencia && $asistencia->asistio === 0) {
+                // if ($asistencia && (!$asistencia->asistio || Carbon::parse($asistencia->start)->isFuture())) {
+                return redirect()->back()->with([
+                    'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último evento.',
+                    'icono' => 'error',
+                    'title' => 'Asistencia pendiente',
+                ]);
+            }
         }
+
 
         // Obtener el día de la semana en español
         $dia = date('l', strtotime($fecha_reserva));
-        $dia_de_reserva = $this->traducir_dia($dia);
+        $dia_de_reserva = traducir_dia($dia);
+        // $dia_de_reserva = $this->traducir_dia($dia);
 
         // Formatear las horas para compararlas en la consulta
         $hora_inicio_formato = $fecha_hora_inicio->format('H:i:s');
@@ -157,11 +161,11 @@ class EventController extends Controller
         ]);
     }
 
-    private function traducir_dia($dia)
-    {
-        $dias = ['Monday' => 'LUNES', 'Tuesday' => 'MARTES', 'Wednesday' => 'MIERCOLES', 'Thursday' => 'JUEVES', 'Friday' => 'VIERNES', 'Saturday' => 'SABADO', 'Sunday' => 'DOMINGO',];
-        return $dias[$dia] ?? $dias;
-    }
+    // private function traducir_dia($dia)
+    // {
+    //     $dias = ['Monday' => 'LUNES', 'Tuesday' => 'MARTES', 'Wednesday' => 'MIERCOLES', 'Thursday' => 'JUEVES', 'Friday' => 'VIERNES', 'Saturday' => 'SABADO', 'Sunday' => 'DOMINGO',];
+    //     return $dias[$dia] ?? $dias;
+    // }
 
     public function show(Request $request)
     {

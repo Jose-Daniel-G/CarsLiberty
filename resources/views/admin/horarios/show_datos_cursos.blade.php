@@ -13,6 +13,7 @@
                 <th scope="col">Jueves</th>
                 <th scope="col">Viernes</th>
                 <th scope="col">Sábado</th>
+                <th scope="col">Domingo</th>
             </tr>
         </thead>
         <tbody>
@@ -33,7 +34,7 @@
                     '06:00 pm - 07:00 pm',
                     '07:00 pm - 08:00 pm',
                 ];
-                $diasSemana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
+                $diasSemana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'];
             @endphp
 
             @foreach ($horas as $hora)

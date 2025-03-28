@@ -60,7 +60,7 @@ class HorarioController extends Controller
             
             // Traducir los días al español
             $horarios_asignados = $horarios_asignados->map(function ($horario) {
-                $horario->dia = $this->traducir_dia($horario->dia); // Traduce el día al español
+                $horario->dia = traducir_dia($horario->dia); // Traduce el día al español
                 return $horario;
             });
     
@@ -69,24 +69,7 @@ class HorarioController extends Controller
             return response()->json(['mensaje' => 'Error']);
         }
     }
-    
-    
-    private function traducir_dia($dia)
-    {
-        $dias = [
-            'Monday' => 'LUNES',
-            'Tuesday' => 'MARTES',
-            'Wednesday' => 'MIERCOLES',
-            'Thursday' => 'JUEVES',
-            'Friday' => 'VIERNES',
-            'Saturday' => 'SABADO',
-            'Sunday' => 'DOMINGO',
-        ];
-        return $dias[$dia] ?? $dia; // Cambiado para devolver el día original si no se encuentra
-    }
-    
-
-    
+       
     // public function show_datos_cursos($id)
     // { 
     //     // echo $id;   

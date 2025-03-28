@@ -31,7 +31,7 @@ class CursoController extends Controller
             'nombre' => 'required',
             'horas_requeridas' => 'required|integer|min:1',
             'estado' => 'required|in:A,I', // Asegúrate de que el estado sea válido
-            'ubicacion' => 'nullable',
+            // 'ubicacion' => 'nullable',
             // 'descripcion' => 'required',
         ]);
 
@@ -120,4 +120,10 @@ class CursoController extends Controller
         return redirect()->route('admin.cursos.index')
             ->with(['title', 'Exito','info', 'El curso se eliminó con éxito','icono', 'success']);
     }
+    public function obtenerCursos($clienteId)
+    {
+        $cliente = Cliente::with('cursos')->findOrFail($clienteId);
+        return response()->json($cliente->cursos);
+    }
+    
 }

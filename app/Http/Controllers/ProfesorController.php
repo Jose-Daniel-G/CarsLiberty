@@ -137,6 +137,7 @@ class ProfesorController extends Controller
 
         return $pdf->stream();
     }
+  
     public function obtenerProfesores($cursoId)
     {
         $profesores = DB::table('horarios')

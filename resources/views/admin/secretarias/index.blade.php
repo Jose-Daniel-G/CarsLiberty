@@ -71,7 +71,22 @@
                                                         class="fas fa-trash"></i></button>
                                             </form> --}}
 
+                                        <div class="text-center">
+                                            <form id="delete-form-{{ $secretaria->id }}"
+                                                action="{{ route('admin.secretarias.toggleStatus', $secretaria->user->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
+                                                <button type="submit"
+                                                    class="btn {{ $secretaria->user->status ? 'btn-success' : 'btn-danger' }}">
+                                                    {!! $secretaria->user->status
+                                                        ? '<i class="fa-solid fa-square-check"></i>'
+                                                        : '<i class="fa-solid fa-circle-xmark"></i>' !!}
+                                                </button>
+                                            </form>
                                         </div>
+                                    </div>
+
                                     </td>
                                 </tr>
                             @endforeach

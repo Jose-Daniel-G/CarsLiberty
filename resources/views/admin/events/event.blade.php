@@ -14,7 +14,7 @@
                         @can('admin.listUsers')
                             <div class="col-md-12">
                                 <div class="form-group"><label for="cliente_id">Estudiante</label>
-                                    <select name="cliente_id" class="form-control">
+                                    <select name="cliente_id" id="cliente_id" class="form-control">
                                         <option value="" selected disabled>Seleccione un Estudiante
                                         </option>
                                         @foreach ($clientes as $cliente)
@@ -33,17 +33,19 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <select name="cursoid" class="form-control" id="cursoid">
-                                <option value="" selected disabled>Seleccione un Curso</option>
-                                @foreach ($cursos as $curso)
-                                    <option value="{{ $curso->id }}">
-                                        {{ $curso->nombre}}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('cursoid')
-                                <small class="bg-danger text-white p-1">{{ $message }}</small>
-                            @enderror
+                            <div class="form-group"><label for="cliente_id">Curso</label>
+                                <select name="cursoid" class="form-control" id="cursoid">
+                                    <option value="" selected disabled>Seleccione un Curso</option>
+                                    @foreach ($cursos as $curso)
+                                        <option value="{{ $curso->id }}">
+                                            {{ $curso->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('cursoid')
+                                    <small class="bg-danger text-white p-1">{{ $message }}</small>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -58,22 +60,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="col-md-12">
-                            <div class="form-group"><label for="profesorid">Profesor</label>
-                                <select name="profesorid" class="form-control">
-                                    <option value="" selected disabled>Selecione un Profesor
-                                    </option>
-                                    @foreach ($profesores as $profesore)
-                                        <option value="{{ $profesore->id }}">
-                                            {{ $profesore->nombres . ' ' . $profesore->apellidos }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('profesorid')
-                                    <small class="bg-danger text-white p-1">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div> --}}
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group"><label for="profesor">Fecha de reserva</label>

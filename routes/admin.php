@@ -2,12 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VehiculoController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\SecretariaController;
@@ -15,17 +11,16 @@ use App\Http\Controllers\CursoController;
 use App\Http\Controllers\ProfesorController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HistorialController;
-use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PicoyplacaController;
 
 Route::get("/", [HomeController::class, "index"])->name("admin.home")->middleware('can:admin.home');
 Route::resource('users', UserController::class)->only(['index', 'edit', 'update'])->names('admin.users');
 Route::patch('/users/{id}/toggle-status', [ClienteController::class, 'toggleStatus'])->name('admin.clientes.toggleStatus');
+Route::patch('/programador/{id}/toggle-status', [SecretariaController::class, 'toggleStatus'])->name('admin.secretarias.toggleStatus');
 
 //RUTAS ADMIN
 Route::get('/admin', [HomeController::class, 'index'])->name('admin.index')->middleware('auth');
 Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('admin.show_reservas')->middleware('auth', 'can:admin.show_reservas');
-
 
 //RUTAS USUARIOS ADMIN
 // Route::resource('/usuarios', UsuarioController::class)->names('admin.usuarios')->middleware('auth', 'can:admin.usuarios');
@@ -56,7 +51,10 @@ Route::resource('/eventos', EventController::class)->names('admin.events');
 //RUTAS para el historial clinico
 Route::get('/historial/pdf', [HistorialController::class, 'pdf'])->name('admin.historial.pdf')->middleware('auth', 'can:admin.historial');
 Route::resource('/historial', HistorialController::class)->names('admin.historial')->middleware('auth', 'can:admin.historial');
+
+//RUTAS para desplegar select
 Route::get('/admin/profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
+Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtenerCursos'])->name('obtenerCursos');
 
 // Route::middleware('can:admin.vehiculos')->group(function () {
 Route::resource('vehiculos', VehiculoController::class)->names('admin.vehiculos');

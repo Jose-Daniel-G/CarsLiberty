@@ -99,14 +99,21 @@ class SecretariaController extends Controller
         return redirect()->route('admin.secretarias.index')
             ->with(['title', 'Exito','info', 'Se actualizo la secretaria de forma correcta','icono', 'success']);
     }
-
-    public function destroy(Secretaria $secretaria)
+    public function toggleStatus($id) //DEACTIVATE
     {
-        $user = $secretaria->user;
-        $user->delete();
-        $secretaria->delete();
-
-        return redirect()->route('admin.secretarias.index')
-            ->with(['title', 'Exito','info', 'La secretaria se eliminó con éxito','icono', 'success']);
+        $user = User::findOrFail($id);
+        $user->status = !$user->status;
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Estado del usuario actualizado.');
     }
+    // public function destroy(Secretaria $secretaria)
+    // {
+    //     $user = $secretaria->user;
+    //     $user->delete();
+    //     $secretaria->delete();
+
+    //     return redirect()->route('admin.secretarias.index')
+    //         ->with(['title', 'Exito','info', 'La secretaria se eliminó con éxito','icono', 'success']);
+    // }
 }
