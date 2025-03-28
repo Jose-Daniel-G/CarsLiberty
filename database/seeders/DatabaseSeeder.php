@@ -21,9 +21,9 @@ class DatabaseSeeder extends Seeder
             SecretariaSeeder::class,
             ProfesorSeeder::class,
             CursoSeeder::class,
-            HorarioSeeder::class,
-            PicoyPlacaSeeder::class,
-            VehiculoSeeder::class,
+            // HorarioSeeder::class,
+            // PicoyPlacaSeeder::class,
+            // VehiculoSeeder::class,
             ClienteSeeder::class,
         ]);
         // $profesores = Profesor::factory()->count(10)->create();

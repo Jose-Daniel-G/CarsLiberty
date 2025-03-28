@@ -36,23 +36,22 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="curso_id">Cursos </label><b class="text-danger">*</b>
-                                <select name="curso_id" id="curso_select" class="form-control">
-                                    <option value="" selected disabled>Seleccione una opción</option>
+                                <label for="cursos">Cursos</label><b class="text-danger">*</b>
+                                <div id="curso_checkboxes">
                                     @foreach ($cursos as $curso)
-                                        <option value="{{ $curso->id }}">
-                                            {{ $curso->nombre }}
-                                            {{-- {{ $curso->nombre . ' - ' . $curso->ubicacion }} --}}
-                                        </option>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}" value="{{ $curso->id }}" class="form-check-input">
+                                            <label class="form-check-label" for="curso_{{ $curso->id }}">
+                                                {{ $curso->nombre }}
+                                            </label>
+                                        </div>
                                     @endforeach
-                                </select>
-                                @error('curso_id')
+                                </div>
+                                @error('cursos')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>
-
-
-
+                            
                             <div class="form-group">
                                 <label for="dia">Dia </label><b class="text-danger">*</b>
                                 <select class="form-control" name="dia" id="dia">

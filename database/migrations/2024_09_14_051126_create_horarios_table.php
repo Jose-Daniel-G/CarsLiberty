@@ -14,13 +14,11 @@ return new class extends Migration
             $table->time('hora_inicio');
             $table->time('hora_fin');
             $table->unsignedBigInteger('profesor_id');
-            $table->unsignedBigInteger('curso_id');
+            // $table->unsignedBigInteger('curso_id');
         
             // Si las tablas y campos existen tal como los mencionas
             $table->foreign('profesor_id')->references('id')->on('profesors')->onDelete('cascade');            
-            $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');            
-            // $table->foreignId('profesor_id')->constrained('profesors')->onDelete('cascade');            
-            // $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');            
+            // $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');           
             
             $table->timestamps();
         });

@@ -8,17 +8,19 @@ moto max horas = 4 && ,  min = 2 * REALIZADO
 
 no esta registrando el cliente
 
-SECRETARIA/ADMIN Agendar cantidad de horas del curso 
-
 Asistencia pendiente ==== si falta una clase inhabilitar las otras clases
 
 -----------------------------------------
--si se selecciona un dia despues esta tomando como si fuera el mismo dia, es decir esta arrojando un error
--se esta disparando error al obtener dtos del profesro - en computador de CARSLIBERTY alejo
+-NO SIEMPRE GENERA ESTE ERROR REVISAR EN EL MOMENTO
+    si se selecciona un dia despues esta tomando como si fuera el mismo dia,
+    ya que genera el mensaje es decir esta arrojando un error
+
+-REVISAR AQUI FUNCIONA CORRECTAMENTE
+    se esta disparando error al obtener dtos del profesro - en computador de CARSLIBERTY alejo
 
 
 agendar varios cursos para el mismo horario para el profesor
- no esta pintando si es B1
+ no esta pintando si esta agendado B1
 
 ---------------- AUN NO ------------------
 PROGRAMADOR PODER CANCELARLA O A FUTURO SOLICITAR CANCELACION DE CLASE

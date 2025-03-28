@@ -18,18 +18,30 @@ class Curso extends Model
     // {
     //     return $this->belongsToMany(Profesor::class, 'curso_profesor', 'curso_id', 'profesor_id');
     // }
-    
-    // public function profesores()
-    // {
-    //     return $this->belongsToMany(Profesor::class, 'curso_profesor');
-    // }
+
     public function profesores()
     {
-        return $this->belongsToMany(Profesor::class, 'curso_profesor', 'curso_id', 'profesor_id');
+        return $this->belongsToMany(Profesor::class, 'curso_profesor');
     }
+    // public function profesores()
+    // {
+    //     return $this->belongsToMany(Profesor::class, 'curso_profesor', 'curso_id', 'profesor_id');
+    // }
+
+    // INCIAL
+    // public function horarios()
+    // {
+    //     return $this->hasMany(Horario::class);
+    // }
+    // TABNINE
+    // public function horarios()
+    // {
+    //     return $this->belongsToMany(Horario::class, 'curso_horario', 'curso_id', 'horario_id');
+    // }
+    // Relación muchos a muchos con horarios
     public function horarios()
     {
-        return $this->hasMany(Horario::class);
+        return $this->belongsToMany(Horario::class);
     }
     public function events()
     {
@@ -46,7 +58,7 @@ class Curso extends Model
     public function clientes()
     {
         return $this->belongsToMany(Cliente::class, 'cliente_curso')
-        ->withPivot('horas_realizadas');
+            ->withPivot('horas_realizadas');
         // return $this->belongsToMany(Cliente::class, 'cliente_curso', 'curso_id', 'cliente_id');
     }
     public function historialCursos()

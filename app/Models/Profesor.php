@@ -17,14 +17,14 @@ class Profesor extends Model
     // {
     //     return $this->belongsToMany(Curso::class, 'curso_profesor', 'profesor_id', 'curso_id');
     // } 
-    // public function cursos()
-    // {
-    //     return $this->belongsToMany(Curso::class, 'curso_profesor');
-    // }
     public function cursos()
     {
-        return $this->belongsToMany(Curso::class, 'curso_profesor', 'profesor_id', 'curso_id');
+        return $this->belongsToMany(Curso::class, 'curso_profesor');
     }
+    // public function cursos()
+    // {
+    //     return $this->belongsToMany(Curso::class, 'curso_profesor', 'profesor_id', 'curso_id');
+    // }
     public function horarios(){
         return $this->hasMany(Horario::class);
     }
