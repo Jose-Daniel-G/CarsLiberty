@@ -31,16 +31,14 @@ class CursoController extends Controller
             'nombre' => 'required',
             'horas_requeridas' => 'required|integer|min:1',
             'estado' => 'required|in:A,I', // Asegúrate de que el estado sea válido
-            // 'ubicacion' => 'nullable',
-            // 'descripcion' => 'required',
+            // 'ubicacion' => 'nullable','descripcion' => 'required',
         ]);
 
         // Crear un nuevo curso
         Curso::create([
             'nombre' => $request->nombre,
-            // 'descripcion' => $request->descripcion,
             'horas_requeridas' => $request->horas_requeridas,
-            'estado' => $request->estado,
+            'estado' => $request->estado,// 'descripcion' => $request->descripcion,
         ]);
 
         // Redireccionar con mensaje de éxito

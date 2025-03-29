@@ -103,10 +103,6 @@
     </div>
 @stop
 
-@section('css')
-
-@stop
-
 @section('js')
     <script>
         // carga contenido de tabla en  curso_info
@@ -114,17 +110,20 @@
             var profesor_id = $('#profesor_id').val();
             var url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}";
             url = url.replace(':id', profesor_id);
-            // alert(profesor_id);
+
+            // console.log("Profesor ID:", profesor_id);
+            // console.log("URL generada:", url);
 
             if (profesor_id) {
                 $.ajax({
                     url: url,
                     type: 'GET',
                     success: function(data) {
-                        // console.log(data);
+                        // console.log("Respuesta del servidor:", data);
                         $('#curso_info').html(data);
                     },
-                    error: function() {
+                    error: function(xhr) {
+                        // console.log("Error AJAX:", xhr.responseText);
                         alert('Error al obtener datos del curso');
                     }
                 });
@@ -132,6 +131,7 @@
                 $('#curso_info').html('');
             }
         });
+
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -152,10 +152,9 @@
                 if (selectedTime < '06:00' || selectedTime > '20:00') {
                     // si es asi, establecer la hora seleccionada en null
                     this.value = null;
-                    alert('');
                     Swal.fire({
                         title: "No fue posible",
-                        text: "Por favor seleccione una fecha entre 08:00 y las 20:00",
+                        text: "Por favor seleccione una fecha entre 06:00 am y las 8:00 pm",
                         icon: "info"
                     });
                 }
@@ -173,7 +172,7 @@
                     this.value = null;
                     Swal.fire({
                         title: "No fue posible",
-                        text: "Por favor seleccione una fecha entre 08:00 y las 20:00",
+                        text: "Por favor seleccione una fecha entre 06:00 am y las 8:00 pm",
                         icon: "info"
                     });
                 }

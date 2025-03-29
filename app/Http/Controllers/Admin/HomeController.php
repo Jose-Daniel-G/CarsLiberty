@@ -43,9 +43,10 @@ class HomeController extends Controller
             $clientes = Cliente::all();
 
 
-            $profesorSelect =  DB::table('profesors') // SE EJECUTA PARA DESPLEGAR EL SCHEDULE DE LA SEMANA DE LOS PROFESORES EN INDEX!
-                ->join('horarios', 'horarios.profesor_id', '=', 'profesors.id')
-                ->join('cursos', 'horarios.curso_id', '=', 'cursos.id')
+            $profesorSelect = DB::table('profesors')
+                ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
+                ->join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id')
+                ->join('cursos', 'horario_profesor_curso.curso_id', '=', 'cursos.id') // Usamos la tabla intermedia
                 ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
                 ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
                 ->join('users', 'clientes.user_id', '=', 'users.id')
@@ -58,17 +59,18 @@ class HomeController extends Controller
                 ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
                 ->limit(100)
                 ->get();
+
             $role = 'admin'; // Asegúrate de tener un campo 'role'
 
             return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'events', 'total_configuraciones', 'role'));
         } else {
             $cliente = Cliente::where('user_id', Auth::id())->first();
-            // dd($cliente);    
             $cursos = $cliente->cursos; // Cursos del cliente
 
-            $profesorSelect =  DB::table('profesors')
-                ->join('horarios', 'horarios.profesor_id', '=', 'profesors.id')
-                ->join('cursos', 'horarios.curso_id', '=', 'cursos.id')
+            $profesorSelect = DB::table('profesors')
+                ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
+                ->join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id')
+                ->join('cursos', 'horario_profesor_curso.curso_id', '=', 'cursos.id') // Usamos la tabla intermedia
                 ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
                 ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
                 ->join('users', 'clientes.user_id', '=', 'users.id')

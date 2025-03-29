@@ -16,20 +16,15 @@ class Horario extends Model
         return $this->belongsTo(Profesor::class);
     }
 
-    // // Relación con Curso (hasMany, aunque esto podría necesitar revisión)
-    // public function curso()
-    // {
-    //     return $this->belongsTo(Curso::class, 'curso_id');
-    // }
-    // Relación muchos a muchos con cursos
-    // public function cursos()
-    // {
-    //     return $this->belongsToMany(Curso::class);
-    // }
+    public function horarioProfesorCurso()
+    {
+        return $this->hasMany(HorarioProfesorCurso::class, 'horario_id');
+    }
     public function cursos()
     {
-        return $this->belongsToMany(Curso::class, 'curso_horario');
+        return $this->belongsToMany(Curso::class, 'horario_profesor_curso');
     }
+    
     public function events()
     {
         return $this->hasMany(Event::class);
