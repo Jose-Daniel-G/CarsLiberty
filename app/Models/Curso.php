@@ -21,8 +21,9 @@ class Curso extends Model
 
     public function profesores()
     {
-        return $this->belongsToMany(Profesor::class, 'curso_profesor');
+        return $this->belongsToMany(Profesor::class, 'horario_profesor_curso');
     }
+    
     // public function profesores()
     // {
     //     return $this->belongsToMany(Profesor::class, 'curso_profesor', 'curso_id', 'profesor_id');
@@ -57,7 +58,7 @@ class Curso extends Model
     // }
     public function clientes()
     {
-        return $this->belongsToMany(Cliente::class, 'cliente_curso')
+        return $this->belongsToMany(Cliente::class, 'horario_profesor_curso')
             ->withPivot('horas_realizadas');
         // return $this->belongsToMany(Cliente::class, 'cliente_curso', 'curso_id', 'cliente_id');
     }
