@@ -10,19 +10,17 @@ class Horario extends Model
     use HasFactory;
     protected $fillable = ['dia', 'hora_inicio', 'hora_fin', 'profesor_id', 'curso_id'];
 
-    // Relación con Profesor (belongsTo)
-    public function profesor()
+    public function profesores()
     {
-        return $this->belongsTo(Profesor::class);
+        return $this->belongsToMany(Profesor::class, 'horario_profesor_curso', 'horario_id', 'profesor_id');
     }
-
-    public function horarioProfesorCurso()
-    {
-        return $this->hasMany(HorarioProfesorCurso::class, 'horario_id');
-    }
+    // public function horarioProfesorCurso()
+    // {
+    //     return $this->hasMany(HorarioProfesorCurso::class, 'horario_id');
+    // }
     public function cursos()
     {
-        return $this->belongsToMany(Curso::class, 'curso_horario');
+        return $this->belongsToMany(Curso::class, 'horario_profesor_curso', 'horario_id', 'curso_id');
     }
     public function events()
     {

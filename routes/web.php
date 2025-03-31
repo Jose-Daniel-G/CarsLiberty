@@ -7,12 +7,18 @@ use App\Http\Controllers\HistorialCursoController;
 use App\Http\Controllers\HorarioController;
 
 use App\Http\Controllers\WebController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
 // Auth::routes(['register'=>false]);
 // Route::get('/', function () {return view('welcome');});
-Route::get('/', function () {return view('auth.login');});
+// Route::get('/', function () {return view('auth.login');});
+## 1 Rutas Públicas
+Route::get('/', function () {
+     return Auth::check() ? app(HomeController::class)->index() : view('auth.login');
+ });
+ 
 
 Route::get('/register', function () {return redirect('/');});
 
