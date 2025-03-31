@@ -569,7 +569,7 @@
                         }
                     },
                     error: function(xhr) {
-                        console.error('Error al cargar los profesores:', xhr.responseText);
+                        // console.error('Error al cargar los profesores:', xhr.responseText);
                         alert('Error al cargar los profesores. Intenta nuevamente.');
                     }
                 });

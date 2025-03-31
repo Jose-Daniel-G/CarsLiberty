@@ -8,10 +8,7 @@
 
     @section('content')
 
-        <div class="row">
-            <h1>Actualizacion curso: {{ $curso->nombre }} {{ $curso->ubicacion }}</h1>
-
-        </div>
+        <div class="row"> <h1>Actualizacion curso: {{  $horario->cursos->pluck('nombre')->join(', ') }}</h1></div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-outline card-primary">
