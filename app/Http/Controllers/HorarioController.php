@@ -30,9 +30,10 @@ class HorarioController extends Controller
         return view('admin.horarios.create', compact('profesores', 'cursos', 'horarios'));
     }
 
-    public function show_datos_cursos($id)
+    public function show_datos_cursos($id) 
     {
         try {
+<<<<<<< HEAD
             // Obtener los cursos asignados al profesor
 
             $cursos_profesor = Curso::whereHas('horarios', function ($query) use ($id) {
@@ -67,19 +68,63 @@ class HorarioController extends Controller
                 ->get();
             // dd(['titulo' => 'Datos de horarios asignados', 'horarios asignados' => $horarios_asignados->toArray()]);
 
+=======
+            // Obtener los cursos que tiene asignado el profesor
+            $cursos_profesor = Curso::whereHas('profesores', function ($query) use ($id) {
+                $query->where('profesor_id', $id);
+            })->get();
+    
+            // Obtener horarios con profesor y curso
+            $horarios = Horario::whereHas('horarioProfesorCurso', function ($query) use ($id) {
+                $query->where('profesor_id', $id);
+            })->with('horarioProfesorCurso.curso')->get();
+    
+            // Obtener horarios asignados a los cursos
+            $horarios_asignados = CalendarEvent::select([
+                'events.id AS evento_id',
+                'events.profesor_id',
+                'events.curso_id',
+                'events.start AS hora_inicio',
+                'events.end AS hora_fin',
+                \DB::raw('DAYNAME(events.start) AS dia'),
+                'users.id AS user_id',
+                'users.name AS user_nombre',
+                'cursos.nombre AS curso_nombre'
+            ])
+            ->join('cursos', 'events.curso_id', '=', 'cursos.id')
+            ->join('clientes', 'events.cliente_id', '=', 'clientes.id')
+            ->join('users', 'clientes.user_id', '=', 'users.id')
+            ->where('events.profesor_id', $id)
+            ->where('events.start', '>=', Carbon::now()->startOfWeek())
+            ->where('events.start', '<', Carbon::now()->endOfWeek())
+            ->orderBy('events.start', 'ASC')
+            ->limit(100)
+            ->get();
+    
+>>>>>>> 70c0c682aa3c2ca1bef3774c65d098efdad0d0a6
             // Traducir los días al español
             $horarios_asignados = $horarios_asignados->map(function ($horario) {
                 $horario->dia = traducir_dia($horario->dia);
                 return $horario;
             });
+<<<<<<< HEAD
 
             return view('admin.horarios.show_datos_cursos', compact('cursos_profesor', 'horarios', 'horarios_asignados'));
+=======
+    
+            return view('admin.horarios.show_datos_cursos', compact('cursos_profesor', 'horarios', 'horarios_asignados'));
+    
+>>>>>>> 70c0c682aa3c2ca1bef3774c65d098efdad0d0a6
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error', 'detalle' => $exception->getMessage()]);
         }
     }
+<<<<<<< HEAD
 
 
+=======
+    
+>>>>>>> 70c0c682aa3c2ca1bef3774c65d098efdad0d0a6
     public function store(Request $request)
     {
         // Validar los datos
@@ -91,6 +136,7 @@ class HorarioController extends Controller
             'cursos' => 'required|array|min:1', // Al menos 1 curso
             'cursos.*' => 'exists:cursos,id',
         ]);
+<<<<<<< HEAD
 
         // Normalizar el formato de las horas (si en la BD se guarda con segundos, por ejemplo "H:i:s")
         $horaInicio = Carbon::parse($validatedData['hora_inicio'])->format('H:i:s');
@@ -132,6 +178,47 @@ class HorarioController extends Controller
             ]);
 
             // Se asocian los cursos a ese horario
+=======
+        // dd($validatedData);
+        // // Verificar si el horario ya existe para ese día, rango de horas y curso
+        // $horarioCurso = Horario::where('dia', $request->dia)
+        //     ->where('curso_id', $request->curso_id) // Filtrar por curso
+        //     ->where(function ($query) use ($request) {
+        //         $query->where(function ($query) use ($request) {
+        //             $query->where('hora_inicio', '>=', $request->hora_inicio)
+        //                 ->where('hora_inicio', '<', $request->hora_fin);
+        //         })
+        //             ->orWhere(function ($query) use ($request) {
+        //                 $query->where('hora_fin', '>', $request->hora_inicio)
+        //                     ->where('hora_fin', '<=', $request->hora_fin);
+        //             })
+        //             ->orWhere(function ($query) use ($request) {
+        //                 $query->where('hora_inicio', '<', $request->hora_inicio)
+        //                     ->where('hora_fin', '>', $request->hora_fin);
+        //             });
+        //     })
+        //     ->exists();
+
+        // // Si ya existe un horario en ese rango para el mismo curso con otro profesor
+        // if ($horarioCurso) {
+        //     return redirect()->back()
+        //         ->withInput()
+        //         ->with('mensaje', 'Ya existe un horario para el curso con otro profesor en ese rango de tiempo')
+        //         ->with('icono', 'error');
+        // }  
+
+        // DB::beginTransaction();
+        try {
+            // Verificar si ya existe el horario con los mismos datos
+            $horario = Horario::firstOrCreate([
+                'dia' => $validatedData['dia'],
+                'hora_inicio' => $validatedData['hora_inicio'],
+                'hora_fin' => $validatedData['hora_fin'],
+                'profesor_id' => $validatedData['profesor_id'],
+            ]);
+        // dd($horario);
+
+>>>>>>> 70c0c682aa3c2ca1bef3774c65d098efdad0d0a6
             foreach ($validatedData['cursos'] as $cursoId) {
                 DB::table('horario_profesor_curso')->updateOrInsert([
                     'horario_id' => $horario->id,
@@ -139,6 +226,12 @@ class HorarioController extends Controller
                     'profesor_id' => $validatedData['profesor_id']
                 ]);
             }
+<<<<<<< HEAD
+=======
+        
+
+            // DB::commit();
+>>>>>>> 70c0c682aa3c2ca1bef3774c65d098efdad0d0a6
 
             return redirect()->route('admin.horarios.create')
                 ->with('info', 'Se registraron los cursos para el horario correctamente.')
@@ -148,6 +241,46 @@ class HorarioController extends Controller
             return back()->with('error', 'Ocurrió un error al registrar el horario.');
         }
     }
+<<<<<<< HEAD
+=======
+
+
+
+
+    // Verificar si existe conflicto de horario con el mismo profesor en el mismo día y hora
+    // $horarioProfesor = Horario::where('dia', $request->dia)
+    //     ->where('profesor_id', $request->profesor_id) // Filtrar por el mismo profesor
+    //     ->where(function ($query) use ($request) {
+    //         $query->where(function ($query) use ($request) {
+    //             $query->where('hora_inicio', '>=', $request->hora_inicio)
+    //                 ->where('hora_inicio', '<', $request->hora_fin);
+    //         })
+    //             ->orWhere(function ($query) use ($request) {
+    //                 $query->where('hora_fin', '>', $request->hora_inicio)
+    //                     ->where('hora_fin', '<=', $request->hora_fin);
+    //             })
+    //             ->orWhere(function ($query) use ($request) {
+    //                 $query->where('hora_inicio', '<', $request->hora_inicio)
+    //                     ->where('hora_fin', '>', $request->hora_fin);
+    //             });
+    //     })
+    //     ->exists();
+
+
+    // if ($horarioProfesor) {
+    //     return redirect()->back()
+    //         ->withInput()
+    //         ->with('mensaje', 'El profesor ya tiene asignado un horario en ese rango de tiempo')
+    //         ->with('icono', 'error');
+    // }
+
+    // Crear el nuevo horario
+
+    // Asociar los cursos
+    // $horario->cursos()->attach($request->cursos);
+
+    // }
+>>>>>>> 70c0c682aa3c2ca1bef3774c65d098efdad0d0a6
 
 
     public function show(Horario $horario)
