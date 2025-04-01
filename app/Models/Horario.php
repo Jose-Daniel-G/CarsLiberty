@@ -14,22 +14,10 @@ class Horario extends Model
     {
         return $this->belongsToMany(Profesor::class, 'horario_profesor_curso', 'horario_id', 'profesor_id');
     }
-<<<<<<< HEAD
     public function cursos()
     {
         return $this->belongsToMany(Curso::class, 'horario_profesor_curso', 'horario_id', 'curso_id');
-=======
-
-    public function horarioProfesorCurso()
-    {
-        return $this->hasMany(HorarioProfesorCurso::class, 'horario_id');
     }
-    public function cursos()
-    {
-        return $this->belongsToMany(Curso::class, 'horario_profesor_curso');
->>>>>>> 70c0c682aa3c2ca1bef3774c65d098efdad0d0a6
-    }
-    
     public function events()
     {
         return $this->hasMany(Event::class);
