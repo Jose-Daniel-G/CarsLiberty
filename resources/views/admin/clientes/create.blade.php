@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="cc">Cc </label><b class="text-danger">*</b>
+                                        <label for="cc">CC</label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="cc"
                                             value="{{ old('cc') }}" required>
                                         @error('cc')

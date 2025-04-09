@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Helpers\DateHelper;
 use App\Models\Curso;
 use App\Models\Profesor;
 use App\Models\Horario;
@@ -26,15 +26,13 @@ class HorarioController extends Controller
         $profesores = Profesor::all();
         $cursos = Curso::all();
         $horarios = Horario::with('profesores', 'cursos')->get(); // viene con la relacion del horario
-
         return view('admin.horarios.create', compact('profesores', 'cursos', 'horarios'));
     }
 
-    public function show_datos_cursos($id)
+    public function show_datos_cursos($id) //show datatable schedules for the teachers
     {
         try {
             // Obtener los cursos asignados al profesor
-
             $cursos_profesor = Curso::whereHas('horarios', function ($query) use ($id) {
                 $query->whereHas('profesores', function ($query) use ($id) {
                     $query->where('profesor_id', $id);
@@ -69,7 +67,7 @@ class HorarioController extends Controller
 
             // Traducir los días al español
             $horarios_asignados = $horarios_asignados->map(function ($horario) {
-                $horario->dia = traducir_dia($horario->dia);
+                $horario->dia = DateHelper::traducirDia($horario->dia);
                 return $horario;
             });
 
@@ -80,7 +78,7 @@ class HorarioController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request)//teacher schedule
     {
         // Validar los datos
         $validatedData = $request->validate([
@@ -114,14 +112,15 @@ class HorarioController extends Controller
                     });
             })
             ->exists();
-
+            // dd($horarioExistente);
         if ($horarioExistente) {
+
             return redirect()->back()
                 ->withInput()
-                ->with('mensaje', 'El profesor ya tiene una clase agendada en ese rango de tiempo.')
+                ->with('info', 'El profesor ya tiene asignado un horario en ese rango de tiempo.')
                 ->with('icono', 'error');
         }
-
+// 
         try {
             // Si no existe un horario en ese rango, se crea el horario
             $horario = Horario::firstOrCreate([
@@ -149,7 +148,6 @@ class HorarioController extends Controller
         }
     }
 
-
     public function show(Horario $horario)
     {
         $horario->load('profesores', 'cursos'); // Cargar relaciones en la instancia
@@ -162,13 +160,11 @@ class HorarioController extends Controller
         $curso = $horario->curso;
         $profesores = Profesor::all();
         $cursos = Curso::all();
-
         return view('admin.horarios.edit', compact('horario', 'curso', 'profesores', 'cursos'));
     }
 
     public function update(Request $request, Horario $horario)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
             'dia' => 'required',
             'hora_inicio' => 'required',

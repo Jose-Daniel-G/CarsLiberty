@@ -46,8 +46,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="cc">Cc </label><b class="text-danger">*</b>
-                                        <input type="text" class="form-control" name="cc"
+                                        <label for="cc">CC </label><b class="text-danger">*</b>
+                                        <input type="number" class="form-control" name="cc"
                                             value="{{ $cliente->cc }}" required>
                                         @error('cc')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
@@ -66,8 +66,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="genero">Sexo </label><b class="text-danger">*</b>
@@ -86,16 +85,19 @@
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="correo">Correo </label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="correo"
-                                            value="{{ $cliente->correo }}" required>
+                                            value="{{ $cliente->user->email }}" required>
                                         @error('correo')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
                                         @enderror
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="direccion">Direccion </label><b class="text-danger">*</b>
@@ -106,8 +108,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="contacto_emergencia">Contacto Emergencia</label><b class="text-danger">*</b>

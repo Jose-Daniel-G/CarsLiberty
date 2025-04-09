@@ -15,11 +15,9 @@ return new class extends Migration
             $table->integer('cc')->unique();
             $table->string('genero' , 10);
             $table->integer('celular');
-            $table->string('correo' , 40)->unique();
             $table->string('direccion' , 150);
-            $table->integer('contacto_emergencia');
+            $table->integer('contacto_emergencia')->nullable();
             $table->string('observaciones' , 255)->nullable();
-
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

@@ -9,7 +9,7 @@
     @section('content')
 
         <div class="row">
-            <h1>Modificar Secretaria: {{ $secretaria->nombres }} {{ $secretaria->apellidos }}</h1>
+            <h1>Modificar Programador: {{ $secretaria->nombres }} {{ $secretaria->apellidos }}</h1>
 
         </div>
         <div class="row">
@@ -46,8 +46,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="cc">Cc </label><b class="text-danger">*</b>
-                                        <input type="text" class="form-control" name="cc"
+                                        <label for="cc">CC </label><b class="text-danger">*</b>
+                                        <input type="number" class="form-control" name="cc"
                                             value="{{ $secretaria->cc }}" required>
                                         @error('cc')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>

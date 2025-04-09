@@ -34,10 +34,8 @@
                                 <th>Nombres</th>
                                 <th>Apellidos</th>
                                 <th>cc</th>
-                                <th>Celular</th>
                                 <th>Direccion</th>
                                 <th>Acciones</th>
-                                <th>Activo</th>
                                 {{-- <th>Email</th> --}}
                                 {{-- <th>Fecha de Nacimiento</th> --}}
                             </tr>
@@ -50,22 +48,17 @@
                                     <td scope="row">{{ $cliente->nombres }}</td>
                                     <td scope="row">{{ $cliente->apellidos }}</td>
                                     <td scope="row">{{ $cliente->cc }}</td>
-                                    <td scope="row">{{ $cliente->celular }}</td>
                                     <td scope="row">{{ $cliente->direccion }}</td>
                                     {{-- <td scope="row">{{ $cliente->user->email }}</td> --}}
-                                    <td scope="row ">
-                                        <div class="text-center">
-                                            <div class="btn-group" role="group" aria-label="basic example">
+                                    <td scope="row "><div class="btn-group" role="group" aria-label="basic example">
+                                            
                                                 <a href="{{ route('admin.clientes.show', $cliente->id) }}"
                                                     class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                                 <a href="{{ route('admin.clientes.edit', $cliente->id) }}"
                                                     class="btn btn-success btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td scope="row">
+                                            
                                         <div class="text-center">
                                             <form id="delete-form-{{ $cliente->id }}"
                                                 action="{{ route('admin.clientes.toggleStatus', $cliente->user->id) }}"
@@ -80,6 +73,7 @@
                                                 </button>
                                             </form>
                                         </div>
+                                    </div>
                                     </td>
                                 </tr>
                             @endforeach

@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('cursos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->string('descripcion')->nullable();
             $table->integer('horas_requeridas');
             $table->string('estado');
             $table->timestamps();

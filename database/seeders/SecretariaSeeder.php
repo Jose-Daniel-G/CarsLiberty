@@ -26,7 +26,7 @@ class SecretariaSeeder extends Seeder
         Secretaria::create([
             'nombres' => 'Secretaria',
             'apellidos' => 'Catrana',
-            'cc' => 'secretaria@email.com',
+            'cc' => '1112036545',
             'celular' => '3147078256',
             'fecha_nacimiento' => '22/10/2010',
             'direccion' => 'calle 5 o este',

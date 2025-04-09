@@ -41,7 +41,19 @@
                                     <td scope="row">{{ $contador++ }}</td>
                                     <td scope="row">{{ $curso->nombre }}</td>
                                     <td scope="row">{{ $curso->horas_requeridas }}</td>
-                                    <td scope="row">{{ $curso->estado == 'A' ? 'Activo' : 'Inactivo' }}</td>
+                                    <td scope="row">
+                                        <form id="disable-form-{{ $curso->id }}"
+                                            action="{{ route('admin.cursos.toggleStatus', $curso->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
+                                            <button type="submit"
+                                                class="btn {{ $curso->estado ? 'btn-success' : 'btn-danger' }}">
+                                                {!! $curso->estado
+                                                    ? '<i class="fa-solid fa-square-check"></i>'
+                                                    : '<i class="fa-solid fa-circle-xmark"></i>' !!}
+                                            </button>
+                                        </form>
+                                    </td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">
                                             <a href="{{ route('admin.cursos.show', $curso->id) }}"
@@ -50,10 +62,13 @@
                                             <a href="{{ route('admin.cursos.edit', $curso->id) }}"
                                                 class="btn btn-success btn-sm"><i class="fas fa-edit"></i>
                                             </a>
-                                            <form id="delete-form-{{ $curso->id }}" action="{{ route('admin.cursos.destroy', $curso->id) }}" method="POST">
+
+                                            <form id="delete-form-{{ $curso->id }}"
+                                                action="{{ route('admin.cursos.destroy', $curso->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $curso->id }})"><i
+                                                <button type="button" class="btn btn-danger"
+                                                    onclick="confirmDelete({{ $curso->id }})"><i
                                                         class="fas fa-trash"></i></button>
                                             </form>
 
@@ -70,17 +85,17 @@
 @stop
 
 @section('js')
-    
-    
-    
+
+
+
 
     <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 
     <script>
         function confirmDelete(id) {

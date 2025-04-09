@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombres');
             $table->string('apellidos');
-            $table->string('cc', 100)->unique();
+            $table->integer('cc')->unique();
             $table->string('celular', 100);
             $table->string('fecha_nacimiento', 100);
             $table->string('direccion', 100);

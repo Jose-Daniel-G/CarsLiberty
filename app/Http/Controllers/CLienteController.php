@@ -35,22 +35,29 @@ class ClienteController extends Controller
             'direccion' => 'required',
             'contacto_emergencia' => 'required|max:11',
         ]);
-
+//  dd($request->all());
         try {      
-            // dd($request->cursos);
-            
+                       
             $usuario = User::create([
                 'name' => $request->nombres,
                 'email' => $request->correo,
                 'password' => Hash::make($request->password ?? $request->cc),
             ]);
 
-            $usuario->assignRole('cliente');
 
-            $validatedData['user_id'] = $usuario->id;
-            // $validatedData['fecha_nacimiento'] = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
-            
-            $cliente = Cliente::create($validatedData);
+            $cliente = new Cliente();
+            $cliente->user_id = $usuario->id;
+            $cliente->nombres = $request->nombres;
+            $cliente->apellidos = $request->apellidos;
+            $cliente->genero = $request->genero;
+            $cliente->cc = $request->cc;
+            $cliente->celular = $request->celular;
+            $cliente->direccion = $request->direccion;
+            $cliente->contacto_emergencia = $request->contacto_emergencia;
+            $cliente->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
+
+            $cliente->save();
+            $usuario->assignRole('cliente');
             
             // Asignar los cursos y registrar horas iniciales en la tabla `cliente_curso`
             if ($request->cursos) {
@@ -60,15 +67,10 @@ class ClienteController extends Controller
             }
 
             return redirect()->route('admin.clientes.index')
-                ->with(['title', 'Exito','info', 'Se registró al Cliente de forma correcta','icono', 'success']);
+                ->with(['title'=> 'Exito','info'=> 'Se registró al Cliente de forma correcta','icono'=> 'success']);
                 
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->errorInfo[1] == 1062) {
-                return back()->withErrors(['correo' => 'El correo ya está en uso. Por favor, utiliza otro.'])
-                    ->withInput();
-            }
-            return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])
-                ->withInput();
+        } catch (\Exception $exception) {
+            return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
     }
 
@@ -109,14 +111,14 @@ class ClienteController extends Controller
             $usuario->password = Hash::make($request->cc); // Establecer la contraseña a la cédula
             $usuario->save();
         }
-
+        // unset($validatedData['correo']);
         // Actualizar los datos del Cliente
         $cliente->update($validatedData);
 
         $cliente->cursos()->sync($request->cursos ?? []); // Sincroniza los cursos seleccionados en el formulario
 
         return redirect()->route('admin.clientes.index')
-            ->with(['title', 'Exito', 'info', 'Cliente actualizado correctamente.', 'icono', 'success']);
+            ->with(['title'=> 'Exito', 'info'=>'Cliente actualizado correctamente.', 'icono'=> 'success']);
     }
 
     public function toggleStatus($id) //DEACTIVATE
@@ -125,7 +127,7 @@ class ClienteController extends Controller
         $user->status = !$user->status;
         $user->save();
     
-        return redirect()->back()->with('success', 'Estado del usuario actualizado.');
+        return redirect()->back()->with(['success'=> 'Estado del usuario actualizado.']);
     }
 
     // public function destroy(Cliente $Cliente)

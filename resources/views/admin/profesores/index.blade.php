@@ -38,7 +38,7 @@
                                 <th>Nro</th>
                                 <th>Nombres y Apellidos</th>
                                 <th>Telefono</th>
-                                {{-- <th>Especialidad</th> --}}
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -49,7 +49,20 @@
                                     <td scope="row">{{ $contador++ }}</td>
                                     <td scope="row">{{ $profesor->nombres . ' ' . $profesor->apellidos }}</td>
                                     <td scope="row">{{ $profesor->telefono }}</td>
-                                    {{-- <td scope="row">{{ $profesor->especialidad }}</td> --}}
+                                    <td scope="row">                                            <div class="text-center">
+                                        <form id="disable-form-{{ $profesor->id }}"
+                                            action="{{ route('admin.profesors.toggleStatus', $profesor->user->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
+                                            <button type="submit"
+                                                class="btn {{ $profesor->user->status ? 'btn-success' : 'btn-danger' }}">
+                                                {!! $profesor->user->status
+                                                    ? '<i class="fa-solid fa-square-check"></i>'
+                                                    : '<i class="fa-solid fa-circle-xmark"></i>' !!}
+                                            </button>
+                                        </form>
+                                    </div></td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">
                                             <a href="{{ route('admin.profesores.show', $profesor->id) }}"
@@ -66,6 +79,7 @@
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
+
                                         </div>
                                     </td>
                                 </tr>

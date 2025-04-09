@@ -187,10 +187,10 @@
                 <div class="tab-pane fade" id="custom-tabs-three-home" role="tabpanel"
                     aria-labelledby="custom-tabs-three-home-tab">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <h3 class="card-title">Calendario de atencion de profesores </h3>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-end">
+                        <div class="col-md d-flex justify-content-end">
                             <label for="curso_id">Cursos </label><b class="text-danger">*</b>
                         </div>
                         <div class="col-md-4">
@@ -198,10 +198,17 @@
                                 <option value="" selected disabled>Seleccione una opción</option>
                                 @foreach ($profesorSelect as $curso)
                                     <option value="{{ $curso->id }}">
-                                        {{ $curso->cursos." - ".$curso->nombres }} </option>
+                                        {{ $curso->cursos . ' - ' . $curso->nombres }} </option>
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#claseModal">
+                                Agendar
+                            </button>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -331,20 +338,30 @@
             //-------------------------------------------------------------
             // VALIDAR SI LA FECHA YA NO HA PASADO
             const fechaReservaInput = document.getElementById('fecha_reserva');
+            // Obtener la fecha actual en la zona horaria del usuario
+            function getLocalDate() {
+                let today = new Date();
+                let year = today.getFullYear();
+                let month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                let day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                return `${year}-${month}-${day}`;
+            }
+
             // Escuchar el evento de cambio en el campo de fecha de reserva
             fechaReservaInput.addEventListener('change', function() {
-                let selectedDate = this.value; //Obtener fecha seleccionada
-                //Obetner la fecha actual en el formato ISO (yyyy-mm-dd)
-                let today = new Date().toISOString().slice(0, 10);
-                // verificar si la fecha selecionada es anterior a la fecha actual
+                let selectedDate = this.value; // Obtener fecha seleccionada
+                let today = getLocalDate(); // Obtener la fecha local correcta
+
+                // Verificar si la fecha seleccionada es anterior a la fecha actual
                 if (selectedDate < today) {
-                    // si es asi, establecer la fecha seleccionada en null
                     this.value = null;
-                    alert('No se puede seleccionar una fecha pasada');
+                    Swal.fire({
+                        title: "No es posible",
+                        text: "No se puede seleccionar una fecha pasada",
+                        icon: "warning"
+                    });
                 }
-
             });
-
             //----------------------------------------------------------------
             // VALIDAR SI LA HORA YA NO HA PASADO
             const HoraIncioInput = document.getElementById('hora_inicio');
@@ -364,7 +381,7 @@
                         this.value = ''; // Limpiar el campo de entrada
                         Swal.fire({
                             title: "No es posible",
-                            text: "Por favor seleccione una hora entre las 06:00 y las 20:00.",
+                            text: "Por favor seleccione una hora entre las 06:00 am y las 8:00 pm.",
                             icon: "warning"
                         });
                         return; // Terminar la ejecución si está fuera de rango
@@ -373,7 +390,7 @@
                     // Obtener la fecha seleccionada del input de fecha
                     let selectedDate = fechaReservaInput.value;
                     let today = now.toISOString().slice(0,
-                    10); // Obtener la fecha actual en formato YYYY-MM-DD
+                        10); // Obtener la fecha actual en formato YYYY-MM-DD
 
                     // Verificar si la fecha seleccionada es hoy
                     if (selectedDate === today) {
@@ -386,7 +403,8 @@
                             selectedHour < currentHour ||
                             // Si la hora seleccionada es menor que la hora actual
                             (selectedHour === currentHour && selectedMinutes <
-                            currentMinutes) // O si es la misma hora pero los minutos seleccionados son menores
+                                currentMinutes
+                            ) // O si es la misma hora pero los minutos seleccionados son menores
                         ) {
                             this.value = ''; // Limpiar el campo de entrada
                             Swal.fire({
@@ -454,20 +472,20 @@
             if ($('#custom-tabs-three-profile').hasClass('active')) {
                 calendar.render();
             }
-                    var url = "{{ route('admin.horarios.show_reserva_profesores') }}";
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            console.log(data);
-                            // Asegúrate de que 'data' esté en el formato correcto
-                            calendar.addEventSource(data); // Añade los eventos al calendario
-                        },
-                        error: function() {
-                            alert('Error al obtener datos del profesor');
-                        }
-                    });
+            var url = "{{ route('admin.horarios.show_reserva_profesores') }}";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    // Asegúrate de que 'data' esté en el formato correcto
+                    calendar.addEventSource(data); // Añade los eventos al calendario
+                },
+                error: function() {
+                    alert('Error al obtener datos del profesor');
+                }
+            });
         });
 
         // carga contenido de tabla en  curso_info
@@ -613,23 +631,7 @@
             });
         });
     </script>
-    <script>
-        /// MODAL SOLO PERMITE EL  MES ACTUAL
-        // Obtener la fecha actual
-        var today = new Date();
 
-        // Obtener el primer día del mes actual
-        var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-        var firstDayString = firstDay.toISOString().split('T')[0];
-
-        // Obtener el último día del mes actual
-        var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        var lastDayString = lastDay.toISOString().split('T')[0];
-
-        // Asignar los valores min y max al input de fecha
-        document.getElementById('fecha_reserva').setAttribute('min', firstDayString);
-        document.getElementById('fecha_reserva').setAttribute('max', lastDayString);
-    </script>
     {{-- <script>
         @if (session('error'))
             toastr.error('{{ session('error') }}');

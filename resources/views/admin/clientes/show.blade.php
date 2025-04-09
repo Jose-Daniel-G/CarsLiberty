@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="cc">Cc </label>
+                                    <label for="cc">CC </label>
                                     <p>{{ $cliente->cc }}</p>
 
                                 </div>

@@ -161,5 +161,12 @@ class ProfesorController extends Controller
             return response()->json(['message' => 'Error al cargar los profesores: ' . $e->getMessage()], 500);
         }
     }
+    public function toggleStatus($id) //DEACTIVATE
+    {
+        $user = User::findOrFail($id);
+        $user->status = !$user->status;
+        $user->save();
 
+        return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
+    }
 }

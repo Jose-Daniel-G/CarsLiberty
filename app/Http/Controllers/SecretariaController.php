@@ -23,37 +23,41 @@ class SecretariaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'nombres' => 'required',
             'apellidos' => 'required',
             'cc' => 'required|unique:secretarias',
             'celular' => 'required',
             'direccion' => 'required',
-            'email' => 'required|email|max:250|unique:users',
+            'correo' => 'required|email|max:250|unique:users',
             'fecha_nacimiento' => 'required|max:150',
             'password' => 'required|min:8|max:20|confirmed',
         ]);
+        try {
 
-        $usuario = new User();
-        $usuario->name = $request->nombres;
-        $usuario->email = $request->email;
-        $usuario->password = Hash::make($request->password);
+            $usuario = User::create([
+                'name' => $request->nombres,
+                'email' => $request->correo,
+                'password' => Hash::make($request->password ?? $request->cc),
+            ]);
 
-        $usuario->save();
-        $secretaria = new Secretaria();
-        $secretaria->user_id = $usuario->id;
-        $secretaria->nombres = $request->nombres;
-        $secretaria->apellidos = $request->apellidos;
-        $secretaria->cc = $request->cc;
-        $secretaria->celular = $request->celular;
-        $secretaria->direccion = $request->direccion;
-        $secretaria->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
+            $secretaria = new Secretaria();
+            $secretaria->user_id = $usuario->id;
+            $secretaria->nombres = $request->nombres;
+            $secretaria->apellidos = $request->apellidos;
+            $secretaria->cc = $request->cc;
+            $secretaria->celular = $request->celular;
+            $secretaria->direccion = $request->direccion;
+            $secretaria->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
 
-        $secretaria->save();
-        $usuario->assignRole('secretaria');
+            $secretaria->save();
+            $usuario->assignRole('secretaria');
 
-        return redirect()->route('admin.secretarias.index')
-            ->with(['title', 'Exito','info', 'Se registro a la secretaria de forma correcta','icono', 'success']);
+            return redirect()->route('admin.secretarias.index')
+                ->with(['title' => 'Exito', 'info' => 'Se registro a la secretaria de forma correcta', 'icono' => 'success']);
+        } catch (\Exception $exception) {
+            return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
+        }
     }
 
     public function show(Secretaria $secretaria)
@@ -97,23 +101,23 @@ class SecretariaController extends Controller
         }
         $usuario->save();
         return redirect()->route('admin.secretarias.index')
-            ->with(['title', 'Exito','info', 'Se actualizo la secretaria de forma correcta','icono', 'success']);
+            ->with(['title' => 'Exito', 'info' => 'Se actualizo la secretaria de forma correcta', 'icono' => 'success']);
     }
     public function toggleStatus($id) //DEACTIVATE
     {
         $user = User::findOrFail($id);
         $user->status = !$user->status;
         $user->save();
-    
-        return redirect()->back()->with('success', 'Estado del usuario actualizado.');
-    }
-    // public function destroy(Secretaria $secretaria)
-    // {
-    //     $user = $secretaria->user;
-    //     $user->delete();
-    //     $secretaria->delete();
 
-    //     return redirect()->route('admin.secretarias.index')
-    //         ->with(['title', 'Exito','info', 'La secretaria se eliminó con éxito','icono', 'success']);
-    // }
+        return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
+    }
+    public function destroy(Secretaria $secretaria)
+    {
+        $user = $secretaria->user;
+        $user->delete();
+        $secretaria->delete();
+
+        return redirect()->route('admin.secretarias.index')
+            ->with(['title', 'Exito','info', 'La secretaria se eliminó con éxito','icono', 'success']);
+    }
 }

@@ -9,7 +9,7 @@
     @section('content')
 
         <div class="row">
-            <h1>Secretaria: {{ $secretaria->nombres }} {{ $secretaria->apellidos }}</h1>
+            <h1>Programador: {{ $secretaria->nombres }} {{ $secretaria->apellidos }}</h1>
 
         </div>
         <div class="row">
@@ -34,7 +34,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="cc">Cc </label>
+                                    <label for="cc">CC </label>
                                     <p>{{ $secretaria->cc }}</p>
                                 </div>
                             </div>
