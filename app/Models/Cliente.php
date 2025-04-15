@@ -13,8 +13,20 @@ class Cliente extends Model
     protected $table = "clientes";
 
     protected $guard_name = 'web';
-    protected $guarded = ['created_at', 'updated_at'];
-
+    // protected $guarded = ['created_at', 'updated_at'];
+    protected $fillable = [
+        'nombres',
+        'apellidos',
+        'cc',
+        'genero',
+        'celular',
+        'correo',
+        'direccion',
+        'contacto_emergencia',
+        'observaciones',
+        'user_id',
+    ];
+    
     // Relación: Cliente pertenece a un Usuario
     public function user()
     {

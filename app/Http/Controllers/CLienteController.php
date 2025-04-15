@@ -25,52 +25,56 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $validatedData = $request->validate([
             'nombres' => 'required',
             'apellidos' => 'required',
-            'cc' => 'required|max:11',
+            'cc' => 'required|max:11|unique:clientes,cc',
             'genero' => 'required',
             'celular' => 'required|max:11',
             'correo' => 'required|email|max:250|unique:users,email',
             'direccion' => 'required',
             'contacto_emergencia' => 'required|max:11',
         ]);
-
+    
         try {      
-            // dd($request->cursos);
-            
             $usuario = User::create([
                 'name' => $request->nombres,
                 'email' => $request->correo,
                 'password' => Hash::make($request->password ?? $request->cc),
             ]);
-
+    
             $usuario->assignRole('cliente');
-
+    
+            // Asociar el user_id al cliente
             $validatedData['user_id'] = $usuario->id;
-            // $validatedData['fecha_nacimiento'] = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
-            
+    
+            // Crear cliente
             $cliente = Cliente::create($validatedData);
-            
-            // Asignar los cursos y registrar horas iniciales en la tabla `cliente_curso`
-            if ($request->cursos) {
+    
+            // Asignar cursos si existen
+            if ($request->has('cursos') && is_array($request->cursos)) {
                 foreach ($request->cursos as $cursoId) {
                     $cliente->cursos()->attach($cursoId, ['horas_realizadas' => 0]);
                 }
             }
-
+    
             return redirect()->route('admin.clientes.index')
-                ->with(['title', 'Exito','info', 'Se registró al Cliente de forma correcta','icono', 'success']);
-                
+                ->with(['title' => 'Éxito', 'info' => 'Se registró al Cliente de forma correcta', 'icono' => 'success']);
+    
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->errorInfo[1] == 1062) {
-                return back()->withErrors(['correo' => 'El correo ya está en uso. Por favor, utiliza otro.'])
-                    ->withInput();
+                return back()->withErrors(['correo' => 'El correo ya está en uso. Por favor, utiliza otro.'])->withInput();
             }
-            return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])
-                ->withInput();
+            \Log::error('Error de base de datos al registrar cliente: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Error en la base de datos.'])->withInput();
+    
+        } catch (\Exception $e) {
+            \Log::error('Error inesperado al registrar cliente: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
     }
+    
 
     public function show(Cliente $cliente)
     {
