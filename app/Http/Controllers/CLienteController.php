@@ -7,6 +7,7 @@ use App\Models\Curso;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class ClienteController extends Controller
@@ -35,44 +36,48 @@ class ClienteController extends Controller
             'direccion' => 'required',
             'contacto_emergencia' => 'required|max:11',
         ]);
-//  dd($request->all());
-        try {      
-                       
+        try {  
+        DB::beginTransaction();  // ⬅️ Comienza la transacción
+
             $usuario = User::create([
                 'name' => $request->nombres,
                 'email' => $request->correo,
                 'password' => Hash::make($request->password ?? $request->cc),
             ]);
-
-
-            $cliente = new Cliente();
-            $cliente->user_id = $usuario->id;
-            $cliente->nombres = $request->nombres;
-            $cliente->apellidos = $request->apellidos;
-            $cliente->genero = $request->genero;
-            $cliente->cc = $request->cc;
-            $cliente->celular = $request->celular;
-            $cliente->direccion = $request->direccion;
-            $cliente->contacto_emergencia = $request->contacto_emergencia;
-            $cliente->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $request->fecha_nacimiento)->format('d/m/Y');
-
-            $cliente->save();
+    
             $usuario->assignRole('cliente');
-            
-            // Asignar los cursos y registrar horas iniciales en la tabla `cliente_curso`
-            if ($request->cursos) {
+    
+            // Asociar el user_id al cliente
+            $validatedData['user_id'] = $usuario->id;
+    
+            // Crear cliente
+            $cliente = Cliente::create($validatedData);
+            $usuarioId = $usuario->id;   
+            // Asignar cursos si existen
+            if ($request->has('cursos') && is_array($request->cursos)) {
                 foreach ($request->cursos as $cursoId) {
                     $cliente->cursos()->attach($cursoId, ['horas_realizadas' => 0]);
                 }
             }
-
+            if (!isset($cliente)) { // $evento->delete();      
+                DB::rollBack();         // Revertir todo si algo falla
+                DB::table('users')->where('id', $usuarioId)->delete();// Definir $ultimoId tomando el máximo ID de la tabla
+            }
+            DB::commit();  // ⬅️ Si todo salió bien, guarda en la base de datos
             return redirect()->route('admin.clientes.index')
-                ->with(['title'=> 'Exito','info'=> 'Se registró al Cliente de forma correcta','icono'=> 'success']);
-                
-        } catch (\Exception $exception) {
+                ->with(['title' => 'Éxito', 'info' => 'Se registró al Cliente de forma correcta', 'icono' => 'success']);
+    
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error('Error de base de datos al registrar cliente: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Error en la base de datos.'])->withInput();
+    
+        } catch (\Exception $e) {
+            DB::rollBack();  // ⬅️ Si falla, revierte todo
+            \Log::error('Error inesperado al registrar cliente: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
     }
+    
 
     public function show(Cliente $cliente)
     {
