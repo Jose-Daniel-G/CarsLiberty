@@ -42,11 +42,10 @@
                             @foreach ($horarios as $horario)
                                 <tr>
                                     <td scope="row">{{ $contador++ }}</td>
-                                    <td scope="row">{{ $horario->profesor->nombres }}</td>
+                                    <td scope="row">{{ $horario->profesores->first()->nombres ?? '' }}</td>
                                     {{-- <td scope="row">{{ $horario->profesor->especialidad }}</td> --}}
-                                    <td scope="row">
-                                        {{ $horario->curso->nombre }}
-                                    </td>
+                                    <td scope="row">{{ $horario->cursos->pluck('nombre')->join(', ') }}</td>
+
                                     <td scope="row">{{ $horario->dia }}</td>
                                     <td scope="row" class="text-center">{{ $horario->hora_inicio }}</td>
                                     <td scope="row" class="text-center">{{ $horario->hora_fin }}</td>

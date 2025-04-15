@@ -31,18 +31,13 @@ class CursoController extends Controller
             'nombre' => 'required',
             'horas_requeridas' => 'required|integer|min:1',
             'estado' => 'required|in:A,I', // Asegúrate de que el estado sea válido
-            // 'ubicacion' => 'nullable','descripcion' => 'required',
+            'descripcion' => 'nullable',
         ]);
-
         // Crear un nuevo curso
-        Curso::create([
-            'nombre' => $request->nombre,
-            'horas_requeridas' => $request->horas_requeridas,
-            'estado' => $request->estado,// 'descripcion' => $request->descripcion,
-        ]);
+        Curso::create($request->all());
 
         // Redireccionar con mensaje de éxito
-        return redirect()->route('admin.cursos.index')->with(['info', 'Curso registrado correctamente.','icono', 'success']);
+        return redirect()->route('admin.cursos.index')->with(['info'=> 'Curso registrado correctamente.','icono'=>'success']);
     }
 
 
@@ -117,6 +112,14 @@ class CursoController extends Controller
 
         return redirect()->route('admin.cursos.index')
             ->with(['title', 'Exito','info', 'El curso se eliminó con éxito','icono', 'success']);
+    }
+    public function toggleStatus($id) //DEACTIVATE
+    {
+        $curso = Curso::findOrFail($id);
+        $curso->estado = !$curso->estado;
+        $curso->save();
+
+        return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
     }
     public function obtenerCursos($clienteId)
     {

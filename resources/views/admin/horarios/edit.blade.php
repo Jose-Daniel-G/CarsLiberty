@@ -8,10 +8,7 @@
 
     @section('content')
 
-        <div class="row">
-            <h1>Actualizacion curso: {{ $curso->nombre }} {{ $curso->ubicacion }}</h1>
-
-        </div>
+        <div class="row"> <h1>Actualizacion curso: {{  $horario->cursos->pluck('nombre')->join(', ') }}</h1></div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-outline card-primary">
@@ -41,24 +38,23 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="curso_id">Cursos </label><b class="text-danger">*</b>
-                                        <select class="form-control" name="curso_id" id="curso_id">
-                                            <option value="" selected disabled>Seleccione una opción</option>
-                                            @foreach ($cursos as $curso)
-                                                <option value="{{ $curso->id }}"
-                                                    {{ (old('curso_id') == $curso->id || $horario->curso_id == $curso->id) ? 'selected' : '' }}>
-
-                                                    {{ $curso->nombres  .'  '. $curso->ubicacion }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('curso_id')
-                                            <small class="bg-danger text-white p-1">{{ $message }}</small>
-                                        @enderror
+                                <div class="form-group">
+                                    <label for="cursos">Cursos</label><b class="text-danger">*</b>
+                                    <div id="curso_checkboxes" class="d-flex flex-wrap">
+                                        @foreach ($cursos as $curso)
+                                            <div class="form-check me-3"> {{-- Espaciado entre checkboxes --}}
+                                                <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}" value="{{ $curso->id }}" class="form-check-input">
+                                                <label class="form-check-label" for="curso_{{ $curso->id }}">
+                                                    {{ $curso->nombre }}
+                                                </label>
+                                            </div>
+                                        @endforeach
                                     </div>
+                                    @error('cursos')
+                                        <small class="bg-danger text-white p-1">{{ $message }}</small>
+                                    @enderror
                                 </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="col-md-4">

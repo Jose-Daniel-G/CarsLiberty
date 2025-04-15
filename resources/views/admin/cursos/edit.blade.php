@@ -9,7 +9,7 @@
     @section('content')
 
         <div class="row">
-            <h1>Actualizacion curso: {{ $curso->nombre }} {{ $curso->ubicacion }}</h1>
+            <h1>Actualizacion curso: {{ $curso->nombre }}</h1>
 
         </div>
         <div class="row">

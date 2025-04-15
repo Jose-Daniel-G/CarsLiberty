@@ -14,10 +14,6 @@ class Horario extends Model
     {
         return $this->belongsToMany(Profesor::class, 'horario_profesor_curso', 'horario_id', 'profesor_id');
     }
-    // public function horarioProfesorCurso()
-    // {
-    //     return $this->hasMany(HorarioProfesorCurso::class, 'horario_id');
-    // }
     public function cursos()
     {
         return $this->belongsToMany(Curso::class, 'horario_profesor_curso', 'horario_id', 'curso_id');

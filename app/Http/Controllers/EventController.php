@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Helpers\DateHelper;
 
 use App\Models\Asistencia;
 use App\Models\Cliente;
@@ -9,6 +10,7 @@ use App\Models\Curso;
 use App\Models\Profesor;
 use App\Models\Event as CalendarEvent;
 use App\Models\Horario;
+use App\Models\HorarioProfesorCurso;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,16 +23,15 @@ class EventController extends Controller
     public function create() {}
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'profesorid' => 'required|exists:profesors,id',
+    {   
+        // dd($request->all());
+        $data = $request->validate([
             'cursoid' => 'required',
+            'profesorid' => 'required|exists:profesors,id',
             'fecha_reserva' => 'required',
             'hora_inicio' => 'required',
-            'hora_fin' => 'required|numeric|min:1',
-            'cliente_id' => 'required_if:role,admin,secretaria' // Asegúrate de que cliente_id si es admin o secretaria
+            'hora_fin' => 'required|numeric|min:1',//'hora_fin' => 'required|date_format:H:i',
         ]);
-        // $data = $request->all();
         // return response()->json($data);
         // Buscar el profesor por su ID
         $profesor = Profesor::find($request->profesorid);
@@ -66,7 +67,7 @@ class EventController extends Controller
 
         // Obtener el día de la semana en español
         $dia = date('l', strtotime($fecha_reserva));
-        $dia_de_reserva = traducir_dia($dia);
+        $dia_de_reserva = DateHelper::traducirDia($dia);
         // $dia_de_reserva = $this->traducir_dia($dia);
 
         // Formatear las horas para compararlas en la consulta
@@ -74,19 +75,20 @@ class EventController extends Controller
         $hora_fin_formato    = $fecha_hora_fin->format('H:i:s');
 
         // Consultar si el profesor tiene disponibilidad en el intervalo
-        $horarios = Horario::where('profesor_id', $profesor->id)
-            ->where('dia', $dia_de_reserva)
-            ->where('hora_inicio', '<=', $hora_inicio_formato)
-            ->where('hora_fin', '>=', $hora_fin_formato)
-            ->get(); // Obtener todos los horarios en lugar de solo verificar existencia
-
+        $horarios = HorarioProfesorCurso::join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id') // Unimos con la tabla correcta
+        ->where('horario_profesor_curso.profesor_id', $profesor->id)
+        ->where('horarios.dia', $dia_de_reserva) // Filtrar por el día en la tabla correcta
+        ->where('horarios.hora_inicio', '<=', $hora_inicio_formato) // Ahora filtramos por horarios.hora_inicio
+        ->where('horarios.hora_fin', '>=', $hora_fin_formato) // Ahora filtramos por horarios.hora_fin
+        ->where('horario_profesor_curso.curso_id', $cursoid) // Si la tabla maneja cursos
+        ->get();
         // dd($horarios);
         // Si no hay horarios disponibles, retornar mensaje de error
         if ($horarios->isEmpty()) {
             return redirect()->back()->with([
-                'info' => 'El profesor no está disponible en ese horario.',
                 'icono' => 'error',
                 'title' => 'Oh!.',
+                'info' => 'El profesor no está disponible en ese horario.',
             ]);
         }
 
@@ -116,8 +118,12 @@ class EventController extends Controller
 
         // Validar si existen eventos duplicados
         $eventos_duplicados = CalendarEvent::where('profesor_id', $profesor->id)
-            ->where('start', $fecha_hora_inicio)
-            ->where('end', $fecha_hora_fin)->exists();
+        ->where(function ($query) use ($fecha_hora_inicio, $fecha_hora_fin) {
+            $query->whereBetween('start', [$fecha_hora_inicio, $fecha_hora_fin])
+                  ->orWhereBetween('end', [$fecha_hora_inicio, $fecha_hora_fin]);
+        })
+        ->exists();
+    
 
         if ($eventos_duplicados) {
             return redirect()->back()->with([
@@ -170,12 +176,9 @@ class EventController extends Controller
     public function show(Request $request)
     {
         try {
-            // $events = CalendarEvent::all(); // Cambia esto según la lógica que necesites
             $events = CalendarEvent::with('profesor', 'cliente')->get(); // Carga la relación 'profesor'
-
             return response()->json($events); // Devuelve todos los eventos
         } catch (\Exception $e) {
-            \Log::error($e); // Loguea el error para diagnóstico
             return response()->json(['error' => 'Error al obtener eventos'], 500);
         }
     }

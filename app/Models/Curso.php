@@ -15,8 +15,7 @@ class Curso extends Model
     {
         return $this->belongsToMany(Profesor::class, 'horario_profesor_curso', 'curso_id', 'profesor_id');
     }
-    
-    
+
     // Relación muchos a muchos con horarios
     public function horarios()
     {

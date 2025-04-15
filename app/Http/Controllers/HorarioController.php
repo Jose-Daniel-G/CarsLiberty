@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Helpers\DateHelper;
 use App\Models\Curso;
 use App\Models\Profesor;
 use App\Models\Horario;
@@ -26,60 +26,59 @@ class HorarioController extends Controller
         $profesores = Profesor::all();
         $cursos = Curso::all();
         $horarios = Horario::with('profesores', 'cursos')->get(); // viene con la relacion del horario
-
         return view('admin.horarios.create', compact('profesores', 'cursos', 'horarios'));
     }
 
-            public function show_datos_cursos($id)
-            {
-                try {
-                    // Obtener los cursos asignados al profesor
+    public function show_datos_cursos($id) //show datatable schedules for the teachers
+    {
+        try {
+            // Obtener los cursos asignados al profesor
+            $cursos_profesor = Curso::whereHas('horarios', function ($query) use ($id) {
+                $query->whereHas('profesores', function ($query) use ($id) {
+                    $query->where('profesor_id', $id);
+                });
+            })->with('horarios.profesores')->get();
 
-                    $cursos_profesor = Curso::whereHas('horarios', function ($query) use ($id) {
-                        $query->whereHas('profesores', function ($query) use ($id) {
-                            $query->where('profesor_id', $id);
-                        });
-                    })->with('horarios.profesores')->get();
-                    
 
-                    // Obtener horarios disponibles del profesor con sus cursos
-                    $horarios = Horario::whereHas('profesores', function ($query) use ($id) {
-                        $query->where('profesor_id', $id);
-                    })->with(['cursos', 'profesores'])->get();
-                    // dd(['titulo' => 'Datos de horarios del Profesor', 'horarios' => $horarios->toArray()]);
-                    // Obtener eventos agendados para este profesor
-                    $horarios_asignados = DB::table('events')
-                        ->select([
-                            'events.id AS evento_id',
-                            'events.profesor_id',
-                            'events.curso_id',
-                            'events.start AS hora_inicio',
-                            'events.end AS hora_fin',
-                            DB::raw('DAYNAME(events.start) AS dia'),
-                            'users.id AS user_id',
-                            'users.name AS user_nombre',
-                            'cursos.nombre AS curso_nombre'
-                        ])
-                        ->join('cursos', 'events.curso_id', '=', 'cursos.id')
-                        ->join('clientes', 'events.cliente_id', '=', 'clientes.id')
-                        ->join('users', 'clientes.user_id', '=', 'users.id')
-                        ->where('events.profesor_id', $id)
-                        ->get();
-                    // dd(['titulo' => 'Datos de horarios asignados', 'horarios asignados' => $horarios_asignados->toArray()]);
-            
-                    // Traducir los días al español
-                    $horarios_asignados = $horarios_asignados->map(function ($horario) {
-                        $horario->dia = traducir_dia($horario->dia);
-                        return $horario;
-                    });
-            
-                    return view('admin.horarios.show_datos_cursos', compact('cursos_profesor', 'horarios', 'horarios_asignados'));
-                } catch (\Exception $exception) {
-                    return response()->json(['mensaje' => 'Error', 'detalle' => $exception->getMessage()]);
-                }
-            }
-    
-    public function store(Request $request)
+            // Obtener horarios disponibles del profesor con sus cursos
+            $horarios = Horario::whereHas('profesores', function ($query) use ($id) {
+                $query->where('profesor_id', $id);
+            })->with(['cursos', 'profesores'])->get();
+            // dd(['titulo' => 'Datos de horarios del Profesor', 'horarios' => $horarios->toArray()]);
+            // Obtener eventos agendados para este profesor
+            $horarios_asignados = DB::table('events')
+                ->select([
+                    'events.id AS evento_id',
+                    'events.profesor_id',
+                    'events.curso_id',
+                    'events.start AS hora_inicio',
+                    'events.end AS hora_fin',
+                    DB::raw('DAYNAME(events.start) AS dia'),
+                    'users.id AS user_id',
+                    'users.name AS user_nombre',
+                    'cursos.nombre AS curso_nombre'
+                ])
+                ->join('cursos', 'events.curso_id', '=', 'cursos.id')
+                ->join('clientes', 'events.cliente_id', '=', 'clientes.id')
+                ->join('users', 'clientes.user_id', '=', 'users.id')
+                ->where('events.profesor_id', $id)
+                ->get();
+            // dd(['titulo' => 'Datos de horarios asignados', 'horarios asignados' => $horarios_asignados->toArray()]);
+
+            // Traducir los días al español
+            $horarios_asignados = $horarios_asignados->map(function ($horario) {
+                $horario->dia = DateHelper::traducirDia($horario->dia);
+                return $horario;
+            });
+
+            return view('admin.horarios.show_datos_cursos', compact('cursos_profesor', 'horarios', 'horarios_asignados'));
+        } catch (\Exception $exception) {
+            return response()->json(['mensaje' => 'Error', 'detalle' => $exception->getMessage()]);
+        }
+    }
+
+
+    public function store(Request $request)//teacher schedule
     {
         // Validar los datos
         $validatedData = $request->validate([
@@ -87,48 +86,51 @@ class HorarioController extends Controller
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fin' => 'required|date_format:H:i|after:hora_inicio',
             'profesor_id' => 'required|exists:profesors,id',
-            'cursos' => 'required|array|min:1', // Asegura que se envíen al menos 1 curso
+            'cursos' => 'required|array|min:1', // Al menos 1 curso
             'cursos.*' => 'exists:cursos,id',
         ]);
-        // dd($validatedData);
-        // // Verificar si el horario ya existe para ese día, rango de horas y curso
-        // $horarioCurso = Horario::where('dia', $request->dia)
-        //     ->where('curso_id', $request->curso_id) // Filtrar por curso
-        //     ->where(function ($query) use ($request) {
-        //         $query->where(function ($query) use ($request) {
-        //             $query->where('hora_inicio', '>=', $request->hora_inicio)
-        //                 ->where('hora_inicio', '<', $request->hora_fin);
-        //         })
-        //             ->orWhere(function ($query) use ($request) {
-        //                 $query->where('hora_fin', '>', $request->hora_inicio)
-        //                     ->where('hora_fin', '<=', $request->hora_fin);
-        //             })
-        //             ->orWhere(function ($query) use ($request) {
-        //                 $query->where('hora_inicio', '<', $request->hora_inicio)
-        //                     ->where('hora_fin', '>', $request->hora_fin);
-        //             });
-        //     })
-        //     ->exists();
 
-        // // Si ya existe un horario en ese rango para el mismo curso con otro profesor
-        // if ($horarioCurso) {
-        //     return redirect()->back()
-        //         ->withInput()
-        //         ->with('mensaje', 'Ya existe un horario para el curso con otro profesor en ese rango de tiempo')
-        //         ->with('icono', 'error');
-        // }  
+        // Normalizar el formato de las horas (si en la BD se guarda con segundos, por ejemplo "H:i:s")
+        $horaInicio = Carbon::parse($validatedData['hora_inicio'])->format('H:i:s');
+        $horaFin    = Carbon::parse($validatedData['hora_fin'])->format('H:i:s');
 
-        // DB::beginTransaction();
+        // Verificar si el profesor ya tiene un horario agendado en ese día con superposición en el rango de horas
+        $horarioExistente = Horario::where('dia', $validatedData['dia'])
+            ->where('profesor_id', $validatedData['profesor_id'])
+            ->where(function ($query) use ($horaInicio, $horaFin) {
+                $query->where(function ($query) use ($horaInicio, $horaFin) {
+                    $query->where('hora_inicio', '>=', $horaInicio)
+                        ->where('hora_inicio', '<', $horaFin);
+                })
+                    ->orWhere(function ($query) use ($horaInicio, $horaFin) {
+                        $query->where('hora_fin', '>', $horaInicio)
+                            ->where('hora_fin', '<=', $horaFin);
+                    })
+                    ->orWhere(function ($query) use ($horaInicio, $horaFin) {
+                        $query->where('hora_inicio', '<', $horaInicio)
+                            ->where('hora_fin', '>', $horaFin);
+                    });
+            })
+            ->exists();
+            // dd($horarioExistente);
+        if ($horarioExistente) {
+
+            return redirect()->back()
+                ->withInput()
+                ->with('info', 'El profesor ya tiene asignado un horario en ese rango de tiempo.')
+                ->with('icono', 'error');
+        }
+// 
         try {
-            // Verificar si ya existe el horario con los mismos datos
+            // Si no existe un horario en ese rango, se crea el horario
             $horario = Horario::firstOrCreate([
                 'dia' => $validatedData['dia'],
-                'hora_inicio' => $validatedData['hora_inicio'],
-                'hora_fin' => $validatedData['hora_fin'],
+                'hora_inicio' => $horaInicio,
+                'hora_fin' => $horaFin,
                 'profesor_id' => $validatedData['profesor_id'],
             ]);
-            // dd($horario);
 
+            // Se asocian los cursos a ese horario
             foreach ($validatedData['cursos'] as $cursoId) {
                 DB::table('horario_profesor_curso')->updateOrInsert([
                     'horario_id' => $horario->id,
@@ -136,9 +138,6 @@ class HorarioController extends Controller
                     'profesor_id' => $validatedData['profesor_id']
                 ]);
             }
-
-
-            // DB::commit();
 
             return redirect()->route('admin.horarios.create')
                 ->with('info', 'Se registraron los cursos para el horario correctamente.')
@@ -149,47 +148,9 @@ class HorarioController extends Controller
         }
     }
 
-
-
-
-    // Verificar si existe conflicto de horario con el mismo profesor en el mismo día y hora
-    // $horarioProfesor = Horario::where('dia', $request->dia)
-    //     ->where('profesor_id', $request->profesor_id) // Filtrar por el mismo profesor
-    //     ->where(function ($query) use ($request) {
-    //         $query->where(function ($query) use ($request) {
-    //             $query->where('hora_inicio', '>=', $request->hora_inicio)
-    //                 ->where('hora_inicio', '<', $request->hora_fin);
-    //         })
-    //             ->orWhere(function ($query) use ($request) {
-    //                 $query->where('hora_fin', '>', $request->hora_inicio)
-    //                     ->where('hora_fin', '<=', $request->hora_fin);
-    //             })
-    //             ->orWhere(function ($query) use ($request) {
-    //                 $query->where('hora_inicio', '<', $request->hora_inicio)
-    //                     ->where('hora_fin', '>', $request->hora_fin);
-    //             });
-    //     })
-    //     ->exists();
-
-
-    // if ($horarioProfesor) {
-    //     return redirect()->back()
-    //         ->withInput()
-    //         ->with('mensaje', 'El profesor ya tiene asignado un horario en ese rango de tiempo')
-    //         ->with('icono', 'error');
-    // }
-
-    // Crear el nuevo horario
-
-    // Asociar los cursos
-    // $horario->cursos()->attach($request->cursos);
-
-    // }
-
-
     public function show(Horario $horario)
     {
-        $horario = $horario->with('profesor', 'curso')->get();
+        $horario->load('profesores', 'cursos'); // Cargar relaciones en la instancia
         return view('admin.horarios.show', compact('horario'));
     }
 
@@ -199,13 +160,11 @@ class HorarioController extends Controller
         $curso = $horario->curso;
         $profesores = Profesor::all();
         $cursos = Curso::all();
-
         return view('admin.horarios.edit', compact('horario', 'curso', 'profesores', 'cursos'));
     }
 
     public function update(Request $request, Horario $horario)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
             'dia' => 'required',
             'hora_inicio' => 'required',

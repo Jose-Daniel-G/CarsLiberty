@@ -37,13 +37,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="cursos">Cursos</label><b class="text-danger">*</b>
-                                <div id="curso_checkboxes">
+                                <div id="curso_checkboxes" class="d-flex flex-wrap">
                                     @foreach ($cursos as $curso)
-                                        <div class="form-check">
-                                            <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}" value="{{ $curso->id }}" class="form-check-input">
-                                            <label class="form-check-label" for="curso_{{ $curso->id }}">
-                                                {{ $curso->nombre }}
-                                            </label>
+                                        <div class="form-check me-3"> {{-- Espaciado entre checkboxes --}}
+                                            <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}" value="{{ $curso->id }}" class="form-check-input"
+                                            {{ in_array($curso->id, $oldCursos) ? 'checked' : '' }}>
+                                            {{ $curso->nombre }}
+                                            <label class="form-check-label" for="curso_{{ $curso->id }}"></label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -51,6 +51,7 @@
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>
+                            
                             
                             <div class="form-group">
                                 <label for="dia">Dia </label><b class="text-danger">*</b>

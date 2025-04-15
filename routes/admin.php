@@ -17,6 +17,8 @@ Route::get("/", [HomeController::class, "index"])->name("admin.home")->middlewar
 Route::resource('users', UserController::class)->only(['index', 'edit', 'update'])->names('admin.users');
 Route::patch('/users/{id}/toggle-status', [ClienteController::class, 'toggleStatus'])->name('admin.clientes.toggleStatus');
 Route::patch('/programador/{id}/toggle-status', [SecretariaController::class, 'toggleStatus'])->name('admin.secretarias.toggleStatus');
+Route::patch('/profesor/{id}/toggle-status', [ProfesorController::class, 'toggleStatus'])->name('admin.profesors.toggleStatus');
+Route::patch('/curso/{id}/toggle-status', [CursoController::class, 'toggleStatus'])->name('admin.cursos.toggleStatus');
 
 //RUTAS ADMIN
 Route::get('/admin', [HomeController::class, 'index'])->name('admin.index')->middleware('auth');
@@ -83,15 +85,15 @@ Route::get('/reservas/pdf_fechas', [EventController::class, 'pdf_fechas'])->name
 
 
 
-// Route::group(['middleware'=>['auth']], function(){
-//     Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
-//     Route::get('events/mostrar', [EventController::class, 'show'])->name('admin.events.show');
-//     // Route::post('events/editar/{id}', [EventController::class, 'edit'])->name('admin.events.edit');
-//     // Route::put('events/actualizar/{evento}', [EventController::class, 'update'])->name('admin.events.update');
+Route::group(['middleware'=>['auth']], function(){
+    Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
+    Route::get('events/mostrar', [EventController::class, 'show'])->name('admin.events.show');
+    // Route::post('events/editar/{id}', [EventController::class, 'edit'])->name('admin.events.edit');
+    // Route::put('events/actualizar/{evento}', [EventController::class, 'update'])->name('admin.events.update');
 
-//     // Route::post('events/actualizar/{evento}', [EventController::class, 'edit'])->name('admin.events.update');
-//     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('admin.events.destroy');
+    // Route::post('events/actualizar/{evento}', [EventController::class, 'edit'])->name('admin.events.update');
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('admin.events.destroy');
 
-//     Route::post('events/agregar', [EventController::class, 'store'])->name('admin.events.store');
+    Route::post('events/agregar', [EventController::class, 'store'])->name('admin.events.store');
 
-// });
+});

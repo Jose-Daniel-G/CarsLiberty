@@ -60,11 +60,16 @@
                             </div>
                         </div>
                     </div>
+                    @php
+                        use App\Helpers\DateHelper;
+                        $dateRange = DateHelper::getCurrentMonthRange(); 
+                    @endphp
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group"><label for="profesor">Fecha de reserva</label>
-                                <input type="date" class="form-control" name="fecha_reserva" id="fecha_reserva"
-                                    value="<?php echo date('Y-m-d'); ?>">
+                                <input type="date" id="fecha_reserva" name="fecha_reserva" min="{{ $dateRange['firstDay'] }}" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                 {{-- max="{{ $dateRange['lastDay'] }}"> --}}
                             </div>
                         </div>
                     </div>

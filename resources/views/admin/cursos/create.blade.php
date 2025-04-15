@@ -31,7 +31,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                {{-- <div class="col-md-3">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="descripcion">Descripcion </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="descripcion"
@@ -40,7 +40,7 @@
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div> --}}
+                                </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="horas_requeridas">horas requeridas </label><b class="text-danger">*</b>

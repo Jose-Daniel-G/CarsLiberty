@@ -33,7 +33,7 @@
                                 <th>Nro</th>
                                 <th>Nombres</th>
                                 <th>Apellidos</th>
-                                <th>cc</th>
+                                <th>Email</th>
                                 <th>Celular</th>
                                 <th>Fecha de Nacimiento</th>
                                 <th>Direccion</th>

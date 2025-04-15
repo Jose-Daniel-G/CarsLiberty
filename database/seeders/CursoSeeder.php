@@ -19,7 +19,7 @@ class CursoSeeder extends Seeder
         Curso::create([
             'nombre' => 'A1',
             'horas_requeridas' => '15',
-            // 'descripcion' => 'Curso de conducción para obtener licencia tipo A1.',
+            'descripcion' => 'Curso de conducción para obtener licencia tipo A1.',
             // 'ubicacion' => 'A',
             'estado' => 'A',
         ]);
@@ -33,14 +33,14 @@ class CursoSeeder extends Seeder
         Curso::create([
             'nombre' => 'B2',
             'horas_requeridas' => '20',
-            // 'descripcion' => 'Curso de conducción para obtener licencia tipo B2.',
+            'descripcion' => 'Curso de conducción para obtener licencia tipo B2.',
             // 'ubicacion' => 'B',
             'estado' => 'A',
         ]);
         Curso::create([
             'nombre' => 'C1',
             'horas_requeridas' => '30',
-            // 'descripcion' => 'Licencia tipo B1. PARA CARRO PUBLICO',
+            'descripcion' => 'Licencia tipo B1. PARA CARRO PUBLICO',
             // 'ubicacion' => 'C',
             'estado' => 'A',
         ]);

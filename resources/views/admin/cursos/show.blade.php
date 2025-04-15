@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <h1>Curso: {{ $curso->nombre }} {{ $curso->ubicacion }}</h1>
+            <h1>Curso: {{ $curso->nombre }}</h1>
 
         </div>
         <div class="row">

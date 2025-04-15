@@ -140,36 +140,33 @@ class ProfesorController extends Controller
   
     public function obtenerProfesores($cursoId)
     {
-        $profesores = DB::table('horarios')
-            ->join('profesors', 'horarios.profesor_id', '=', 'profesors.id')
-            ->where('horarios.curso_id', $cursoId)
-            ->select('profesors.*')
-            ->distinct()
-            ->get();
-        // dd($profesores);
-        return response()->json($profesores); // Asegúrate de devolver JSON
+        try {
+            // Obtener los profesores asociados con el curso a través de la tabla intermedia
+            $profesores = DB::table('horario_profesor_curso')
+                ->join('profesors', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
+                ->join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id')
+                ->join('cursos', 'horario_profesor_curso.curso_id', '=', 'cursos.id') // Relacionar directamente la tabla intermedia con cursos
+                ->where('cursos.id', $cursoId) // Filtrar por el ID del curso
+                ->select('profesors.*')
+                ->distinct()
+                ->get();
+    
+            // Verificar si se obtuvieron resultados
+            if ($profesores->isEmpty()) {
+                return response()->json(['message' => 'No se encontraron profesores para este curso.'], 404);
+            }
+    
+            return response()->json($profesores); // Devuelves la lista de profesores en formato JSON
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al cargar los profesores: ' . $e->getMessage()], 500);
+        }
     }
+    public function toggleStatus($id) //DEACTIVATE
+    {
+        $user = User::findOrFail($id);
+        $user->status = !$user->status;
+        $user->save();
 
-
-    // public function obtenerProfesoresPorCurso($cursoId)
-    // {
-    //     // Suponiendo que tienes una relación entre Curso y Profesor
-    //     $curso = Curso::find($cursoId);
-
-    //     if (!$curso) {
-    //         return response()->json(['message' => 'Curso no encontrado'], 404);
-    //     }
-
-    //     $profesores = $curso->profesores; // Asegúrate de que esta relación esté definida en el modelo Curso
-    //     return response()->json($profesores);
-    // }
-
-    // public function obtenerProfesoresPorCurso($cursoId)
-    // {
-    //     // Suponiendo que tienes un método en el modelo Curso que devuelve los profesores
-    //     $curso = Curso::find($cursoId);
-    //     $profesores = $curso->profesores; // Asumiendo que tienes la relación definida
-
-    //     return response()->json($profesores);
-    // }
+        return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
+    }
 }

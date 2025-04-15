@@ -7,6 +7,7 @@ use App\Models\Curso;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class ClienteController extends Controller
@@ -36,8 +37,9 @@ class ClienteController extends Controller
             'direccion' => 'required',
             'contacto_emergencia' => 'required|max:11',
         ]);
-    
-        try {      
+        try {  
+        DB::beginTransaction();  // ⬅️ Comienza la transacción
+
             $usuario = User::create([
                 'name' => $request->nombres,
                 'email' => $request->correo,
@@ -51,25 +53,27 @@ class ClienteController extends Controller
     
             // Crear cliente
             $cliente = Cliente::create($validatedData);
-    
+            $usuarioId = $usuario->id;   
             // Asignar cursos si existen
             if ($request->has('cursos') && is_array($request->cursos)) {
                 foreach ($request->cursos as $cursoId) {
                     $cliente->cursos()->attach($cursoId, ['horas_realizadas' => 0]);
                 }
             }
-    
+            if (!isset($cliente)) { // $evento->delete();      
+                DB::rollBack();         // Revertir todo si algo falla
+                DB::table('users')->where('id', $usuarioId)->delete();// Definir $ultimoId tomando el máximo ID de la tabla
+            }
+            DB::commit();  // ⬅️ Si todo salió bien, guarda en la base de datos
             return redirect()->route('admin.clientes.index')
                 ->with(['title' => 'Éxito', 'info' => 'Se registró al Cliente de forma correcta', 'icono' => 'success']);
     
         } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->errorInfo[1] == 1062) {
-                return back()->withErrors(['correo' => 'El correo ya está en uso. Por favor, utiliza otro.'])->withInput();
-            }
             \Log::error('Error de base de datos al registrar cliente: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Error en la base de datos.'])->withInput();
     
         } catch (\Exception $e) {
+            DB::rollBack();  // ⬅️ Si falla, revierte todo
             \Log::error('Error inesperado al registrar cliente: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
@@ -113,14 +117,14 @@ class ClienteController extends Controller
             $usuario->password = Hash::make($request->cc); // Establecer la contraseña a la cédula
             $usuario->save();
         }
-
+        // unset($validatedData['correo']);
         // Actualizar los datos del Cliente
         $cliente->update($validatedData);
 
         $cliente->cursos()->sync($request->cursos ?? []); // Sincroniza los cursos seleccionados en el formulario
 
         return redirect()->route('admin.clientes.index')
-            ->with(['title', 'Exito', 'info', 'Cliente actualizado correctamente.', 'icono', 'success']);
+            ->with(['title'=> 'Exito', 'info'=>'Cliente actualizado correctamente.', 'icono'=> 'success']);
     }
 
     public function toggleStatus($id) //DEACTIVATE
@@ -129,7 +133,7 @@ class ClienteController extends Controller
         $user->status = !$user->status;
         $user->save();
     
-        return redirect()->back()->with('success', 'Estado del usuario actualizado.');
+        return redirect()->back()->with(['success'=> 'Estado del usuario actualizado.']);
     }
 
     // public function destroy(Cliente $Cliente)
