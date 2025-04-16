@@ -40,8 +40,7 @@
                                 <div id="curso_checkboxes" class="d-flex flex-wrap">
                                     @foreach ($cursos as $curso)
                                         <div class="form-check me-3"> {{-- Espaciado entre checkboxes --}}
-                                            <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}" value="{{ $curso->id }}" class="form-check-input"
-                                            {{ in_array($curso->id, $oldCursos) ? 'checked' : '' }}>
+                                            <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}" value="{{ $curso->id }}" class="form-check-input">
                                             {{ $curso->nombre }}
                                             <label class="form-check-label" for="curso_{{ $curso->id }}"></label>
                                         </div>
