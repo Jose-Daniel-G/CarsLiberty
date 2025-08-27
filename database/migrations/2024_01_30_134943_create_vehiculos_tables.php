@@ -13,10 +13,10 @@ return new class extends Migration
             $table->string('placa')->unique();
             $table->string('modelo');
             $table->boolean('disponible')->default(true);
-            $table->string('tipo');
-            $table->timestamps();
+            $table->foreignId('tipo_id')->constrained('tipos_vehiculos');
             $table->unsignedBigInteger('profesor_id')->nullable();
             $table->foreign('profesor_id')->references('id')->on('users')->onDelete('set null');
+            $table->timestamps();
         });
     }
     

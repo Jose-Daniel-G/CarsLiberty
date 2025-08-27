@@ -77,7 +77,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                     @include('admin.vehiculos.create')
+                    @include('admin.vehiculos.create')
                     @include('admin.vehiculos.edit')
                     @include('admin.vehiculos.show')
                 </div> <!-- Modales para crear y editar vehículos -->

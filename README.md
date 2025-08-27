@@ -180,3 +180,5 @@ php artisan db:seed --class=WorldSeeder
 
 ## LIBRERIA SLUG
 https://leocaseiro.com.br/jquery-plugin-string-to-slug/#
+## Fecha de creacion
+git log --reverse

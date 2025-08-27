@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Hebron',
+    'title' => 'Liberty',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Hebron</b>LTE',
+    'logo' => '<b>Liberty</b>LTE',
     'logo_img' => 'vendor/adminlte/dist/img/HEBRON.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,

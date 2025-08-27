@@ -14,7 +14,7 @@ return new class extends Migration
             $table->time('hora_inicio');
             $table->time('hora_fin');
             $table->unsignedBigInteger('profesor_id');
-            // $table->unsignedBigInteger('curso_id');
+            $table->unsignedBigInteger('curso_id');
         
             // Si las tablas y campos existen tal como los mencionas
             $table->foreign('profesor_id')->references('id')->on('profesors')->onDelete('cascade');            

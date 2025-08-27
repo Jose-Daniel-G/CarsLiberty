@@ -16,14 +16,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            TipoVehiculoSeeder::class,
             RoleSeeder::class,
             AdminSeeder::class,
             SecretariaSeeder::class,
             ProfesorSeeder::class,
             CursoSeeder::class,
-            // HorarioSeeder::class,
-            // PicoyPlacaSeeder::class,
-            // VehiculoSeeder::class,
+            HorarioSeeder::class,
+            PicoyPlacaSeeder::class,
+            VehiculoSeeder::class,
             ClienteSeeder::class,
         ]);
         // $profesores = Profesor::factory()->count(10)->create();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Profesor;
+use App\Models\TipoVehiculo;
 use App\Models\Vehiculo;
 use Illuminate\Http\Request;
 
@@ -11,33 +12,28 @@ class VehiculoController extends Controller
 {
     public function index()
     {
-        // $vehiculos = Vehiculo::all();
         $vehiculos = Vehiculo::leftJoin('users', 'vehiculos.profesor_id', '=', 'users.id')
             ->join('profesors', 'users.id', '=', 'profesors.user_id')
             ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')
-            ->limit(100)
-            ->get();
+            ->limit(100)->get();
 
-        return view("admin.vehiculos.index", compact('vehiculos'));
+        $tipos = TipoVehiculo::all();
+        return view("admin.vehiculos.index", compact('vehiculos','tipos'));
     }
 
     public function create()
     {
         $profesores = Profesor::all(); // Obtener todos los profesores
-        // $vehiculo->load('profesor'); // Cargar solo el profesor relacionado
         return response()->json(['profesores' => $profesores]);
-        // return view('admin.vehiculos.create');
     }
 
     public function store(Request $request)
-    {   // $vehiculos = $request->all();
-        // return response()->json($vehiculos);
+    {
         $vehiculos = $request->validate([
             'placa' => 'required|string|max:10|unique:vehiculos,placa', // Validación para que la placa sea única
             'modelo' => 'required|string|max:255',
             'tipo' => 'required|string|max:100', // Asegúrate de que 'tipo' sea válido
             'disponible' => 'required|boolean', // Asumiendo que quieres manejar disponibilidad
-            // 'picoyplaca_id' => 'required|exists:picoyplaca,id', // Asumiendo que tienes esta validación
             'profesor_id' => 'required|exists:users,id', // Asegúrate de que el usuario exista
         ]);
 
@@ -64,7 +60,7 @@ class VehiculoController extends Controller
     {
         $profesores = Profesor::all(); // Obtener todos los profesores
         $vehiculo->load('profesor'); // Cargar solo el profesor relacionado
-
+        \Log::info('Vehículo con profesor:', ['vehiculo' => $vehiculo->toArray()]);
         return response()->json([
             'vehiculo' => $vehiculo,
             'profesores' => $profesores,
