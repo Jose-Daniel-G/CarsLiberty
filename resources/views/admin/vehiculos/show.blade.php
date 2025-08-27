@@ -24,7 +24,7 @@
                 </div>
                 <div class="form-group">
                     <label for="tipo">Tipo:</label>
-                    <p>{{ $vehiculo->tipo }}</p>
+                    <p>{{ $vehiculo->tipo->tipo }}</p>
                 </div>
                 <div class="form-group">
                     <label for="profesor">Profesor:</label>

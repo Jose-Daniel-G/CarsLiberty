@@ -11,9 +11,7 @@ class TipoVehiculo extends Model
 
     protected $table = 'tipos_vehiculos';
 
-    protected $fillable = [
-        'tipo'
-    ];
+    protected $fillable = ['tipo'];
     /**
      * Un tipo de vehículo puede tener muchos vehículos.
      * Define la relación uno-a-muchos (one-to-many).

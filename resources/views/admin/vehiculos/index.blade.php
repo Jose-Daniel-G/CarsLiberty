@@ -54,7 +54,7 @@
                                     <td>{{ $vehiculo->placa }}</td>
                                     <td>{{ $vehiculo->modelo }}</td>
                                     <td>{{ $vehiculo->disponible ? 'Sí' : 'No' }}</td>
-                                    <td>{{ $vehiculo->tipo }}</td>
+                                    <td>{{ $vehiculo->tipo->tipo }}</td>
                                     <td>{{ $vehiculo->nombres . ' ' . $vehiculo->apellidos }}</td>
                                     <td>
                                         <a href="#" class="btn btn-primary" data-id="{{ $vehiculo->id }}"
@@ -91,17 +91,6 @@
 @endsection
 
 @section('js')
-    
-    
-    
-
-    <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
     <script>
         new DataTable('#vehiculos', {
             responsive: true,
@@ -163,29 +152,25 @@
                 url: url,
                 method: 'GET',
                 success: function(data) {
-                    modal.find('#edit_vehiculo_id').val(data.vehiculo.id);
+                    // modal.find('#edit_vehiculo_id').val(data.vehiculo.id);
                     modal.find('#placa').val(data.vehiculo.placa);
                     modal.find('#modelo').val(data.vehiculo.modelo);
                     modal.find('#disponible').val(data.vehiculo.disponible ? '1' : '0');
-                    modal.find('#tipo').val(data.vehiculo.tipo);
-                    modal.find('#picoyplaca_id').val(data.vehiculo.picoyplaca_id);
-                    modal.find('#profesor_nombres').val(data.vehiculo.profesor.nombres + ' ' + data
-                        .vehiculo.profesor.apellidos);
 
-                    // Limpiar y agregar opciones al select de tipo
-                    var tipoSelect = modal.find('#tipo_select');
+                    // Limpiar y agregar opciones al select de tipos
+                    var tipoSelect = modal.find('#tipo_selected');
                     tipoSelect.empty();
-                    ['Sedan', 'SUV', 'Pickup', 'Hatchback'].forEach(function(tipo) {
-                        tipoSelect.append(new Option(tipo, tipo.toLowerCase()));
+                    $.each(data.tipos, function(index, tipo) {
+                        tipoSelect.append(new Option(tipo.tipo, tipo.id));
                     });
-                    tipoSelect.val(data.vehiculo.tipo); // Establecer el valor seleccionado
+                    tipoSelect.val(data.vehiculo.tipo_id); // Establecer el valor seleccionado
 
                     // Limpiar y agregar opciones al select de profesores
                     var profesorSelect = modal.find('#profesor_select');
                     profesorSelect.empty();
                     $.each(data.profesores, function(index, profesor) {
                         profesorSelect.append(new Option(profesor.nombres + ' ' + profesor
-                            .apellidos, profesor.id));
+                            .apellidos, profesor.user_id));
                     });
                     profesorSelect.val(data.vehiculo.profesor_id); // Establecer el valor seleccionado
                 },
@@ -196,18 +181,6 @@
         });
     </script>
 
-    <script>
-        function formatearPlaca(input) {
-            let valor = input.value.replace(/-/g, ''); // Eliminar guiones existentes
-            if (valor.length >= 3) {
-                valor = valor.slice(0, 3) + '-' + valor.slice(3); // Agregar guion después de 3 caracteres
-            }
-            if (valor.length > 7) {
-                valor = valor.slice(0, 7); // Limitar a 7 caracteres
-            }
-            input.value = valor.toUpperCase(); // Convertir a mayúsculas
-        }
-    </script>
 <script>
     $('#createVehiculoModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget); // Botón que activó el modal
@@ -215,25 +188,15 @@
         var url = "{{ route('admin.vehiculos.create', ':id') }}"; // Corrige la ruta aquí
         url = url.replace(':id', button.data('id')); // Reemplaza ':id' con el ID del vehículo
 
-        // Hacer una solicitud AJAX para obtener los datos del vehículo
         $.ajax({
             url: url, // URL de la API o endpoint
             method: 'GET',
             success: function(data) {
-                // var select1 = modal.find('#tipo_select'); // Asegúrate de que este es el ID de tu select
-                // select1.empty(); // Limpiar las opciones existentes
-
-                // Opciones de tipo
-                // select1.append(new Option('Sedan', 'sedan'));
-                // select1.append(new Option('SUV', 'suv'));
-                // select1.append(new Option('Pickup', 'pickup'));
-                // select1.append(new Option('Hatchback', 'hatchback'));
-
                 // Obtener y limpiar el select de profesor
                 var select = modal.find('#profesor_select'); // Asegúrate de que este es el ID de tu select
                 select.empty(); // Limpiar las opciones existentes
                 $.each(data.profesores, function(index, profesor) {
-                    select.append(new Option(profesor.nombres + ' ' + profesor.apellidos, profesor.id));
+                    select.append(new Option(profesor.nombres + ' ' + profesor.apellidos, profesor.user_id));
                 });
                 
                 // Establecer el valor seleccionado del profesor, si existe

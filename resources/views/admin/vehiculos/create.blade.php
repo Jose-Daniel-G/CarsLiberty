@@ -30,13 +30,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tipo_select">Tipo</label>
-                        <select class="form-control" id="tipo_select" name="tipo" required>
+                        <label for="tipo_id">Tipo</label>
+                        <select class="form-control" id="tipo_id" name="tipo_id" required>
                             <option value="">Seleccione un tipo</option>
-                            <option value="sedan">Sedan</option>
-                            <option value="suv">SUV</option>
-                            <option value="pickup">Pickup</option>
-                            <option value="hatchback">Hatchback</option>
+                            @foreach ($tipos as $tipo)
+                                <option value="{{ $tipo->id }}">{{ $tipo->tipo }}</option>
+                            @endforeach
                         </select>
                     </div>
                     

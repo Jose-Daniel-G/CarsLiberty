@@ -13,10 +13,8 @@ class VehiculoController extends Controller
     public function index()
     {
         $vehiculos = Vehiculo::leftJoin('users', 'vehiculos.profesor_id', '=', 'users.id')
-            ->join('profesors', 'users.id', '=', 'profesors.user_id')
-            ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')
-            ->limit(100)->get();
-
+            ->leftJoin('profesors', 'users.id', '=', 'profesors.user_id')
+            ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')->get();
         $tipos = TipoVehiculo::all();
         return view("admin.vehiculos.index", compact('vehiculos','tipos'));
     }
@@ -32,10 +30,11 @@ class VehiculoController extends Controller
         $vehiculos = $request->validate([
             'placa' => 'required|string|max:10|unique:vehiculos,placa', // Validación para que la placa sea única
             'modelo' => 'required|string|max:255',
-            'tipo' => 'required|string|max:100', // Asegúrate de que 'tipo' sea válido
+            'tipo_id' => 'required|exists:tipos_vehiculos,id', // Asegúrate de que 'tipo' sea válido
             'disponible' => 'required|boolean', // Asumiendo que quieres manejar disponibilidad
             'profesor_id' => 'required|exists:users,id', // Asegúrate de que el usuario exista
         ]);
+        // dd($vehiculos);
 
         Vehiculo::create($vehiculos);
 
@@ -58,25 +57,35 @@ class VehiculoController extends Controller
 
     public function edit(Vehiculo $vehiculo)
     {
-        $profesores = Profesor::all(); // Obtener todos los profesores
-        $vehiculo->load('profesor'); // Cargar solo el profesor relacionado
-        \Log::info('Vehículo con profesor:', ['vehiculo' => $vehiculo->toArray()]);
+        // Cargar el profesor y su user
+        $vehiculo->load(['profesor']); 
+
+        $profesores = Profesor::all();
+        $tipos = TipoVehiculo::all();
+
+        \Log::info('Vehículo con profesor:', [$vehiculo->toArray()]);
+        \Log::info('tipos :', [$tipos->toArray()]);
+
         return response()->json([
             'vehiculo' => $vehiculo,
             'profesores' => $profesores,
+            'tipos' => $tipos,
         ]);
     }
 
 
+
     public function update(Request $request, Vehiculo $vehiculo)
     {
-        $request->validate(['placa' => 'required|string|max:7',
-                            'modelo' => 'required|string|max:255',
-                            'tipo' => 'required|string|max:50',
+       $data = $request->validate(['modelo' => 'required|string|max:255',
+                            'tipo_selected' => 'required|exists:tipos_vehiculos,id',
                             'disponible' => 'required|boolean', // Validación para 'disponible'
-                            'picoyplaca_id' => 'nullable|exists:picoyplaca,id', // Si manejas un campo de pico y placa
-                            'profesor_id' => 'nullable|exists:profesores,id']); // Validación para el profesor asociado
-        $vehiculo->update();
+                            'profesor_id' => 'nullable|exists:profesors,user_id']); // Validación para el profesor asociado
+        
+        $data['tipo_id'] = $data['tipo_selected'];
+        unset($data['tipo_selected']);
+
+        $vehiculo->update($data);
         return redirect()->route('admin.vehiculos.index')
             ->with('title', 'Éxito')
             ->with('info', 'Vehículo actualizado correctamente.')

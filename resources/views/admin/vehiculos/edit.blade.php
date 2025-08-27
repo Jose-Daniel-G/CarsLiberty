@@ -30,8 +30,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tipo_select">Tipo</label>
-                        <select class="form-control" id="tipo_select" name="tipo" required>
+                        <label for="tipo_selected">Tipo</label>
+                        <select class="form-control" id="tipo_selected" name="tipo_selected" required>
                             <option value="">Seleccione un tipo</option>
                             <!-- Opciones de tipo se llenarán aquí -->
                         </select>

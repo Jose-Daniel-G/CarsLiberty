@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function profesor()
     {
-        return $this->hasOne(Profesor::class);
+        return $this->hasOne(Profesor::class, 'user_id');
     }
 
     public function curso()
