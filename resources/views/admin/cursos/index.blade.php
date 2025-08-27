@@ -14,8 +14,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Cursos registrados</h3>
                     <div class="card-tools">
-                        <a href="{{ route('admin.cursos.create') }}" class="btn btn-primary">Registrar
-                            {{-- <i class="fa-solid fa-plus"></i> --}}
+                        <a class="btn btn-secondary" data-toggle="modal" data-target="#createCursoModal">Registrar
+                            <i class="bi bi-plus-circle-fill"></i>
                         </a>
                     </div>
                 </div>
@@ -54,30 +54,32 @@
                                             </button>
                                         </form>
                                     </td>
-                                    <td scope="row">
-                                        <div class="btn-group" role="group" aria-label="basic example">
-                                            <a href="{{ route('admin.cursos.show', $curso->id) }}"
-                                                class="btn btn-info btn-sm"><i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.cursos.edit', $curso->id) }}"
-                                                class="btn btn-success btn-sm"><i class="fas fa-edit"></i>
-                                            </a>
+                                    <td scope="row"> 
+                                        <a href="{{ route('admin.cursos.show', $curso->id) }}" class="btn btn-info btn-sm mr-1" title="Ver">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
 
-                                            <form id="delete-form-{{ $curso->id }}"
-                                                action="{{ route('admin.cursos.destroy', $curso->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="confirmDelete({{ $curso->id }})"><i
-                                                        class="fas fa-trash"></i></button>
-                                            </form>
+                                        <a href="#" class="btn btn-warning btn-sm mr-1" data-id="{{ $curso->id }}"
+                                        data-toggle="modal" data-target="#editCursoModal" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
 
-                                        </div>
+                                        <form id="delete-form-{{ $curso->id }}" action="{{ route('admin.cursos.destroy', $curso->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
+                                                    onclick="confirmDelete({{ $curso->id }})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                     @include('admin.cursos.create')
+                    @include('admin.cursos.edit')
+                    {{--@include('admin.cursos.show') --}}
                 </div>
             </div>
         </div>
@@ -157,3 +159,31 @@
         @endif
     </script>
 @stop
+<script>
+    $('#editCursoModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); // botón que abre el modal
+        var id = button.data('id'); // ID del curso
+        var modal = $(this);
+
+        var url = "{{ route('admin.cursos.edit', ':id') }}".replace(':id', id);
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data) {
+                // Cambiar la URL del form
+                var formAction = "{{ route('admin.cursos.update', ':id') }}".replace(':id', data.id);
+                modal.find('#editForm').attr('action', formAction);
+
+                // Llenar los campos
+                modal.find('#edit-nombre').val(data.nombre);
+                modal.find('#edit-descripcion').val(data.descripcion);
+                modal.find('#edit-horas').val(data.horas_requeridas);
+                modal.find('#edit-estado').val(data.estado);
+            },
+            error: function(xhr) {
+                console.error('Error al cargar los datos del curso:', xhr);
+            }
+        });
+    });
+</script>

@@ -395,11 +395,11 @@ return [
             'icon' => 'fas fa-book',
             'can' => 'admin.cursos.index',
             'submenu' => [
-                [
-                    'text' => 'Creacion de cursos',
-                    'icon'        => 'far fa-circle nav-icon',
-                    'route' => 'admin.cursos.create',
-                ],
+                // [
+                //     'text' => 'Creacion de cursos',
+                //     'icon'        => 'far fa-circle nav-icon',
+                //     'route' => 'admin.cursos.create',
+                // ],
                 [
                     'text' => 'Listado de cursos',
                     'icon'        => 'far fa-circle nav-icon',
