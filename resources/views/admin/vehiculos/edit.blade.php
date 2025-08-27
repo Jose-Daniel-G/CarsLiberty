@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.vehiculos.update', $vehiculo->id) }}" method="POST">
+                <form id="editForm" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="form-group">

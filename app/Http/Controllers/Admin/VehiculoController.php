@@ -75,22 +75,27 @@ class VehiculoController extends Controller
 
 
 
-    public function update(Request $request, Vehiculo $vehiculo)
-    {
-       $data = $request->validate(['modelo' => 'required|string|max:255',
-                            'tipo_selected' => 'required|exists:tipos_vehiculos,id',
-                            'disponible' => 'required|boolean', // Validación para 'disponible'
-                            'profesor_id' => 'nullable|exists:profesors,user_id']); // Validación para el profesor asociado
-        
-        $data['tipo_id'] = $data['tipo_selected'];
-        unset($data['tipo_selected']);
+public function update(Request $request, Vehiculo $vehiculo)
+{
+    // The unique validation rule is modified to ignore the current vehicle's ID
+    $data = $request->validate([
+        'placa' => 'required|string|max:7|unique:vehiculos,placa,' . $vehiculo->id,
+        'modelo' => 'required|string|max:255',
+        'tipo_selected' => 'required|exists:tipos_vehiculos,id',
+        'disponible' => 'required|boolean',
+        'profesor_id' => 'nullable|exists:profesors,user_id'
+    ]);
 
-        $vehiculo->update($data);
-        return redirect()->route('admin.vehiculos.index')
-            ->with('title', 'Éxito')
-            ->with('info', 'Vehículo actualizado correctamente.')
-            ->with('icon', 'success');
-    }
+    $data['tipo_id'] = $data['tipo_selected'];
+    unset($data['tipo_selected']);
+
+    $vehiculo->update($data);
+
+    return redirect()->route('admin.vehiculos.index')
+        ->with('title', 'Éxito')
+        ->with('info', 'Vehículo actualizado correctamente.')
+        ->with('icon', 'success');
+}
 
 
     public function destroy(Vehiculo $vehiculo)
