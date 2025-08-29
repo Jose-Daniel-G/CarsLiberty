@@ -305,11 +305,7 @@ return [
             'icon' => 'bi bi-gear',
             'can'  => 'admin.config.index',
             'submenu' => [
-                // [
-                //     'text' => 'Crear configuracion',
-                //     'icon'        => 'far fa-circle nav-icon',
-                //     'route' => 'admin.config.create',
-                // ],
+                // [ 'text' => 'Crear configuracion', 'icon'=> 'far fa-circle nav-icon', 'route' => 'admin.config.create', ],
                 [
                     'text' => 'Listado de configuracion',
                     'icon'        => 'far fa-circle nav-icon',
@@ -377,11 +373,11 @@ return [
             'icon' => 'fas fa-users mr-2',
             'can' => 'admin.clientes.index',
             'submenu' => [
-                [
-                    'text' => 'Creacion de clientes',
-                    'icon'        => 'far fa-circle nav-icon',
-                    'route' => 'admin.clientes.create',
-                ],
+                // [
+                //     'text' => 'Creacion de clientes',
+                //     'icon'=> 'far fa-circle nav-icon',
+                //     'route' => 'admin.clientes.create',
+                // ],
                 [
                     'text' => 'Listado de clientes',
                     'icon'        => 'far fa-circle nav-icon',
@@ -395,11 +391,7 @@ return [
             'icon' => 'fas fa-book',
             'can' => 'admin.cursos.index',
             'submenu' => [
-                // [
-                //     'text' => 'Creacion de cursos',
-                //     'icon'        => 'far fa-circle nav-icon',
-                //     'route' => 'admin.cursos.create',
-                // ],
+                // ['text' => 'Creacion de cursos','icon'=> 'far fa-circle nav-icon','route' => 'admin.cursos.create', ],
                 [
                     'text' => 'Listado de cursos',
                     'icon'        => 'far fa-circle nav-icon',
@@ -413,21 +405,16 @@ return [
             'icon' => 'ion fas bi bi-person-lines-fill',
             'can' => 'admin.profesores.index',
             'submenu' => [
-                [
-                    'text' => 'Creacion de profesores',
-                    'icon'        => 'far fa-circle nav-icon',
-                    'route' => 'admin.profesores.create',
-                ],
+                // ['text' => 'Creacion de profesores','icon' => 'far fa-circle nav-icon','route' => 'admin.profesores.create', ],
                 [
                     'text' => 'Listado de profesores',
                     'icon'        => 'far fa-circle nav-icon',
                     'route' => 'admin.profesores.index',
                 ],
                 // [
-                //     'text'        => 'Reportes',
-                //     'icon'        => 'far fa-circle nav-icon',
-                //     'route' => 'admin.profesores.reportes',
-                // ],
+                //     'text'  => 'Reportes',
+                //     'icon'  => 'far fa-circle nav-icon',
+                //     'route' => 'admin.profesores.reportes', ],
 
             ],
         ],

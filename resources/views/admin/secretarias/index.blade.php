@@ -17,8 +17,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Usuarios registrados</h3>
                     <div class="card-tools">
-                        <a href="{{ route('admin.secretarias.create') }}" class="btn btn-primary">Registrar
-                            {{-- <i class="fa-solid fa-plus"></i> --}}
+                        <a class="btn btn-secondary" data-toggle="modal" data-target="#createModal">Registrar
+                            <i class="bi bi-plus-circle-fill"></i>
                         </a>
                     </div>
                 </div>
@@ -92,6 +92,10 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @include('admin.secretarias.create')
+                    {{-- @include('admin.secretarias.edit')
+                    @include('admin.secretarias.show') --}}
+
                 </div>
             </div>
         </div>

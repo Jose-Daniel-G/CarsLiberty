@@ -1,23 +1,15 @@
-@extends('adminlte::page')
-
-@section('title', 'Dashboard')
-
-@section('content_header')
-    <h1>Sistema de reservas </h1>
-@stop
-
-@section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <h1>Registro de un nuevo profesores</h1>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-outline card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Llene los Datos</h3>
-                    </div>
-                    <div class="card-body">
+<!-- Modal de Create -->
+<div class="modal fade" id="createProfesorModal" tabindex="-1" role="dialog" aria-labelledby="createProfesorModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createProfesorModalLabel">Crear Profesor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
                         <form action="{{ route('admin.profesores.store') }}" method="POST" autocomplete="off">
                             @csrf
                             <div class="row">
@@ -51,17 +43,6 @@
                                         @enderror
                                     </div>
                                 </div>
-
-                                {{-- <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="especialidad">Especialidad </label><b class="text-danger">*</b>
-                                        <input type="text" class="form-control" name="especialidad"
-                                            value="{{ old('especialidad') }}" required>
-                                        @error('especialidad')
-                                            <small class="bg-danger text-white p-1">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div> --}}
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
@@ -88,7 +69,8 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="password_confirmation">Verificacion de contrasena </label><b class="text-danger">*</b>
+                                        <label for="password_confirmation">Verificacion de contrasena </label><b
+                                            class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password_confirmation"
                                             value="{{ old('password_confirmation') }}" required>
                                         @error('password_confirmation')
@@ -97,31 +79,19 @@
                                     </div>
                                 </div>
                             </div>
-
-                    </div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <a href="{{ route('admin.secretarias.index') }}" class="btn btn-secondary">
-                                Cancelar
-                                {{-- <i class="fa-solid fa-plus"></i> --}}
-                            </a>
-                            <button type="submit" class="btn btn-primary">Registrar profesores</button>
-                        </div>
-                    </div>
-                </div>
-                </form>
+                            </div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <a href="{{ route('admin.secretarias.index') }}" class="btn btn-secondary">
+                                            Cancelar
+                                            {{-- <i class="fa-solid fa-plus"></i> --}}
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">Registrar profesores</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
             </div>
         </div>
     </div>
-    </div>
-    </div>
-
-@stop
-
-@section('css')
-
-@stop
-
-@section('js')
-
-@stop
+</div>

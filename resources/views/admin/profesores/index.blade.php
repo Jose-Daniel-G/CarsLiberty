@@ -22,8 +22,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Profesores registrados</h3>
                     <div class="card-tools">
-                        <a href="{{ route('admin.profesores.create') }}" class="btn btn-primary">Registrar
-                            {{-- <i class="fa-solid fa-plus"></i> --}}
+                        <a class="btn btn-secondary" data-toggle="modal" data-target="#createProfesorModal">Registrar
+                            <i class="bi bi-plus-circle-fill"></i>
                         </a>
                     </div>
                 </div>
@@ -49,26 +49,34 @@
                                     <td scope="row">{{ $contador++ }}</td>
                                     <td scope="row">{{ $profesor->nombres . ' ' . $profesor->apellidos }}</td>
                                     <td scope="row">{{ $profesor->telefono }}</td>
-                                    <td scope="row">                                            <div class="text-center">
-                                        <form id="disable-form-{{ $profesor->id }}"
-                                            action="{{ route('admin.profesors.toggleStatus', $profesor->user->id) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
-                                            <button type="submit"
-                                                class="btn {{ $profesor->user->status ? 'btn-success' : 'btn-danger' }}">
-                                                {!! $profesor->user->status
-                                                    ? '<i class="fa-solid fa-square-check"></i>'
-                                                    : '<i class="fa-solid fa-circle-xmark"></i>' !!}
-                                            </button>
-                                        </form>
-                                    </div></td>
+                                    <td scope="row">
+                                        <div class="text-center">
+                                            <form id="disable-form-{{ $profesor->id }}"
+                                                action="{{ route('admin.profesors.toggleStatus', $profesor->user->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
+                                                <button type="submit"
+                                                    class="btn {{ $profesor->user->status ? 'btn-success' : 'btn-danger' }}">
+                                                    {!! $profesor->user->status
+                                                        ? '<i class="fa-solid fa-square-check"></i>'
+                                                        : '<i class="fa-solid fa-circle-xmark"></i>' !!}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">
-                                            <a href="{{ route('admin.profesores.show', $profesor->id) }}"
-                                                class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                            <a href="{{ route('admin.profesores.edit', $profesor->id) }}"
-                                                class="btn btn-success btn-sm"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="btn btn-primary" data-id="{{ $profesor->id }}"
+                                                data-toggle="modal" data-target="#showProfesorModal">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+
+                                            <a href="#" class="btn btn-warning btn-sm mr-1"
+                                                data-id="{{ $profesor->id }}" data-toggle="modal"
+                                                data-target="#editProfesorModal" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <form id="delete-form-{{ $profesor->id }}"
                                                 action="{{ route('admin.profesores.destroy', $profesor->id) }}"
                                                 method="POST">
@@ -86,6 +94,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @include('admin.profesores.edit')
+                    @include('admin.profesores.create')
+                    @include('admin.profesores.show')
                 </div>
             </div>
         </div>
@@ -93,17 +104,7 @@
 @stop
 
 @section('js')
-    
-    
-    
 
-    <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
     <script>
         function confirmDelete(id) {
             Swal.fire({
@@ -166,20 +167,7 @@
                 extend: 'collection',
                 text: 'Reportes',
                 orientation: 'landscape',
-                buttons: [{
-                        text: 'Copiar',
-                        extend: 'copy'
-                    },
-                    {
-                        // text: '<i class="bi bi-file-pdf-fill"></i>',//NO SE ESTA VISUALIZANDO ICONO DE  BOOTSTRAP 4
-                        extend: 'pdf'
-                    }, {
-                        extend: 'csv'
-                    }, {
-                        extend: 'excel'
-                    }, {
-                        text: 'Imprimir',
-                        extend: 'print'
+                buttons: [{text: 'Copiar',extend: 'copy'},{extend: 'pdf'},{extend: 'csv'},{extend: 'excel'},{text: 'Imprimir',extend: 'print'
                     }
                 ]
             }, ],
@@ -193,4 +181,34 @@
             });
         @endif
     </script>
+    <script>
+    $('#editProfesorModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); 
+        var id = button.data('id'); // id del profesor
+        var modal = $(this);
+
+        // Ruta edit
+        var url = "{{ route('admin.profesores.edit', ':id') }}".replace(':id', id);
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data) {
+                // Cambiar la URL del form update
+                var formAction = "{{ route('admin.profesores.update', ':id') }}".replace(':id', data.id);
+                modal.find('#editProfesorForm').attr('action', formAction);
+
+                // Rellenar los campos
+                modal.find('#edit-nombres').val(data.nombres);
+                modal.find('#edit-apellidos').val(data.apellidos);
+                modal.find('#edit-telefono').val(data.telefono);
+                modal.find('#edit-email').val(data.user.email);
+            },
+            error: function(xhr) {
+                console.error('Error al cargar los datos del profesor:', xhr);
+            }
+        });
+    });
+</script>
+
 @stop

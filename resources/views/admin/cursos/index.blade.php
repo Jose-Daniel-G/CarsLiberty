@@ -88,7 +88,35 @@
 
 @section('js')
 
+<script>
+    $('#editCursoModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); // botón que abre el modal
+        var id = button.data('id'); // ID del curso
+        var modal = $(this);
 
+        var url = "{{ route('admin.cursos.edit', ':id') }}".replace(':id', id);
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data) {
+                // Cambiar la URL del form
+                var formAction = "{{ route('admin.cursos.update', ':id') }}".replace(':id', data.id);
+                modal.find('#editForm').attr('action', formAction);
+
+                // Llenar los campos
+                modal.find('#edit-nombre').val(data.nombre);
+                modal.find('#edit-descripcion').val(data.descripcion);
+                modal.find('#edit-horas').val(data.horas_requeridas);
+                var estadoTexto = (data.estado == 1 || data.estado == 'A') ? 'Activo' : 'Inactivo';
+                modal.find('#edit-estado').text(estadoTexto);
+            },
+            error: function(xhr) {
+                console.error('Error al cargar los datos del curso:', xhr);
+            }
+        });
+    });
+</script>
 
 
     <!-- Buttons JS -->
@@ -159,31 +187,3 @@
         @endif
     </script>
 @stop
-<script>
-    $('#editCursoModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); // botón que abre el modal
-        var id = button.data('id'); // ID del curso
-        var modal = $(this);
-
-        var url = "{{ route('admin.cursos.edit', ':id') }}".replace(':id', id);
-
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(data) {
-                // Cambiar la URL del form
-                var formAction = "{{ route('admin.cursos.update', ':id') }}".replace(':id', data.id);
-                modal.find('#editForm').attr('action', formAction);
-
-                // Llenar los campos
-                modal.find('#edit-nombre').val(data.nombre);
-                modal.find('#edit-descripcion').val(data.descripcion);
-                modal.find('#edit-horas').val(data.horas_requeridas);
-                modal.find('#edit-estado').val(data.estado);
-            },
-            error: function(xhr) {
-                console.error('Error al cargar los datos del curso:', xhr);
-            }
-        });
-    });
-</script>

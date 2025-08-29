@@ -48,7 +48,7 @@
                         <div class="row ">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="fecha_nacimiento">Fecha de Nacimientos </label>
+                                    <label for="fecha_nacimiento">Fecha de Nacimiento </label>
                                     <p>{{ $secretaria->fecha_nacimiento }}</p>
                                 </div>
                             </div>

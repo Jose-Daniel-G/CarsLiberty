@@ -60,13 +60,19 @@ class ProfesorController extends Controller
 
     public function show(Profesor $profesor)
     {
-        return view('admin.profesores.show', compact('profesor'));
+        // return view('admin.profesores.show', compact('profesor'));
     }
 
     public function edit(Profesor $profesor)
     {
-        return view('admin.profesores.edit', compact('profesor'));
+        \Log::info("profesor: ", [$profesor]);
+
+        // incluir también el email del user
+        $profesor->load('user');
+
+        return response()->json($profesor);
     }
+
 
     public function update(Request $request, Profesor $profesor)
     {
@@ -74,7 +80,6 @@ class ProfesorController extends Controller
             'nombres' => 'required',
             'apellidos' => 'required',
             'telefono' => 'required',
-            // 'especialidad' => 'required',
             'email' => 'required|email|max:50|unique:users,email,' . $profesor->user_id, // Excluyendo el usuario actual
             'password' => 'nullable|min:8|confirmed', // Permitir que la contraseña sea opcional
         ]);

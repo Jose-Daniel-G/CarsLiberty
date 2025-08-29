@@ -15,13 +15,14 @@ class ClienteController extends Controller
     public function index()
     {
         $clientes = Cliente::with('user')->get();
-        return view('admin.clientes.index', compact('clientes'));
+         $cursos = Curso::all();
+        return view('admin.clientes.index', compact('clientes','cursos'));
     }
 
     public function create()
     {
-        $cursos = Curso::all();
-        return view('admin.clientes.create', compact('cursos'));
+        // $cursos = Curso::all();
+        // return view('admin.clientes.create', compact('cursos'));
     }
 
     public function store(Request $request)
@@ -50,7 +51,8 @@ class ClienteController extends Controller
     
             // Asociar el user_id al cliente
             $validatedData['user_id'] = $usuario->id;
-    
+            unset($validatedData['correo']);
+            \Log::info('data cliente: ', $validatedData);
             // Crear cliente
             $cliente = Cliente::create($validatedData);
             $usuarioId = $usuario->id;   

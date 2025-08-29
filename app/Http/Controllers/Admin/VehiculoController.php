@@ -46,13 +46,13 @@ class VehiculoController extends Controller
 
     public function show(Vehiculo $vehiculo)
     {
-        $vehiculo = Vehiculo::leftJoin('users', 'vehiculos.profesor_id', '=', 'users.id')
-            ->join('profesors', 'users.id', '=', 'profesors.user_id')
-            ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')
-            ->where('vehiculos.id', $vehiculo->id) // Filtrar por el ID del vehículo
-            ->first(); // Obtener solo un registro
+        // $vehiculo = Vehiculo::leftJoin('users', 'vehiculos.profesor_id', '=', 'users.id')
+        //     ->join('profesors', 'users.id', '=', 'profesors.user_id')
+        //     ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')
+        //     ->where('vehiculos.id', $vehiculo->id) // Filtrar por el ID del vehículo
+        //     ->first(); // Obtener solo un registro
 
-        return view('admin.vehiculos.show', compact('vehiculo')); // Asegúrate de tener esta vista
+        // return view('admin.vehiculos.show', compact('vehiculo')); // Asegúrate de tener esta vista
     }
 
     public function edit(Vehiculo $vehiculo)
@@ -63,9 +63,6 @@ class VehiculoController extends Controller
         $profesores = Profesor::all();
         $tipos = TipoVehiculo::all();
 
-        \Log::info('Vehículo con profesor:', [$vehiculo->toArray()]);
-        \Log::info('tipos :', [$tipos->toArray()]);
-
         return response()->json([
             'vehiculo' => $vehiculo,
             'profesores' => $profesores,
@@ -75,27 +72,27 @@ class VehiculoController extends Controller
 
 
 
-public function update(Request $request, Vehiculo $vehiculo)
-{
-    // The unique validation rule is modified to ignore the current vehicle's ID
-    $data = $request->validate([
-        'placa' => 'required|string|max:7|unique:vehiculos,placa,' . $vehiculo->id,
-        'modelo' => 'required|string|max:255',
-        'tipo_selected' => 'required|exists:tipos_vehiculos,id',
-        'disponible' => 'required|boolean',
-        'profesor_id' => 'nullable|exists:profesors,user_id'
-    ]);
+    public function update(Request $request, Vehiculo $vehiculo)
+    {
+        // The unique validation rule is modified to ignore the current vehicle's ID
+        $data = $request->validate([
+            'placa' => 'required|string|max:7|unique:vehiculos,placa,' . $vehiculo->id,
+            'modelo' => 'required|string|max:255',
+            'tipo_selected' => 'required|exists:tipos_vehiculos,id',
+            'disponible' => 'required|boolean',
+            'profesor_id' => 'nullable|exists:profesors,user_id'
+        ]);
 
-    $data['tipo_id'] = $data['tipo_selected'];
-    unset($data['tipo_selected']);
+        $data['tipo_id'] = $data['tipo_selected'];
+        unset($data['tipo_selected']);
 
-    $vehiculo->update($data);
+        $vehiculo->update($data);
 
-    return redirect()->route('admin.vehiculos.index')
-        ->with('title', 'Éxito')
-        ->with('info', 'Vehículo actualizado correctamente.')
-        ->with('icon', 'success');
-}
+        return redirect()->route('admin.vehiculos.index')
+            ->with('title', 'Éxito')
+            ->with('info', 'Vehículo actualizado correctamente.')
+            ->with('icon', 'success');
+    }
 
 
     public function destroy(Vehiculo $vehiculo)

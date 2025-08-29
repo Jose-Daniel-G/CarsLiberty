@@ -29,7 +29,7 @@ class SecretariaController extends Controller
             'cc' => 'required|unique:secretarias',
             'celular' => 'required',
             'direccion' => 'required',
-            'correo' => 'required|email|max:250|unique:users',
+            'correo' => 'required|email|max:250|unique:users,email',
             'fecha_nacimiento' => 'required|max:150',
             'password' => 'required|min:8|max:20|confirmed',
         ]);
