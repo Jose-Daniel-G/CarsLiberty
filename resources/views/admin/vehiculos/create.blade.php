@@ -25,10 +25,11 @@
                     <div class="form-group">
                         <label for="disponible">Disponible</label>
                         <select class="form-control" id="disponible" name="disponible">
-                            <option value="1" {{ $vehiculo->disponible ? 'selected' : '' }}>Sí</option>
-                            <option value="0" {{ !$vehiculo->disponible ? 'selected' : '' }}>No</option>
+                            <option value="1" selected>Sí</option>
+                            <option value="0">No</option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="tipo_id">Tipo</label>
                         <select class="form-control" id="tipo_id" name="tipo_id" required>
