@@ -38,8 +38,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="profesor_select">Profesor</label>
-                        <select class="form-control" id="profesor_select" name="profesor_id"></select>
+                        <label for="profesor_select_edit">Profesor</label>
+                        <select class="form-control" id="profesor_select_edit" name="profesor_id"></select>
                     </div>
 
                     <div class="modal-footer">

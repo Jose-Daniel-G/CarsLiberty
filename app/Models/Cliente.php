@@ -44,7 +44,7 @@ class Cliente extends Model
     }
     public function asistencias()
     {
-        return $this->hasMany(Asistencia::class, 'cliente_id'); // Asegúrate de que 'cliente_id' sea la clave foránea en la tabla asistencias
+        return $this->hasMany(Asistencia::class, 'cliente_id'); 
     }
     
     public function cursosCompletados()

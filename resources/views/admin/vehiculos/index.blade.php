@@ -168,7 +168,7 @@
                 tipoSelect.val(data.vehiculo.tipo_id); // Establecer el valor seleccionado
 
                 // Limpiar y agregar opciones al select de profesores
-                var profesorSelect = modal.find('#profesor_select');
+                var profesorSelect = modal.find('#profesor_select_edit');
                 profesorSelect.empty();
                 $.each(data.profesores, function(index, profesor) {
                     profesorSelect.append(new Option(profesor.nombres + ' ' + profesor
@@ -197,13 +197,8 @@
             url: url, // URL de la API o endpoint
             method: 'GET',
             success: function(data) {
-                // Obtener y limpiar el select de profesor
-                var select = modal.find('#profesor_select'); // Asegúrate de que este es el ID de tu select
-                select.empty(); // Limpiar las opciones existentes
-                $.each(data.profesores, function(index, profesor) {
-                    select.append(new Option(profesor.nombres + ' ' + profesor.apellidos, profesor.user_id));
-                });
-                
+                // Obtener el select de profesor
+                var select = modal.find('#profesor_select'); 
                 // Establecer el valor seleccionado del profesor, si existe
                 if (data.vehiculo) {
                     select.val(data.vehiculo.profesor_id); // Establecer el valor seleccionado

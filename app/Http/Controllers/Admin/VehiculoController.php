@@ -12,17 +12,16 @@ class VehiculoController extends Controller
 {
     public function index()
     {
-        $vehiculos = Vehiculo::leftJoin('users', 'vehiculos.profesor_id', '=', 'users.id')
-            ->leftJoin('profesors', 'users.id', '=', 'profesors.user_id')
+        $vehiculos = Vehiculo::leftJoin('profesors', 'vehiculos.profesor_id', '=', 'profesors.id')
             ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')->get();
-        $tipos = TipoVehiculo::all();
-        return view("admin.vehiculos.index", compact('vehiculos','tipos'));
+        // dd($vehiculos);
+        $tipos = TipoVehiculo::all();  $profesors = Profesor::all(); 
+        return view("admin.vehiculos.index", compact('vehiculos','tipos', 'profesors'));
     }
 
     public function create()
     {
-        $profesores = Profesor::all(); // Obtener todos los profesores
-        return response()->json(['profesores' => $profesores]);
+
     }
 
     public function store(Request $request)
