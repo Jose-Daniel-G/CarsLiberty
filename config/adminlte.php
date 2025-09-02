@@ -353,6 +353,8 @@ return [
         [
             'text' => 'Programador',
             'icon' => 'fas fa-laptop',
+            'label' => 'check',
+            'label_color' => 'primary',
             'can' => 'admin.secretarias.index',
             'submenu' => [
                 [
@@ -371,13 +373,11 @@ return [
         [
             'text' => 'Clientes',
             'icon' => 'fas fa-users mr-2',
+            'label' => 'check *',
+            'label_color' => 'primary',
             'can' => 'admin.clientes.index',
             'submenu' => [
-                // [
-                //     'text' => 'Creacion de clientes',
-                //     'icon'=> 'far fa-circle nav-icon',
-                //     'route' => 'admin.clientes.create',
-                // ],
+                // ['text' => 'Creacion de clientes','icon'=> 'far fa-circle nav-icon','route' => 'admin.clientes.create',],
                 [
                     'text' => 'Listado de clientes',
                     'icon'        => 'far fa-circle nav-icon',
@@ -389,6 +389,8 @@ return [
         [
             'text' => 'Cursos',
             'icon' => 'fas fa-book',
+            'label' => 'check',
+            'label_color' => 'primary',
             'can' => 'admin.cursos.index',
             'submenu' => [
                 // ['text' => 'Creacion de cursos','icon'=> 'far fa-circle nav-icon','route' => 'admin.cursos.create', ],
@@ -403,6 +405,8 @@ return [
         [
             'text' => 'Profesores',
             'icon' => 'ion fas bi bi-person-lines-fill',
+            'label' => 'check *',
+            'label_color' => 'primary',
             'can' => 'admin.profesores.index',
             'submenu' => [
                 // ['text' => 'Creacion de profesores','icon' => 'far fa-circle nav-icon','route' => 'admin.profesores.create', ],
@@ -421,6 +425,8 @@ return [
         [
             'text' => 'Horarios',
             'icon' => 'fas fa-calendar-alt',
+            'label' => 'edit,show',
+            'label_color' => 'danger',
             'can' => 'admin.horarios.index',
             'submenu' => [
                 [
@@ -439,6 +445,8 @@ return [
         [
             'text' => 'Vehiculos',
             'icon' => 'bi bi-car-front',
+            'label' => 'edit,show',
+            'label_color' => 'danger',
             'can'  => 'admin.vehiculos.index',
             'submenu' => [
                 [
@@ -446,25 +454,16 @@ return [
                     'icon'        => 'far fa-circle nav-icon',
                     'route'  => 'admin.vehiculos.index',
                 ],
-                [
-                    'text' => 'Picoyplaca',
-                    'icon'        => 'far fa-circle nav-icon',
-                    'route' => 'admin.picoyplaca.index',
-                ],
+                // [
+                //     'text' => 'Picoyplaca',
+                //     'icon'        => 'far fa-circle nav-icon',
+                //     'route' => 'admin.picoyplaca.index',
+                // ],
 
             ],
         ],
-        // [
-        //     'text'        => 'Agenda',
-        //     'route'         => 'admin.users.index',
-        //     'icon' => 'fas fa-envelope',
-        // ],
-
-        // [
-        //     'text' => 'information',
-        //     'icon_color' => 'cyan',
-        //     'url' => '#',
-        // ],
+        // ['text'=> 'Agenda','route' => 'admin.users.index','icon' => 'fas fa-envelope',],
+        // ['text' => 'information','icon_color' => 'cyan','url' => '#', ],
     ],
 
     /*

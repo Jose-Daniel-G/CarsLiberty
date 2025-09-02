@@ -48,8 +48,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="email">Email </label><b class="text-danger">*</b>
-                                        <input type="email" class="form-control" name="email"
-                                            value="{{ old('email') }}" required>
+                                        <input type="email" class="form-control" name="email" autocomplete="new-email" required>
                                         @error('email')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
                                         @enderror
@@ -59,8 +58,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="password">Contrasena </label><b class="text-danger">*</b>
-                                        <input type="password" class="form-control" name="password"
-                                            value="{{ old('password') }}" required>
+                                        <input type="password" class="form-control" name="password" autocomplete="new-password" required>
                                         @error('password')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
                                         @enderror
@@ -71,8 +69,7 @@
                                     <div class="form-group">
                                         <label for="password_confirmation">Verificacion de contrasena </label><b
                                             class="text-danger">*</b>
-                                        <input type="password" class="form-control" name="password_confirmation"
-                                            value="{{ old('password_confirmation') }}" required>
+                                        <input type="password" class="form-control" name="password_confirmation"  required>
                                         @error('password_confirmation')
                                             <small class="bg-danger text-white p-1">{{ $message }}</small>
                                         @enderror
@@ -81,11 +78,7 @@
                             </div>
                             </div class="row">
                                 <div class="col-md-12">
-                                    <div class="form-group">
-                                        <a href="{{ route('admin.secretarias.index') }}" class="btn btn-secondary">
-                                            Cancelar
-                                            {{-- <i class="fa-solid fa-plus"></i> --}}
-                                        </a>
+                                    <div class="form-group"> 
                                         <button type="submit" class="btn btn-primary">Registrar profesores</button>
                                     </div>
                                 </div>

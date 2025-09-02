@@ -54,7 +54,6 @@
                     <div class="row mt-3">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <a href="{{ route('admin.cursos.index') }}" class="btn btn-secondary">Cancelar</a>
                                 <button type="submit" class="btn btn-primary">Actualizar curso</button>
                             </div>
                         </div>
