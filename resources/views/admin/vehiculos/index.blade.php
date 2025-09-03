@@ -91,124 +91,165 @@
 @endsection
 
 @section('js')
-<script src="{{ asset('js/helpers.js') }}"></script>
+    <script src="{{ asset('js/helpers.js') }}"></script>
 
-<script>
-    new DataTable('#vehiculos', {
-        responsive: true,
-        autoWidth: false, //no le vi la funcionalidad
-        dom: 'Bfrtip', // Añade el contenedor de botones
-        buttons: [{
-            extend: 'collection',
-            text: 'Reportes',
-            orientation: 'landscape',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
-            'colvis'], // Botones que aparecen en la imagen
-        }, ],
-        "language": {
-            "decimal": "",
-            "emptyTable": "No hay datos disponibles en la tabla",
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ vehiculos",
-            "infoEmpty": "Mostrando 0 a 0 de 0 vehiculos",
-            "infoFiltered": "(filtrado de _MAX_ vehiculos totales)",
-            "infoPostFix": "",
-            "thousands": ",",
-            "lengthMenu": "Mostrar _MENU_ vehiculos",
-            "loadingRecords": "Cargando...",
-            "processing": "",
-            "search": "Buscar:",
-            "zeroRecords": "No se encontraron registros coincidentes",
-            "paginate": {
-                "first": "Primero",
-                "last": "Último",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            },
-            "aria": {
-                "orderable": "Ordenar por esta columna",
-                "orderableReverse": "Invertir el orden de esta columna"
-            }
-        },
-        initComplete: function() {
-            // Apply custom styles after initialization
-            $('.dt-button').css({
-                'background-color': '#4a4a4a',
-                'color': 'white',
-                'border': 'none',
-                'border-radius': '4px',
-                'padding': '8px 12px',
-                'margin': '0 5px',
-                'font-size': '14px'
-            });
-        },
-    });
-</script>
-
-<script>
-    $('#editVehiculoModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var modal = $(this);
-        var url = "{{ route('admin.vehiculos.edit', ':id') }}".replace(':id', button.data('id'));
-
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(data) {
-                // modal.find('#edit_vehiculo_id').val(data.vehiculo.id);
-                modal.find('#placa').val(data.vehiculo.placa);
-                modal.find('#modelo').val(data.vehiculo.modelo);
-                modal.find('#disponible').val(data.vehiculo.disponible ? '1' : '0');
-
-                // Limpiar y agregar opciones al select de tipos
-                var tipoSelect = modal.find('#tipo_selected');
-                tipoSelect.empty();
-                $.each(data.tipos, function(index, tipo) {
-                    tipoSelect.append(new Option(tipo.tipo, tipo.id));
-                });
-                tipoSelect.val(data.vehiculo.tipo_id); // Establecer el valor seleccionado
-
-                // Limpiar y agregar opciones al select de profesores
-                var profesorSelect = modal.find('#profesor_select_edit');
-                profesorSelect.empty();
-                $.each(data.profesores, function(index, profesor) {
-                    profesorSelect.append(new Option(profesor.nombres + ' ' + profesor
-                        .apellidos, profesor.user_id));
-                });
-                profesorSelect.val(data.vehiculo.profesor_id); // Establecer el valor seleccionado
-                // CRUCIAL: Set the form's action URL dynamically
-                var formAction = "{{ route('admin.vehiculos.update', ':id') }}".replace(':id', data.vehiculo.id);
-                modal.find('#editForm').attr('action', formAction);
-            },
-            error: function(xhr) {
-                console.error('Error al cargar los datos del vehículo:', xhr);
-            }
-        });
-    });
-</script>
-
-<script>
-    $('#createVehiculoModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); // Botón que activó el modal
-        var modal = $(this); // Define modal como el modal actual
-        var url = "{{ route('admin.vehiculos.create', ':id') }}"; // Corrige la ruta aquí
-        url = url.replace(':id', button.data('id')); // Reemplaza ':id' con el ID del vehículo
-
-        $.ajax({
-            url: url, // URL de la API o endpoint
-            method: 'GET',
-            success: function(data) {
-                // Obtener el select de profesor
-                var select = modal.find('#profesor_select'); 
-                // Establecer el valor seleccionado del profesor, si existe
-                if (data.vehiculo) {
-                    select.val(data.vehiculo.profesor_id); // Establecer el valor seleccionado
+    <script>
+        new DataTable('#vehiculos', {
+            responsive: true,
+            autoWidth: false, //no le vi la funcionalidad
+            dom: 'Bfrtip', // Añade el contenedor de botones
+            buttons: [{
+                extend: 'collection',
+                text: 'Reportes',
+                orientation: 'landscape',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
+                    'colvis'
+                ], // Botones que aparecen en la imagen
+            }, ],
+            "language": {
+                "decimal": "",
+                "emptyTable": "No hay datos disponibles en la tabla",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ vehiculos",
+                "infoEmpty": "Mostrando 0 a 0 de 0 vehiculos",
+                "infoFiltered": "(filtrado de _MAX_ vehiculos totales)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ vehiculos",
+                "loadingRecords": "Cargando...",
+                "processing": "",
+                "search": "Buscar:",
+                "zeroRecords": "No se encontraron registros coincidentes",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+                "aria": {
+                    "orderable": "Ordenar por esta columna",
+                    "orderableReverse": "Invertir el orden de esta columna"
                 }
             },
-            error: function(xhr) {
-                console.error('Error al cargar los datos del vehículo:', xhr);
-            }
+            initComplete: function() {
+                // Apply custom styles after initialization
+                $('.dt-button').css({
+                    'background-color': '#4a4a4a',
+                    'color': 'white',
+                    'border': 'none',
+                    'border-radius': '4px',
+                    'padding': '8px 12px',
+                    'margin': '0 5px',
+                    'font-size': '14px'
+                });
+            },
         });
-    });
+    </script>
 
-</script>
+    <script>
+        $('#showVehiculoModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+
+            var url = "{{ route('admin.vehiculos.show', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // Llenar los campos de solo lectura
+                    modal.find('#show-placa').text(data.vehiculo.placa);
+                    modal.find('#show-modelo').text(data.vehiculo.modelo);
+                    modal.find('#show-disponible').text(data.vehiculo.disponible ? 'Sí' : 'No');
+                    modal.find('#show-tipo').text(data.vehiculo.tipo ? data.vehiculo.tipo.tipo :
+                        'No definido');
+                    modal.find('#show-profesor').text(data.vehiculo.profesor ? data.vehiculo.profesor
+                        .nombres + ' ' + data.vehiculo.profesor.apellidos : 'No asignado');
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos del vehículo:', xhr);
+                }
+            });
+        });
+    </script>
+    <script>
+        $('#editVehiculoModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+            var url = "{{ route('admin.vehiculos.edit', ':id') }}".replace(':id', button.data('id'));
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // modal.find('#edit_vehiculo_id').val(data.vehiculo.id);
+                    modal.find('#placa').val(data.vehiculo.placa);
+                    modal.find('#modelo').val(data.vehiculo.modelo);
+                    modal.find('#disponible').val(data.vehiculo.disponible ? '1' : '0');
+
+                    // --- TIPOS ---Limpiar y agregar opciones al select de tipos
+                    var tipoSelect = modal.find('#tipo_selected');
+                    tipoSelect.empty(); 
+                    $.each(data.tipos, function(index, tipo) {
+                        tipoSelect.append(new Option(tipo.tipo, tipo.id)); // uso tipo.id
+                    });
+                    // forzar string por si acaso
+                    tipoSelect.val(data.vehiculo.tipo_id ? String(data.vehiculo.tipo_id) : '').trigger(
+                        'change');
+
+                    // --- PROFESORES ---
+                    var profesorSelect = modal.find('#profesor_select_edit');
+                    profesorSelect.empty(); // Mostrar nombres + apellidos cuando existan, si no usar name (fallback) 
+                    $.each(data.profesores, function(index, profesor) {
+                        var texto = (profesor.nombres && profesor.apellidos) ?
+                            profesor.nombres + ' ' + profesor.apellidos :
+                            (profesor.name || 'Profesor');
+                        profesorSelect.append(new Option(texto, profesor.id)); 
+                    });
+                    var profId = data.vehiculo.profesor_id;
+                    profesorSelect.val(profId ? String(profId) : '').trigger('change');
+
+                    // fallback: si por alguna razón no se seleccionó (plugin o mismatch), forzar .prop('selected')
+                    if (profId && profesorSelect.val() !== String(profId)) {
+                        profesorSelect.find('option').each(function() {
+                            if ($(this).val() == profId) $(this).prop('selected', true);
+                        });
+                    }
+
+                    // CRUCIAL: Set the form's action URL dynamically
+                    var formAction = "{{ route('admin.vehiculos.update', ':id') }}".replace(':id', data
+                        .vehiculo.id);
+                    modal.find('#editForm').attr('action', formAction);
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos del vehículo:', xhr);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('#createVehiculoModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var modal = $(this); // Define modal como el modal actual
+            var url = "{{ route('admin.vehiculos.create', ':id') }}"; // Corrige la ruta aquí
+            url = url.replace(':id', button.data('id')); // Reemplaza ':id' con el ID del vehículo
+
+            $.ajax({
+                url: url, // URL de la API o endpoint
+                method: 'GET',
+                success: function(data) {
+                    // Obtener el select de profesor
+                    var select = modal.find('#profesor_select');
+                    // Establecer el valor seleccionado del profesor, si existe
+                    if (data.vehiculo) {
+                        select.val(data.vehiculo.profesor_id); // Establecer el valor seleccionado
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos del vehículo:', xhr);
+                }
+            });
+        });
+    </script>
 @endsection

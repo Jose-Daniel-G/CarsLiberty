@@ -151,16 +151,19 @@ class HorarioController extends Controller
     public function show(Horario $horario)
     {
         $horario->load('profesores', 'cursos'); // Cargar relaciones en la instancia
+        // dd($horario);
         return view('admin.horarios.show', compact('horario'));
     }
 
     public function edit(Horario $horario)
     {
         // Obtener el curso relacionado con el horario
-        $curso = $horario->curso;
+        // $curso = $horario->curso;
         $profesores = Profesor::all();
         $cursos = Curso::all();
-        return view('admin.horarios.edit', compact('horario', 'curso', 'profesores', 'cursos'));
+        // return view('admin.horarios.edit', compact('horario', 'curso', 'profesores', 'cursos'));'curso' => $curso,
+        return response()->json(['horario' => $horario,  'profesores'=> $profesores, 'cursos'=>$cursos]);
+
     }
 
     public function update(Request $request, Horario $horario)

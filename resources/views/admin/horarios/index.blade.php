@@ -51,12 +51,12 @@
                                     <td scope="row" class="text-center">{{ $horario->hora_fin }}</td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">
-                                            <a href="{{ route('admin.horarios.show', $horario->id) }}"
-                                                class="btn btn-info btn-sm"><i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.horarios.edit', $horario->id) }}"
-                                                class="btn btn-success btn-sm"> <i class="fas fa-edit"></i>
-                                            </a>
+
+                                            {{-- button EDIT --}}
+                                            <a href="#" class="btn btn-warning btn-sm mr-1"
+                                                data-id="{{ $horario->id }}" data-toggle="modal" data-target="#editModal"
+                                                title="Editar"> <i class="fas fa-edit"></i></a>
+
                                             <form id="delete-form-{{ $horario->id }}"
                                                 action="{{ route('admin.horarios.destroy', $horario->id) }}"
                                                 method="POST">
@@ -73,6 +73,8 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @include('admin.horarios.edit')
+
                 </div>
             </div>
         </div>
@@ -139,39 +141,28 @@
         @endif
 
         // carga contenido de tabla en  curso_info
-            $('#curso_select').on('change', function() {
-                var curso_id = $('#curso_select').val();
-                var url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}";
-                url = url.replace(':id', curso_id);
+        $('#curso_select').on('change', function() {
+            var curso_id = $('#curso_select').val();
+            var url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}";
+            url = url.replace(':id', curso_id);
 
-                if (curso_id) {
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        success: function(data) {
-                            $('#curso_info').html(data);
-                        },
-                        error: function() {
-                            alert('Error al obtener datos del curso');
-                        }
-                    });
-                } else {
-                    $('#curso_info').html('');
-                }
-            });
+            if (curso_id) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#curso_info').html(data);
+                    },
+                    error: function() {
+                        alert('Error al obtener datos del curso');
+                    }
+                });
+            } else {
+                $('#curso_info').html('');
+            }
+        });
     </script>
 
-    
-    
-    
-
-    <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
     <script>
         new DataTable('#horarios', {
             responsive: true,
@@ -202,8 +193,7 @@
                 }
             },
             initComplete: function() {
-                // Apply custom styles after initialization
-                $('.dt-button').css({
+                $('.dt-button').css({ // Apply custom styles after initialization
                     'background-color': '#4a4a4a',
                     'color': 'white',
                     'border': 'none',
@@ -220,16 +210,76 @@
                 extend: 'collection',
                 text: 'Reportes',
                 orientation: 'landscape',
-                buttons: [{ extend: 'copy',text: '<i class="bi bi-clipboard-check btn btn-success">Copiar</i>'},
-                          { extend: 'print',text: '<i class="bi bi-file-pdf-fill btn btn-danger">Imprimir</i>'},
-                          { extend: 'pdf'},
-                          { extend: 'csv', text: '<i class="bi bi-filetype-csv btn btn-primary">csv</i> '},
-                          { extend: 'excel', text: '<i class="bi bi-file-earmark-excel btn btn-secondary">Excel</i> '},
-               ]
+                buttons: [{
+                        extend: 'copy',
+                        text: '<i class="bi bi-clipboard-check btn btn-success">Copiar</i>'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="bi bi-file-pdf-fill btn btn-danger">Imprimir</i>'
+                    },
+                    {
+                        extend: 'pdf'
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="bi bi-filetype-csv btn btn-primary">csv</i> '
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-excel btn btn-secondary">Excel</i> '
+                    },
+                ]
             }, ],
 
         });
-
-        // ,//NO SE ESTA VISUALIZANDO ICONO DE  BOOTSTRAP 4
     </script>
+    <script>
+        $('#editModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+
+            var url = "{{ route('admin.horarios.edit', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // Cambiar acción del form
+                    var formAction = "{{ route('admin.horarios.update', ':id') }}".replace(':id', data.horario.id);
+                    modal.find('#editForm').attr('action', formAction);
+
+                    // Llenar Profesores
+                    var profesorSelect = modal.find('#edit-profesor');
+                    $.each(data.profesores, function(index, profesor) {
+                        profesorSelect.append(new Option(profesor.nombres + ' ' + profesor
+                            .apellidos, profesor.id));
+                    });
+                    // Seleccionar profesores relacionados
+                    var selectedProfesores = data.horario.profesores.map(p => p.id);
+                    profesorSelect.val(selectedProfesores).trigger('change');
+
+                    // Llenar Cursos
+                    var cursoSelect = modal.find('#edit-curso');
+                    $.each(data.cursos, function(index, curso) {
+                        cursoSelect.append(new Option(curso.nombre + ' - ' + (curso.ubicacion ??
+                            ''), curso.id));
+                    });
+                    // Seleccionar cursos relacionados
+                    var selectedCursos = data.horario.cursos.map(c => c.id);
+                    cursoSelect.val(selectedCursos).trigger('change');
+
+                    // Inputs de horario
+                    modal.find('#edit-dia').val(data.horario.dia);
+                    modal.find('#edit-hora_inicio').val(data.horario.hora_inicio);
+                    modal.find('#edit-hora_fin').val(data.horario.hora_fin);
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos del horario:', xhr);
+                }
+            });
+        });
+    </script>
+
 @stop

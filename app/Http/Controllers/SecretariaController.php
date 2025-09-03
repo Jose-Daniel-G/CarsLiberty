@@ -66,8 +66,10 @@ class SecretariaController extends Controller
     }
 
     public function edit(Secretaria $secretaria)
-    {
-        return view('admin.secretarias.edit', compact('secretaria'));
+    { 
+        $secretaria->load('user');
+        // Retornar JSON para AJAX
+        return response()->json($secretaria);
     }
 
     public function update(Request $request, Secretaria $secretaria)

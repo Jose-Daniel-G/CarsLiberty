@@ -81,15 +81,11 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            {{-- <form id="delete-form-{{ $cliente->id }}"
-                                                action="{{ route('admin.clientes.destroy', $cliente->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="confirmDelete({{ $cliente->id }})"><i
-                                                        class="fas fa-trash"></i></button>
-                                            </form> --}}
+                            {{-- <form id="delete-form-{{ $cliente->id }}" action="{{ route('admin.clientes.destroy', $cliente->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $cliente->id }})"><i     class="fas fa-trash"></i></button>
+                            </form> --}}
                         </tbody>
                     </table>
                     </table>
@@ -180,6 +176,48 @@
                 },
                 error: function(xhr) {
                     console.error('Error al cargar los datos del profesor:', xhr);
+                }
+            });
+        });
+    </script>
+        <!-- JAVASCRIPT -->
+    <script>
+        $('#editModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+
+            var url = "{{ route('admin.clientes.edit', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // Cambiar la acción del form
+                    var formAction = "{{ route('admin.clientes.update', ':id') }}".replace(':id',
+                        data.id);
+                    modal.find('#editForm').attr('action', formAction);
+
+                    // Llenar los campos
+                    modal.find('#edit-nombres').val(data.nombres);
+                    modal.find('#edit-apellidos').val(data.apellidos);
+                    modal.find('#edit-cc').val(data.cc);
+                    modal.find('#edit-celular').val(data.celular);
+                    modal.find('#edit-direccion').val(data.direccion);
+                    modal.find('#edit-email').val(data.user.email);
+                    // 👇 convertir fecha de DD/MM/YYYY → YYYY-MM-DD
+                    if (data.fecha_nacimiento) {
+                        let partes = data.fecha_nacimiento.split('/');
+                        if (partes.length === 3) {
+                            let fechaISO =
+                                `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+                            modal.find('#edit-fecha_nacimiento').val(fechaISO);
+                        }
+                    }
+
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos de la secretaria:', xhr);
                 }
             });
         });

@@ -55,37 +55,35 @@
                                     <td scope="row">{{ $secretaria->user->email }}</td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">
-                                            <a href="{{ route('admin.secretarias.show', $secretaria->id) }}"
-                                                class="btn btn-info btn-sm"><i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.secretarias.edit', $secretaria->id) }}"
-                                                class="btn btn-success btn-sm"><i class="fas fa-edit"></i>
-                                            </a>
-                                            {{-- <form id="delete-form-{{ $secretaria->id }}"
-                                                action="{{ route('admin.secretarias.destroy', $secretaria->id) }}"
-                                                method="POST">
+                                            {{-- button SHOW --}}
+                                            <a href="#" class="btn btn-primary" data-id="{{ $secretaria->id }}"
+                                                data-toggle="modal" data-target="#showModal"> <i class="fas fa-eye"></i></a>
+                                            {{-- button EDIT --}}
+                                            <a href="#" class="btn btn-warning btn-sm mr-1"
+                                                data-id="{{ $secretaria->id }}" data-toggle="modal"
+                                                data-target="#editModal" title="Editar"> <i class="fas fa-edit"></i></a>
+
+                                            {{-- <form id="delete-form-{{ $secretaria->id }}" action="{{ route('admin.secretarias.destroy', $secretaria->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="confirmDelete({{ $secretaria->id }})"><i
-                                                        class="fas fa-trash"></i></button>
+                                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $secretaria->id }})"><i class="fas fa-trash"></i></button>
                                             </form> --}}
 
-                                        <div class="text-center">
-                                            <form id="delete-form-{{ $secretaria->id }}"
-                                                action="{{ route('admin.secretarias.toggleStatus', $secretaria->user->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
-                                                <button type="submit"
-                                                    class="btn {{ $secretaria->user->status ? 'btn-success' : 'btn-danger' }}">
-                                                    {!! $secretaria->user->status
-                                                        ? '<i class="fa-solid fa-square-check"></i>'
-                                                        : '<i class="fa-solid fa-circle-xmark"></i>' !!}
-                                                </button>
-                                            </form>
+                                            <div class="text-center">
+                                                <form id="delete-form-{{ $secretaria->id }}"
+                                                    action="{{ route('admin.secretarias.toggleStatus', $secretaria->user->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
+                                                    <button type="submit"
+                                                        class="btn {{ $secretaria->user->status ? 'btn-success' : 'btn-danger' }}">
+                                                        {!! $secretaria->user->status
+                                                            ? '<i class="fa-solid fa-square-check"></i>'
+                                                            : '<i class="fa-solid fa-circle-xmark"></i>' !!}
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
-                                    </div>
 
                                     </td>
                                 </tr>
@@ -93,8 +91,8 @@
                         </tbody>
                     </table>
                     @include('admin.secretarias.create')
-                    {{-- @include('admin.secretarias.edit')
-                    @include('admin.secretarias.show') --}}
+                    @include('admin.secretarias.edit')
+                    @include('admin.secretarias.show')
 
                 </div>
             </div>
@@ -103,18 +101,6 @@
 @stop
 
 @section('js')
-
-    
-    
-    
-
-    <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
     <script>
         new DataTable('#secretarias', {
             responsive: true,
@@ -125,7 +111,8 @@
                 text: 'Reportes',
                 orientation: 'landscape',
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
-                'colvis'], // Botones que aparecen en la imagen
+                    'colvis'
+                ], // Botones que aparecen en la imagen
             }, ],
             "language": {
                 "decimal": "",
@@ -182,5 +169,47 @@
                 }
             });
         }
+    </script>
+    <!-- JAVASCRIPT -->
+    <script>
+        $('#editModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+
+            var url = "{{ route('admin.secretarias.edit', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // Cambiar la acción del form
+                    var formAction = "{{ route('admin.secretarias.update', ':id') }}".replace(':id',
+                        data.id);
+                    modal.find('#editForm').attr('action', formAction);
+
+                    // Llenar los campos
+                    modal.find('#edit-nombres').val(data.nombres);
+                    modal.find('#edit-apellidos').val(data.apellidos);
+                    modal.find('#edit-cc').val(data.cc);
+                    modal.find('#edit-celular').val(data.celular);
+                    modal.find('#edit-direccion').val(data.direccion);
+                    modal.find('#edit-email').val(data.user.email);
+                    // 👇 convertir fecha de DD/MM/YYYY → YYYY-MM-DD
+                    if (data.fecha_nacimiento) {
+                        let partes = data.fecha_nacimiento.split('/');
+                        if (partes.length === 3) {
+                            let fechaISO =
+                                `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+                            modal.find('#edit-fecha_nacimiento').val(fechaISO);
+                        }
+                    }
+
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos de la secretaria:', xhr);
+                }
+            });
+        });
     </script>
 @stop

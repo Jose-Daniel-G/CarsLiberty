@@ -15,14 +15,12 @@ class VehiculoController extends Controller
         $vehiculos = Vehiculo::leftJoin('profesors', 'vehiculos.profesor_id', '=', 'profesors.id')
             ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')->get();
         // dd($vehiculos);
-        $tipos = TipoVehiculo::all();  $profesors = Profesor::all(); 
-        return view("admin.vehiculos.index", compact('vehiculos','tipos', 'profesors'));
+        $tipos = TipoVehiculo::all();
+        $profesors = Profesor::all();
+        return view("admin.vehiculos.index", compact('vehiculos', 'tipos', 'profesors'));
     }
 
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     public function store(Request $request)
     {
@@ -45,21 +43,23 @@ class VehiculoController extends Controller
 
     public function show(Vehiculo $vehiculo)
     {
-        // $vehiculo = Vehiculo::leftJoin('users', 'vehiculos.profesor_id', '=', 'users.id')
-        //     ->join('profesors', 'users.id', '=', 'profesors.user_id')
-        //     ->select('vehiculos.*', 'profesors.nombres', 'profesors.apellidos')
-        //     ->where('vehiculos.id', $vehiculo->id) // Filtrar por el ID del vehículo
-        //     ->first(); // Obtener solo un registro
+        // Cargar relaciones tipo y profesor
+        $vehiculo->load(['tipo', 'profesor']);
 
-        // return view('admin.vehiculos.show', compact('vehiculo')); // Asegúrate de tener esta vista
+        \Log::info('vehiculo', [$vehiculo]);
+
+        return response()->json([ 'vehiculo' => $vehiculo ]);
     }
+
 
     public function edit(Vehiculo $vehiculo)
     {
         // Cargar el profesor y su user
-        $vehiculo->load(['profesor']); 
-
+        $vehiculo->load(['tipo', 'profesor']);
+        
         $profesores = Profesor::all();
+        \Log::info('profesores', [$profesores]);
+
         $tipos = TipoVehiculo::all();
 
         return response()->json([
@@ -72,14 +72,14 @@ class VehiculoController extends Controller
 
 
     public function update(Request $request, Vehiculo $vehiculo)
-    {
+    {   
         // The unique validation rule is modified to ignore the current vehicle's ID
         $data = $request->validate([
             'placa' => 'required|string|max:7|unique:vehiculos,placa,' . $vehiculo->id,
             'modelo' => 'required|string|max:255',
             'tipo_selected' => 'required|exists:tipos_vehiculos,id',
             'disponible' => 'required|boolean',
-            'profesor_id' => 'nullable|exists:profesors,user_id'
+            'profesor_id' => 'nullable|exists:profesors,id'
         ]);
 
         $data['tipo_id'] = $data['tipo_selected'];

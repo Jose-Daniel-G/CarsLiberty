@@ -15,7 +15,7 @@ class Vehiculo extends Model
     
     public function profesor()
     {
-        return $this->belongsTo(User::class, 'profesor_id');
+        return $this->belongsTo(Profesor::class, 'profesor_id');
     }
     public function tipo()
     {

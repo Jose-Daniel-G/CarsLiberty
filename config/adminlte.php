@@ -309,11 +309,12 @@ return [
                 [
                     'text' => 'Listado de configuracion',
                     'icon'        => 'far fa-circle nav-icon',
+                    'label' => '?',
+                    'label_color' => 'light',
                     'route' => 'admin.config.index',
                 ],
             ],
         ],
-
         [
             'text'        => 'Usuarios',
             'route'         => 'admin.users.index',
@@ -334,15 +335,18 @@ return [
                 [
                     'text' => 'Registrar Asistencia',
                     'icon'        => 'far fa-circle nav-icon',
+                    'label' => '?',
+                    'label_color' => 'light',
                     'route' => 'admin.asistencias.index',
                     'can' => 'admin.asistencias.registrar_asistencia',
                 ],
                 [
                     'text' => 'Listado de Inacistencias',
                     'icon'        => 'far fa-circle nav-icon',
+                    'label' => '?',
+                    'label_color' => 'light',
                     'route' => 'admin.secretarias.inasistencias',
                     'can' => 'admin.asistencias.list_inacistencias',
-
                 ],
 
             ],
@@ -353,18 +357,14 @@ return [
         [
             'text' => 'Programador',
             'icon' => 'fas fa-laptop',
-            'label' => 'check',
-            'label_color' => 'primary',
+            // 'label' => 'check',
+            // 'label_color' => 'primary',
             'can' => 'admin.secretarias.index',
             'submenu' => [
-                [
-                    'text' => 'Creacion de programador',
-                    'icon'        => 'far fa-circle nav-icon',
-                    'route' => 'admin.secretarias.create',
-                ],
+                // ['text' => 'Creacion de programador','icon' => 'far fa-circle nav-icon','route' => 'admin.secretarias.create',],
                 [
                     'text' => 'Listado de programador',
-                    'icon'        => 'far fa-circle nav-icon',
+                    'icon' => 'far fa-circle nav-icon',
                     'route' => 'admin.secretarias.index',
                 ],
 
@@ -445,8 +445,8 @@ return [
         [
             'text' => 'Vehiculos',
             'icon' => 'bi bi-car-front',
-            'label' => 'edit,show',
-            'label_color' => 'danger',
+            // 'label' => 'edit,show',
+            // 'label_color' => 'danger',
             'can'  => 'admin.vehiculos.index',
             'submenu' => [
                 [
@@ -454,11 +454,13 @@ return [
                     'icon'        => 'far fa-circle nav-icon',
                     'route'  => 'admin.vehiculos.index',
                 ],
-                // [
-                //     'text' => 'Picoyplaca',
-                //     'icon'        => 'far fa-circle nav-icon',
-                //     'route' => 'admin.picoyplaca.index',
-                // ],
+                [
+                    'text' => 'Picoyplaca',
+                    'icon'        => 'far fa-circle nav-icon',
+                    'label' => 'create, edit,show',
+                    'label_color' => 'warning',
+                    'route' => 'admin.picoyplaca.index',
+                ],
 
             ],
         ],
