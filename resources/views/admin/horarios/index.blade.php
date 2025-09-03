@@ -47,8 +47,8 @@
                                     <td scope="row">{{ $horario->cursos->pluck('nombre')->join(', ') }}</td>
 
                                     <td scope="row">{{ $horario->dia }}</td>
-                                    <td scope="row" class="text-center">{{ $horario->hora_inicio }}</td>
-                                    <td scope="row" class="text-center">{{ $horario->hora_fin }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_inicio)->format('h:i A') }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_fin)->format('h:i A') }}</td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">
 
@@ -252,19 +252,17 @@
 
                     // Llenar Profesores
                     var profesorSelect = modal.find('#edit-profesor');
-                    $.each(data.profesores, function(index, profesor) {
-                        profesorSelect.append(new Option(profesor.nombres + ' ' + profesor
-                            .apellidos, profesor.id));
-                    });
-                    // Seleccionar profesores relacionados
-                    var selectedProfesores = data.horario.profesores.map(p => p.id);
-                    profesorSelect.val(selectedProfesores).trigger('change');
+                    profesorSelect.empty();
 
+                    $.each(data.profesores, function(index, profesor) {
+                        profesorSelect.append(new Option(profesor.nombres + ' ' + profesor.apellidos, profesor.id));
+                    });
+                    // Seleccionar el profesor asignado
+                    profesorSelect.val(data.horario.profesor_id).trigger('change');
                     // Llenar Cursos
                     var cursoSelect = modal.find('#edit-curso');
                     $.each(data.cursos, function(index, curso) {
-                        cursoSelect.append(new Option(curso.nombre + ' - ' + (curso.ubicacion ??
-                            ''), curso.id));
+                        cursoSelect.append(new Option(curso.nombre, curso.id));
                     });
                     // Seleccionar cursos relacionados
                     var selectedCursos = data.horario.cursos.map(c => c.id);

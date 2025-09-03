@@ -60,7 +60,10 @@ class ProfesorController extends Controller
 
     public function show(Profesor $profesor)
     {
+        $profesor->load('user');
         // return view('admin.profesores.show', compact('profesor'));
+        \Log::info('profesor',[$profesor]);
+        return response()->json($profesor);
     }
 
     public function edit(Profesor $profesor)

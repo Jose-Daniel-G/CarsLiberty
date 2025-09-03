@@ -303,6 +303,8 @@ return [
             'text'        => 'Configuraciones',
             'route'         => 'admin.config.index',
             'icon' => 'bi bi-gear',
+            'label' => 'waiting',
+            'label_color' => 'light',
             'can'  => 'admin.config.index',
             'submenu' => [
                 // [ 'text' => 'Crear configuracion', 'icon'=> 'far fa-circle nav-icon', 'route' => 'admin.config.create', ],
@@ -330,6 +332,8 @@ return [
         [
             'text'        => 'Gestión de Asistencias',
             'icon' => 'fas fa-fw fa-user',
+            'label' => 'waiting',
+            'label_color' => 'light',
             // 'can'  => 'admin.asistencias.index',
             'submenu' => [
                 [
@@ -357,8 +361,8 @@ return [
         [
             'text' => 'Programador',
             'icon' => 'fas fa-laptop',
-            // 'label' => 'check',
-            // 'label_color' => 'primary',
+            'label' => 'fix validate',
+            'label_color' => 'warning',
             'can' => 'admin.secretarias.index',
             'submenu' => [
                 // ['text' => 'Creacion de programador','icon' => 'far fa-circle nav-icon','route' => 'admin.secretarias.create',],
@@ -373,14 +377,14 @@ return [
         [
             'text' => 'Clientes',
             'icon' => 'fas fa-users mr-2',
-            'label' => 'check *',
+            'label' => 'check **',
             'label_color' => 'primary',
             'can' => 'admin.clientes.index',
             'submenu' => [
                 // ['text' => 'Creacion de clientes','icon'=> 'far fa-circle nav-icon','route' => 'admin.clientes.create',],
                 [
                     'text' => 'Listado de clientes',
-                    'icon'        => 'far fa-circle nav-icon',
+                    'icon' => 'far fa-circle nav-icon',
                     'route' => 'admin.clientes.index',
                 ],
 
@@ -389,7 +393,7 @@ return [
         [
             'text' => 'Cursos',
             'icon' => 'fas fa-book',
-            'label' => 'check',
+            'label' => 'check cr activo',
             'label_color' => 'primary',
             'can' => 'admin.cursos.index',
             'submenu' => [
@@ -405,28 +409,25 @@ return [
         [
             'text' => 'Profesores',
             'icon' => 'ion fas bi bi-person-lines-fill',
-            'label' => 'check *',
-            'label_color' => 'primary',
+            // 'label' => 'check *',
+            // 'label_color' => 'primary',
             'can' => 'admin.profesores.index',
             'submenu' => [
                 // ['text' => 'Creacion de profesores','icon' => 'far fa-circle nav-icon','route' => 'admin.profesores.create', ],
                 [
-                    'text' => 'Listado de profesores',
-                    'icon'        => 'far fa-circle nav-icon',
+                    'text'  => 'Listado de profesores',
+                    'icon'  => 'far fa-circle nav-icon',
                     'route' => 'admin.profesores.index',
                 ],
-                // [
-                //     'text'  => 'Reportes',
-                //     'icon'  => 'far fa-circle nav-icon',
-                //     'route' => 'admin.profesores.reportes', ],
+                // [ 'text'  => 'Reportes',  'icon'  => 'far fa-circle nav-icon', 'route' => 'admin.profesores.reportes', ],
 
             ],
         ],
         [
             'text' => 'Horarios',
             'icon' => 'fas fa-calendar-alt',
-            'label' => 'edit,show',
-            'label_color' => 'danger',
+            // 'label' => 'edit,show',
+            // 'label_color' => 'danger',
             'can' => 'admin.horarios.index',
             'submenu' => [
                 [

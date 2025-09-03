@@ -184,8 +184,7 @@
                 method: 'GET',
                 success: function(data) {
                     // Cambiar la acción del form
-                    var formAction = "{{ route('admin.secretarias.update', ':id') }}".replace(':id',
-                        data.id);
+                    var formAction = "{{ route('admin.secretarias.update', ':id') }}".replace(':id',data.id);
                     modal.find('#editForm').attr('action', formAction);
 
                     // Llenar los campos
@@ -199,8 +198,7 @@
                     if (data.fecha_nacimiento) {
                         let partes = data.fecha_nacimiento.split('/');
                         if (partes.length === 3) {
-                            let fechaISO =
-                                `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+                            let fechaISO =`${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
                             modal.find('#edit-fecha_nacimiento').val(fechaISO);
                         }
                     }

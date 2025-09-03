@@ -194,15 +194,13 @@
                         tipoSelect.append(new Option(tipo.tipo, tipo.id)); // uso tipo.id
                     });
                     // forzar string por si acaso
-                    tipoSelect.val(data.vehiculo.tipo_id ? String(data.vehiculo.tipo_id) : '').trigger(
-                        'change');
+                    tipoSelect.val(data.vehiculo.tipo_id ? String(data.vehiculo.tipo_id) : '').trigger('change');
 
                     // --- PROFESORES ---
                     var profesorSelect = modal.find('#profesor_select_edit');
                     profesorSelect.empty(); // Mostrar nombres + apellidos cuando existan, si no usar name (fallback) 
                     $.each(data.profesores, function(index, profesor) {
-                        var texto = (profesor.nombres && profesor.apellidos) ?
-                            profesor.nombres + ' ' + profesor.apellidos :
+                        var texto = (profesor.nombres && profesor.apellidos) ? profesor.nombres + ' ' + profesor.apellidos :
                             (profesor.name || 'Profesor');
                         profesorSelect.append(new Option(texto, profesor.id)); 
                     });

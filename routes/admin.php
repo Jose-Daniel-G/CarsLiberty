@@ -24,49 +24,37 @@ Route::patch('/curso/{id}/toggle-status', [CursoController::class, 'toggleStatus
 Route::get('/admin', [HomeController::class, 'index'])->name('admin.index')->middleware('auth');
 Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('admin.show_reservas')->middleware('auth', 'can:admin.show_reservas');
 
-//RUTAS USUARIOS ADMIN
-// Route::resource('/usuarios', UsuarioController::class)->names('admin.usuarios')->middleware('auth', 'can:admin.usuarios');
-
-//RUTAS CONFIGURACIONES ADMIN
+//RUTAS CONFIGURACIONES
 Route::resource('/config', ConfigController::class)->names('admin.config')->middleware('auth', 'can:admin.config');
 
-//RUTAS SECRETARIAS ADMIN
+//RUTAS SECRETARIAS
 Route::resource('/secretarias', SecretariaController::class)->names('admin.secretarias')->middleware('auth', 'can:admin.secretarias');
 
-//RUTAS AgendarS ADMIN
+//RUTAS Agendas
 Route::resource('/clientes', ClienteController::class)->names('admin.clientes')->middleware('auth', 'can:admin.clientes');
 
-//RUTAS CURSOS ADMIN
-Route::get('/cursos/completados', [CursoController::class, 'completados'])
-    ->name('admin.cursos.completados');
-    // ->middleware('auth', 'can:admin.cursos.completados');
+//RUTAS CURSOS
+Route::get('/cursos/completados', [CursoController::class, 'completados'])->name('admin.cursos.completados');// ->middleware('auth', 'can:admin.cursos.completados');
 Route::resource('/cursos', CursoController::class)->names('admin.cursos')->middleware('auth', 'can:admin.cursos');
 
-
-
-// //RUTAS PARA LOS EVENTOS
+//RUTAS PARA LOS EVENTOS
 Route::resource('/eventos', EventController::class)->names('admin.events');
-
-// //RUTAS PARA LOS VEHICULOS
-// Route::resource('vehiculos', VehiculoController::class)->names('admin.vehiculos');
-
-//RUTAS para el historial clinico
-Route::get('/historial/pdf', [HistorialController::class, 'pdf'])->name('admin.historial.pdf')->middleware('auth', 'can:admin.historial');
-Route::resource('/historial', HistorialController::class)->names('admin.historial')->middleware('auth', 'can:admin.historial');
 
 //RUTAS para desplegar select
 Route::get('/admin/profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
 Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtenerCursos'])->name('obtenerCursos');
 
+//RUTAS PARA LOS VEHICULOS
 // Route::middleware('can:admin.vehiculos')->group(function () {
-Route::resource('vehiculos', VehiculoController::class)->names('admin.vehiculos');
-
-Route::resource('picoyplaca', PicoyplacaController::class)->names('admin.picoyplaca');
-Route::put('/picoyplaca/update', [PicoyPlacaController::class, 'updateAll'])->name('picoyplaca.updateAll');
+    Route::resource('vehiculos', VehiculoController::class)->names('admin.vehiculos');
+    Route::resource('picoyplaca', PicoyplacaController::class)->names('admin.picoyplaca');
+    Route::put('/picoyplaca/update', [PicoyPlacaController::class, 'updateAll'])->name('picoyplaca.updateAll');
 // });
 
 
 
+//RUTAS USUARIOS ADMIN
+// Route::resource('/usuarios', UsuarioController::class)->names('admin.usuarios')->middleware('auth', 'can:admin.usuarios');
 //RUTAS REPORTES PROFESORES ADMIN
 /*NO INCLUDO */
 Route::get('/profesores/pdf/{id}', [ProfesorController::class, 'reportes'])->name('admin.profesores.pdf'); // ->middleware('auth', 'can:admin.profesores.pdf');
@@ -82,7 +70,9 @@ Route::get('/reservas/reportes', [EventController::class, 'reportes'])->name('ad
 Route::get('/reservas/pdf/{id}', [EventController::class, 'pdf'])->name('admin.reservas.pdf')->middleware('auth', 'can:admin.reservas.pdf');
 /*NO INCLUDO */
 Route::get('/reservas/pdf_fechas', [EventController::class, 'pdf_fechas'])->name('admin.reservas.pdf_fechas')->middleware('auth', 'can:admin.event.pdf_fechas');
-
+//RUTAS para el historial clinico
+Route::get('/historial/pdf', [HistorialController::class, 'pdf'])->name('admin.historial.pdf')->middleware('auth', 'can:admin.historial');
+Route::resource('/historial', HistorialController::class)->names('admin.historial')->middleware('auth', 'can:admin.historial');
 
 
 Route::group(['middleware'=>['auth']], function(){

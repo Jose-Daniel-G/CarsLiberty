@@ -117,8 +117,7 @@
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
+                if (result.isConfirmed) { // Si el usuario confirma, se envía el formulario.
                     document.getElementById('delete-form-' + id).submit();
                 }
             });
@@ -167,9 +166,19 @@
                 extend: 'collection',
                 text: 'Reportes',
                 orientation: 'landscape',
-                buttons: [{text: 'Copiar',extend: 'copy'},{extend: 'pdf'},{extend: 'csv'},{extend: 'excel'},{text: 'Imprimir',extend: 'print'
-                    }
-                ]
+                buttons: [{
+                    text: 'Copiar',
+                    extend: 'copy'
+                }, {
+                    extend: 'pdf'
+                }, {
+                    extend: 'csv'
+                }, {
+                    extend: 'excel'
+                }, {
+                    text: 'Imprimir',
+                    extend: 'print'
+                }]
             }, ],
 
         });
@@ -182,33 +191,58 @@
         @endif
     </script>
     <script>
-    $('#editProfesorModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); 
-        var id = button.data('id'); // id del profesor
-        var modal = $(this);
+        $('#editProfesorModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id'); // id del profesor
+            var modal = $(this);
 
-        // Ruta edit
-        var url = "{{ route('admin.profesores.edit', ':id') }}".replace(':id', id);
+            // Ruta edit
+            var url = "{{ route('admin.profesores.edit', ':id') }}".replace(':id', id);
 
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(data) {
-                // Cambiar la URL del form update
-                var formAction = "{{ route('admin.profesores.update', ':id') }}".replace(':id', data.id);
-                modal.find('#editProfesorForm').attr('action', formAction);
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // Cambiar la URL del form update
+                    var formAction = "{{ route('admin.profesores.update', ':id') }}".replace(':id',
+                        data.id);
+                    modal.find('#editProfesorForm').attr('action', formAction);
 
-                // Rellenar los campos
-                modal.find('#edit-nombres').val(data.nombres);
-                modal.find('#edit-apellidos').val(data.apellidos);
-                modal.find('#edit-telefono').val(data.telefono);
-                modal.find('#edit-email').val(data.user.email);
-            },
-            error: function(xhr) {
-                console.error('Error al cargar los datos del profesor:', xhr);
-            }
+                    // Rellenar los campos
+                    modal.find('#edit-nombres').val(data.nombres);
+                    modal.find('#edit-apellidos').val(data.apellidos);
+                    modal.find('#edit-telefono').val(data.telefono);
+                    modal.find('#edit-email').val(data.user.email);
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos del profesor:', xhr);
+                }
+            });
         });
-    });
-</script>
+    </script>
+    <script>
+        $('#showProfesorModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Botón que abre el modal
+            var id = button.data('id'); // ID del profesor
+            var modal = $(this);
+
+            var url = "{{ route('admin.profesores.show', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // Llenar campos del modal
+                    modal.find('#show-profesor-nombre').text(data.nombres + ' ' + data.apellidos);
+                    modal.find('#show-profesor-telefono').text(data.telefono);
+                    modal.find('#show-profesor-estado').text(data.user.status === 1 ? 'Activo' :
+                        'Inactivo');
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar el profesor:', xhr);
+                }
+            });
+        });
+    </script>
 
 @stop

@@ -33,24 +33,27 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="edit-dia">Día</label>
-                                <input type="text" id="edit-dia" name="dia" class="form-control">
+                                <select id="edit-dia" name="dia" class="form-control">
+                                    <option value="" disabled selected>Seleccione un día</option>
+                                    <option value="LUNES">LUNES</option>
+                                    <option value="MARTES">MARTES</option>
+                                    <option value="MIERCOLES">MIERCOLES</option>
+                                    <option value="JUEVES">JUEVES</option>
+                                    <option value="VIERNES">VIERNES</option>
+                                    <option value="SABADO">SABADO</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-
-
-                        <!-- Hora inicio -->
-                        <div class="col-md-3">
+                        <div class="col-md-3"><!-- Hora inicio -->
                             <div class="form-group">
                                 <label for="edit-hora_inicio">Hora Inicio</label>
                                 <input type="time" id="edit-hora_inicio" name="hora_inicio" class="form-control">
                             </div>
                         </div>
-
-                        <!-- Hora fin -->
-                        <div class="col-md-3">
+                        <div class="col-md-3"><!-- Hora fin -->
                             <div class="form-group">
                                 <label for="edit-hora_fin">Hora Fin</label>
                                 <input type="time" id="edit-hora_fin" name="hora_fin" class="form-control">

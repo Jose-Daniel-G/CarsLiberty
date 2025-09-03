@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+
 use App\Helpers\DateHelper;
 use App\Models\Curso;
 use App\Models\Profesor;
@@ -78,7 +81,7 @@ class HorarioController extends Controller
     }
 
 
-    public function store(Request $request)//teacher schedule
+    public function store(Request $request) //teacher schedule
     {
         // Validar los datos
         $validatedData = $request->validate([
@@ -112,7 +115,7 @@ class HorarioController extends Controller
                     });
             })
             ->exists();
-            // dd($horarioExistente);
+        // dd($horarioExistente);
         if ($horarioExistente) {
 
             return redirect()->back()
@@ -120,7 +123,7 @@ class HorarioController extends Controller
                 ->with('info', 'El profesor ya tiene asignado un horario en ese rango de tiempo.')
                 ->with('icono', 'error');
         }
-// 
+        // 
         try {
             // Si no existe un horario en ese rango, se crea el horario
             $horario = Horario::firstOrCreate([
@@ -157,25 +160,33 @@ class HorarioController extends Controller
 
     public function edit(Horario $horario)
     {
-        // Obtener el curso relacionado con el horario
-        // $curso = $horario->curso;
+        $horario->load(['profesores', 'cursos']); // Cargar relaciones
         $profesores = Profesor::all();
         $cursos = Curso::all();
+        // \Log::info('horario',[$horario]);
         // return view('admin.horarios.edit', compact('horario', 'curso', 'profesores', 'cursos'));'curso' => $curso,
-        return response()->json(['horario' => $horario,  'profesores'=> $profesores, 'cursos'=>$cursos]);
-
+        return response()->json(['horario' =>  $horario->toArray(),  'profesores' => $profesores, 'cursos' => $cursos]);
     }
 
     public function update(Request $request, Horario $horario)
-    {
+    {   //dd($horario);
         $validatedData = $request->validate([
             'dia' => 'required',
             'hora_inicio' => 'required',
             'hora_fin' => 'required',
+            'curso_id' => 'required',
         ]);
-
-        // Crea el nuevo horario
-        $horario->update($request->all());
+        // Actualizar datos propios del horario
+        $horario->update([
+            'dia' => $request->dia,
+            'hora_inicio' => $request->hora_inicio,
+            'hora_fin' => $request->hora_fin,
+        ]);
+ 
+        $horario->profesores()->syncWithPivotValues(
+            [$request->profesor_id],
+            ['curso_id' => $request->curso_id]
+        );
 
         return redirect()->route('admin.horarios.index')
             ->with(['info', 'Horario actualizado correctamente.', 'icono', 'success']);
