@@ -47,7 +47,6 @@ class HorarioController extends Controller
             $horarios = Horario::whereHas('profesores', function ($query) use ($id) {
                 $query->where('profesor_id', $id);
             })->with(['cursos', 'profesores'])->get();
-            // dd(['titulo' => 'Datos de horarios del Profesor', 'horarios' => $horarios->toArray()]);
             // Obtener eventos agendados para este profesor
             $horarios_asignados = DB::table('events')
                 ->select([

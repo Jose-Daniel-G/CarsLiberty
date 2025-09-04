@@ -597,8 +597,7 @@
                 // Función para cargar profesores
                 if (!cliente_id) return; // Salir si no hay curso seleccionado
                 var url = "{{ route('obtenerCursos', ':id') }}";
-                url = url.replace(':id', cliente_id);
-                // alert('url ' + url);
+                url = url.replace(':id', cliente_id); 
 
                 // Realizar una llamada AJAX para obtener los curso disponibles
                 $.ajax({
@@ -631,8 +630,8 @@
             });
         });
     </script>
-
-    {{-- <script>
+{{-- 
+    <script>
         @if (session('error'))
             toastr.error('{{ session('error') }}');
         @endif

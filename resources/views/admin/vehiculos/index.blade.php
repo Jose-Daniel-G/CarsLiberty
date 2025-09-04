@@ -14,7 +14,6 @@
             <ul>
                 @foreach ($errors->all() as $error)
                     <li><strong>{{ $error }}</strong></li>
-                    <!-- Cambié el <strong> a <li> para una mejor estructura -->
                 @endforeach
             </ul>
         </div>
@@ -92,7 +91,7 @@
 
 @section('js')
     <script src="{{ asset('js/helpers.js') }}"></script>
-
+{{-- DATA TABLE --}}
     <script>
         new DataTable('#vehiculos', {
             responsive: true,
@@ -144,7 +143,7 @@
             },
         });
     </script>
-
+{{-- SHOW MODAL --}}
     <script>
         $('#showVehiculoModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
@@ -172,6 +171,7 @@
             });
         });
     </script>
+{{-- EDIT MODAL --}}
     <script>
         $('#editVehiculoModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
@@ -225,7 +225,7 @@
             });
         });
     </script>
-
+{{-- CREATE MODAL --}}
     <script>
         $('#createVehiculoModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Botón que activó el modal
@@ -236,12 +236,10 @@
             $.ajax({
                 url: url, // URL de la API o endpoint
                 method: 'GET',
-                success: function(data) {
-                    // Obtener el select de profesor
+                success: function(data) {// Obtener el select de profesor
                     var select = modal.find('#profesor_select');
-                    // Establecer el valor seleccionado del profesor, si existe
-                    if (data.vehiculo) {
-                        select.val(data.vehiculo.profesor_id); // Establecer el valor seleccionado
+                    if (data.vehiculo) {// Establecer el valor seleccionado del profesor, si existe
+                        select.val(data.vehiculo.profesor_id); 
                     }
                 },
                 error: function(xhr) {
@@ -250,4 +248,51 @@
             });
         });
     </script>
+    vz{{-- VALIDACIÓN CREATE VEHICULO --}}
+<script>
+    $(document).ready(function() {
+        $('#createFormVehiculo').on('submit', function(e) {
+            let valido = true;
+            let mensajes = [];
+
+            // limpiar errores previos
+            $('#createVehiculoModal .text-danger').remove();
+
+            // Validar placa
+            let placa = $('#createFormVehiculo input[name="placa"]').val().trim();
+            if (placa === "") {
+                valido = false;
+                mensajes.push("La placa es obligatoria");
+                $('#createFormVehiculo input[name="placa"]').after('<small class="text-danger">La placa es obligatoria</small>');
+            }
+
+            // Validar modelo
+            let modelo = $('#createFormVehiculo input[name="modelo"]').val().trim();
+            if (modelo === "") {
+                valido = false;
+                $('#createFormVehiculo input[name="modelo"]').after('<small class="text-danger">El modelo es obligatorio</small>');
+            }
+
+            // Validar tipo (select)
+            let tipo = $('#createFormVehiculo select[name="tipo_id"]').val();
+            if (!tipo) {
+                valido = false;
+                $('#createFormVehiculo select[name="tipo_id"]').after('<small class="text-danger">Debe seleccionar un tipo</small>');
+            }
+
+            // Validar profesor (select)
+            let profesor = $('#createFormVehiculo select[name="profesor_id"]').val();
+            if (!profesor) {
+                valido = false;
+                $('#createFormVehiculo select[name="profesor_id"]').after('<small class="text-danger">Debe seleccionar un profesor</small>');
+            }
+
+            // si no es válido, detener envío
+            if (!valido) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+
 @endsection

@@ -55,8 +55,17 @@ class SecretariaController extends Controller
 
             return redirect()->route('admin.secretarias.index')
                 ->with(['title' => 'Exito', 'info' => 'Se registro a la secretaria de forma correcta', 'icono' => 'success']);
+                // ->with(['title' => 'Exito', 'info' => 'Se registro a la secretaria de forma correcta', 'icono' => 'success', 'swal' => 'true']);
         } catch (\Exception $exception) {
-            return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
+                return back()
+                    ->withInput()
+                    ->with([
+                        'title' => 'Error',
+                        'info'  => 'No se registró la secretaria. ' . $exception->getMessage(),
+                        'icono' => 'error',
+                        'openModal' => 'createModal' // <- clave para reabrir el modal
+                    ]);
+            // return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
     }
 

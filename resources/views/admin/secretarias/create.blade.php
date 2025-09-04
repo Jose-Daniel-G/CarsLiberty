@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.secretarias.store') }}" method="POST" autocomplete="off">
+                <form id="createForm" action="{{ route('admin.secretarias.store') }}" method="POST" autocomplete="off">
                     @csrf
                     <div class="row">
                         <div class="col-md-3">

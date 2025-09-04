@@ -24,7 +24,8 @@
                 </div>
 
                 <div class="card-body">
-                    @if ($info = Session::get('info'))
+                    {{-- @if ($info = Session::get('info')) --}}
+                    @if (session('info'))
                         <div class="alert alert-success"><strong>{{ $info }}</strong></div>
                     @endif
                     <table id="secretarias" class="table table-striped table-bordered table-hover table-sm">
@@ -101,6 +102,7 @@
 @stop
 
 @section('js')
+    {{-- DATA TABLE --}}
     <script>
         new DataTable('#secretarias', {
             responsive: true,
@@ -170,7 +172,7 @@
             });
         }
     </script>
-    <!-- JAVASCRIPT -->
+    <!-- EDIT MODAL -->
     <script>
         $('#editModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
@@ -184,7 +186,8 @@
                 method: 'GET',
                 success: function(data) {
                     // Cambiar la acción del form
-                    var formAction = "{{ route('admin.secretarias.update', ':id') }}".replace(':id',data.id);
+                    var formAction = "{{ route('admin.secretarias.update', ':id') }}".replace(':id',
+                        data.id);
                     modal.find('#editForm').attr('action', formAction);
 
                     // Llenar los campos
@@ -198,7 +201,8 @@
                     if (data.fecha_nacimiento) {
                         let partes = data.fecha_nacimiento.split('/');
                         if (partes.length === 3) {
-                            let fechaISO =`${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+                            let fechaISO =
+                                `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
                             modal.find('#edit-fecha_nacimiento').val(fechaISO);
                         }
                     }
@@ -209,5 +213,38 @@
                 }
             });
         });
+    </script> 
+    {{-- VALIDATION MODAL --}}
+    <script>
+        $('#createForm').on('submit', function(e) {
+            e.preventDefault(); // evita el cierre automático
+
+            let form = $(this);
+            let actionUrl = form.attr('action');
+
+            $.ajax({
+                url: actionUrl,
+                method: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    toastr.success("Registro exitoso");
+                    $('#createModal').modal('hide'); // aquí sí cierras manualmente si quieres
+                    form[0].reset();   // limpiar formulario
+                    location.reload(); // refresca la vista y la tabla se repuebla desde Blade
+                    // $('#secretarias').DataTable().ajax.reload(); // refrescar tabla sin recargar la página
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) { // errores de validación Laravel
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, messages) {
+                            toastr.error(messages[0]);
+                        });
+                    } else {
+                        toastr.error("Ocurrió un error inesperado");
+                    }
+                }
+            });
+        });
     </script>
+
 @stop

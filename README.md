@@ -182,3 +182,11 @@ php artisan db:seed --class=WorldSeeder
 https://leocaseiro.com.br/jquery-plugin-string-to-slug/#
 ## Fecha de creacion
 git log --reverse
+
+## DATA TABLE BY AJAX - when save avoid reload
+- Yajra DataTable
+
+composer require yajra/laravel-datatables-oracle
+php artisan vendor:publish --tag=datatables
+npm install datatables.net datatables.net-bs4 datatables.net-responsive datatables.net-buttons
+npm run dev

@@ -361,8 +361,8 @@ return [
         [
             'text' => 'Programador',
             'icon' => 'fas fa-laptop',
-            'label' => 'fix validate',
-            'label_color' => 'warning',
+            // 'label' => 'fix validate',
+            // 'label_color' => 'warning',
             'can' => 'admin.secretarias.index',
             'submenu' => [
                 // ['text' => 'Creacion de programador','icon' => 'far fa-circle nav-icon','route' => 'admin.secretarias.create',],

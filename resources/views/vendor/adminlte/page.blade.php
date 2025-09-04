@@ -58,7 +58,7 @@
     {{-- @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
         <script></script>
         @endif --}}
-    @if (session('info') && session('icono'))
+    @if (session('swal') && session('info') && session('icono'))
         <script>
             Swal.fire({
                 title: "{{ session('title') }}",
