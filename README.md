@@ -190,3 +190,4 @@ composer require yajra/laravel-datatables-oracle
 php artisan vendor:publish --tag=datatables
 npm install datatables.net datatables.net-bs4 datatables.net-responsive datatables.net-buttons
 npm run dev
+![Imagen del juego](images/cars_liberty.png)
