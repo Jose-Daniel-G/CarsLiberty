@@ -1,150 +1,85 @@
-@extends('adminlte::page')
+<!-- Modal de Create -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Crear Vehículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.config.store') }}" method="POST" autocomplete="off"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="logo">Logo</label>
 
-@section('title', 'Dashboard')
-@section('css')
-    <style>
-        .image-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-        }
+                            <div class="form-group">
 
-        .image-wrapper img {
-            position: absolute;
-            object-fit: cover;
-            width: 80%;
-            height: 80%;
-        }
+                                <div class="image-wrapper">
 
-        .image-wrapper img:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
-            /* Sombra más oscura al pasar el cursor */
-            transform: scale(1.05);
-            /* Efecto de zoom al hacer hover */
-        }
-    </style>
-@stop
-@section('content_header')
-    <h1>Sistema de reservas </h1>
-@stop
-
-@section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <h1>Registro de una nueva configuración</h1>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-outline card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Llene los Datos</h3>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('admin.config.store') }}" method="POST" autocomplete="off"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="logo">Logo</label>
-
-                                    <div class="form-group">
-
-                                        <div class="image-wrapper">
-
-                                            @isset($post->image)
-                                                <img src="{{ asset($post->image->url) }}" alt="" id="picture"
-                                                    accept="image/*">
-                                            @else
-                                                <img id="picture"
-                                                    src="https://cdn.pixabay.com/photo/2020/03/27/13/02/venice-4973502_1280.jpg"
-                                                    alt="">
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="file" name="logo" id="file" class="form-control-file"  accept=".jpg, .jpeg, .png" 
-                                                accept="image/*" style="display: none;">
-                                        </div>
-                                        @error('file')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="site_name">Nombre del sitio</label>
-                                            <input type="text" class="form-control" name="site_name"
-                                                value="{{ old('site_name') }}" required>
-                                            @error('site_name')
-                                                <small class="text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="address">Dirección</label>
-                                            <input type="text" class="form-control" name="address"
-                                                value="{{ old('address') }}" required>
-                                            @error('address')
-                                                <small class="text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="phone">Teléfono</label>
-                                            <input type="number" class="form-control" name="phone"
-                                                value="{{ old('telefono') }}" required>
-                                            @error('telefono')
-                                                <small class="text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email_contact">Correo de contacto</label>
-                                            <input type="email" class="form-control" name="email_contact"
-                                                value="{{ old('email_contact') }}" required>
-                                            @error('email_contact')
-                                                <small class="text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <a href="{{ route('admin.config.index') }}" class="btn btn-secondary">
-                                                Cancelar
-                                            </a>
-                                            <button type="submit" class="btn btn-primary">Registrar configuracion</button>
-                                        </div>
-                                    </div>
+                                    <img id="picture"
+                                        src="{{ isset($config->logo) ? asset('storage/' . $config->logo) : 'https://cdn.pixabay.com/photo/2020/03/27/13/02/venice-4973502_1280.jpg' }}"
+                                        alt="" style="cursor:pointer; max-width:100%; height:auto;">
                                 </div>
-                            </form>
-
-
-
-                            {{-- <div class="form-group">
-                                <div class="row mb-3">
-                                    <div class="col">
-
-                                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae, officiis
-                                                incidunt commodi numquam quas
-                                                esse alias, dolor ipsum dignissimos eius hic a. Aliquam eveniet minima incidunt
-                                                amet temporibus, commodi
-                                                quisquam?</p>
-                                        </div>
-                                    </div>
-                                </div> --}}
-                            {{-- <div class="form-group">
-                                <label for="logo">Logo</label><b class="text-danger">*</b>
-                                <input type="file" id="file" class="form-control" name="logo" required>
-                                <div class="text-center"><output id="list"></output></div>
-                                @error('logo')
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="logo" id="file" class="form-control-file"
+                                    accept=".jpg, .jpeg, .png" accept="image/*" style="display: none;">
+                            </div>
+                            @error('file')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="site_name">Nombre del sitio</label>
+                                <input type="text" class="form-control" name="site_name"
+                                    value="{{ old('site_name') }}" required>
+                                @error('site_name')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
-                                /div> --}}
-
-
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Dirección</label>
+                                <input type="text" class="form-control" name="address" value="{{ old('address') }}"
+                                    required>
+                                @error('address')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Teléfono</label>
+                                <input type="number" class="form-control" name="phone" value="{{ old('telefono') }}"
+                                    required>
+                                @error('telefono')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="email_contact">Correo de contacto</label>
+                                <input type="email" class="form-control" name="email_contact"
+                                    value="{{ old('email_contact') }}" required>
+                                @error('email_contact')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <a href="{{ route('admin.config.index') }}" class="btn btn-secondary">
+                                    Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">Registrar configuracion</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
-    @stop
-
-@section('css')
-
-@stop
+    </div>
+</div>
+</div>
 
 @section('js')
     <script>
@@ -154,9 +89,8 @@
 
         // Al hacer clic en la imagen, simula un clic en el input file
         picture.addEventListener('click', () => {
-            fileInput.click(); // Activa el input file
+            fileInput.click();
         });
-        // Cambiar imagen
         // Cambiar la imagen mostrada cuando se selecciona un archivo
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -171,24 +105,5 @@
                 reader.readAsDataURL(file);
             }
         });
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     document.getElementById('file').addEventListener('change', function(evt) {
-        //         var files = evt.target.files; // FileList object
-        //         if (files.length > 0) {
-        //             var file = files[0]; // Tomamos el primer archivo seleccionado
-        //             if (!file.type.match('image.*')) {
-        //                 alert("Solo se permiten archivos de imagen.");
-        //                 return;
-        //             }
-
-        //             var reader = new FileReader();
-        //             reader.onload = function(e) {
-        //                 document.getElementById("list").innerHTML =
-        //                     `<img class="thumb thumbnail" src="${e.target.result}" width="100%" title="${file.name}"/>`;
-        //             };
-        //             reader.readAsDataURL(file);
-        //         }
-        //     });
-        // });
     </script>
 @stop
