@@ -105,8 +105,7 @@
             autoWidth: false, //no le vi la funcionalidad
             dom: 'Bfrtip', // Añade el contenedor de botones
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print', 'colvis' // Botones que aparecen en la imagen
-            ],
+                'copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
             "language": {
                 "decimal": "",
                 "emptyTable": "No hay datos disponibles en la tabla",
@@ -133,7 +132,60 @@
             }
 
         });
+        $('#editClienteModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
 
+            // Ruta del endpoint de edición
+            var url = "{{ route('admin.clientes.edit', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    // Rellenar los campos del cliente
+                    modal.find('#editClienteForm').attr('action',"{{ route('admin.clientes.update', ':id') }}".replace(':id', response.cliente.id));
+                    modal.find('#edit-nombres').val(response.cliente.nombres);
+                    modal.find('#edit-apellidos').val(response.cliente.apellidos);
+                    modal.find('#edit-cc').val(response.cliente.cc);
+                    modal.find('#edit-celular').val(response.cliente.celular);
+                    modal.find('#edit-direccion').val(response.cliente.direccion);
+                    modal.find('#edit-contacto_emergencia').val(response.cliente.contacto_emergencia);
+                    modal.find('#edit-email').val(response.cliente.user.email);
+                    modal.find('#edit-observaciones').val(response.cliente.observaciones);
+
+                    // Seleccionar la opción de género
+                    modal.find('#edit-genero').val(response.cliente.genero);
+
+                    // Rellenar y seleccionar los checkboxes de los cursos
+                    var cursosContainer = modal.find('#cursos-checkboxes');
+                    cursosContainer.empty(); // Limpiar checkboxes anteriores
+
+                    // Iterar sobre todos los cursos y crear los checkboxes
+                    response.cursos.forEach(function(curso) {
+                        var isChecked = response.cursosSeleccionados.includes(curso.id) ?
+                            'checked' : '';
+                        var checkboxHtml = `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-check">
+                                    <input type="checkbox" name="cursos[]" value="${curso.id}"
+                                        class="form-check-input" id="edit-curso-${curso.id}" ${isChecked}>
+                                    <label class="form-check-label" for="edit-curso-${curso.id}">
+                                        ${curso.nombre}
+                                    </label>
+                                </div>
+                            </div>`;
+                        cursosContainer.append(checkboxHtml);
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Error al cargar los datos del cliente:', xhr);
+                    // Opcional: mostrar un mensaje de error al usuario
+                    alert('No se pudieron cargar los datos del cliente. Por favor, intente de nuevo.');
+                }
+            });
+        });
         // function confirmDelete(id) {
         //     Swal.fire({
         //         title: '¿Estás seguro?',
@@ -151,76 +203,5 @@
         //         }
         //     });
         // }
-        $('#editClienteModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id'); // id del profesor
-            var modal = $(this);
-
-            // Ruta edit
-            var url = "{{ route('admin.profesores.edit', ':id') }}".replace(':id', id);
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(data) {
-                    // Cambiar la URL del form update
-                    var formAction = "{{ route('admin.profesores.update', ':id') }}".replace(':id',
-                        data.id);
-                    modal.find('#editClienteForm').attr('action', formAction);
-
-                    // Rellenar los campos
-                    modal.find('#edit-nombres').val(data.nombres);
-                    modal.find('#edit-apellidos').val(data.apellidos);
-                    modal.find('#edit-telefono').val(data.telefono);
-                    modal.find('#edit-email').val(data.user.email);
-                },
-                error: function(xhr) {
-                    console.error('Error al cargar los datos del profesor:', xhr);
-                }
-            });
-        });
     </script>
-        <!-- JAVASCRIPT -->
-    <script>
-        $('#editModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-            var modal = $(this);
-
-            var url = "{{ route('admin.clientes.edit', ':id') }}".replace(':id', id);
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(data) {
-                    // Cambiar la acción del form
-                    var formAction = "{{ route('admin.clientes.update', ':id') }}".replace(':id',
-                        data.id);
-                    modal.find('#editForm').attr('action', formAction);
-
-                    // Llenar los campos
-                    modal.find('#edit-nombres').val(data.nombres);
-                    modal.find('#edit-apellidos').val(data.apellidos);
-                    modal.find('#edit-cc').val(data.cc);
-                    modal.find('#edit-celular').val(data.celular);
-                    modal.find('#edit-direccion').val(data.direccion);
-                    modal.find('#edit-email').val(data.user.email);
-                    // 👇 convertir fecha de DD/MM/YYYY → YYYY-MM-DD
-                    if (data.fecha_nacimiento) {
-                        let partes = data.fecha_nacimiento.split('/');
-                        if (partes.length === 3) {
-                            let fechaISO =
-                                `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
-                            modal.find('#edit-fecha_nacimiento').val(fechaISO);
-                        }
-                    }
-
-                },
-                error: function(xhr) {
-                    console.error('Error al cargar los datos de la secretaria:', xhr);
-                }
-            });
-        });
-    </script>
-
 @stop

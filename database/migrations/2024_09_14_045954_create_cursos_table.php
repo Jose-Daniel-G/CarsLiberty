@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('descripcion')->nullable();
             $table->integer('horas_requeridas');
-            $table->string('estado');
+            $table->boolean('estado')->default(1);
             $table->timestamps();
         });
     }

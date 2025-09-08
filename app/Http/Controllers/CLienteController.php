@@ -15,16 +15,10 @@ class ClienteController extends Controller
     public function index()
     {
         $clientes = Cliente::with('user')->get();
-         $cursos = Curso::all();
+        $cursos = Curso::all();
         return view('admin.clientes.index', compact('clientes','cursos'));
     }
-
-    public function create()
-    {
-        // $cursos = Curso::all();
-        // return view('admin.clientes.create', compact('cursos'));
-    }
-
+    // public function create(){// $cursos = Curso::all();// return view('admin.clientes.create', compact('cursos'));}
     public function store(Request $request)
     {
         // dd($request->all());
@@ -80,22 +74,18 @@ class ClienteController extends Controller
             return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
     }
-    
-
-    public function show(Cliente $cliente)
-    {
-        return view('admin.clientes.show', compact('cliente'));
-    }
-
-
+    // public function show(Cliente $cliente) {  return view('admin.clientes.show', compact('cliente'));  }
     public function edit(Cliente $cliente)
     {
         $cursos = Curso::all(); // Cargar todos los cursos disponibles
+        $cliente->load('user');
 
         // Obtener los IDs de los cursos ya asignados al cliente
         $cursosSeleccionados = $cliente->cursos->pluck('id')->toArray();
 
-        return view('admin.clientes.edit', compact('cliente', 'cursos', 'cursosSeleccionados'));
+        // return view('admin.clientes.edit', compact('cliente', 'cursos', 'cursosSeleccionados'));
+        \Log::info('cliente',[$cliente]);
+        return response()->json(['cliente'=>$cliente,'cursos' => $cursos,'cursosSeleccionados' => $cursosSeleccionados]);
     }
 
 

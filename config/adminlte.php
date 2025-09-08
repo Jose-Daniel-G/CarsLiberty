@@ -303,16 +303,16 @@ return [
             'text'        => 'Configuraciones',
             'route'         => 'admin.config.index',
             'icon' => 'bi bi-gear',
-            'label' => 'waiting',
-            'label_color' => 'light',
+            // 'label' => 'waiting',
+            // 'label_color' => 'light',
             'can'  => 'admin.config.index',
             'submenu' => [
                 // [ 'text' => 'Crear configuracion', 'icon'=> 'far fa-circle nav-icon', 'route' => 'admin.config.create', ],
                 [
                     'text' => 'Listado de configuracion',
                     'icon'        => 'far fa-circle nav-icon',
-                    'label' => '?',
-                    'label_color' => 'light',
+                    // 'label' => '?',
+                    // 'label_color' => 'light',
                     'route' => 'admin.config.index',
                 ],
             ],
@@ -393,8 +393,8 @@ return [
         [
             'text' => 'Cursos',
             'icon' => 'fas fa-book',
-            'label' => 'check cr activo',
-            'label_color' => 'primary',
+            // 'label' => 'check cr activo',
+            // 'label_color' => 'primary',
             'can' => 'admin.cursos.index',
             'submenu' => [
                 // ['text' => 'Creacion de cursos','icon'=> 'far fa-circle nav-icon','route' => 'admin.cursos.create', ],

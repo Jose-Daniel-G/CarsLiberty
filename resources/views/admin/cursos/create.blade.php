@@ -49,8 +49,8 @@
                                 <select name="estado" id="" class="form-control" name="estado">
                                     <!-- Opción por defecto -->
                                     <option value="" selected disabled>Seleccione una opción</option>
-                                    <option value="A">Activo</option>
-                                    <option value="I">Inactivo</option>
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
                                 </select>
                                 @error('estado')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>

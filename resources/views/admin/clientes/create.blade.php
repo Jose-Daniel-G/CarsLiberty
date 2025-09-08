@@ -47,10 +47,10 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="celular">Celular </label><b class="text-danger">*</b>
-                                <input type="number" class="form-control" name="celular" value="{{ old('celular') }}"
+                                <label for="telefono">telefono </label><b class="text-danger">*</b>
+                                <input type="number" class="form-control" name="telefono" value="{{ old('telefono') }}"
                                     required>
-                                @error('celular')
+                                @error('telefono')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>

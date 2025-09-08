@@ -15,8 +15,8 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="row">
-                        <div class="col-md-3">
+                    <div class="row justify-content-center">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="edit-nombre">Nombre del curso </label><b class="text-danger">*</b>
                                 <input type="text" class="form-control" id="edit-nombre" name="nombre" required>
@@ -25,34 +25,34 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="edit-descripcion">Descripción </label><b class="text-danger">*</b>
-                                <input type="text" class="form-control" id="edit-descripcion" name="descripcion" required>
+                                <input type="text" class="form-control" id="edit-descripcion" name="descripcion"
+                                    required>
                                 @error('descripcion')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-1">
                             <div class="form-group">
-                                <label for="edit-horas">Horas requeridas </label><b class="text-danger">*</b>
-                                <input type="number" class="form-control" id="edit-horas" name="horas_requeridas" required>
+                                <label for="edit-horas">Horas </label><b class="text-danger">*</b>
+                                <input type="number" class="form-control" id="edit-horas" name="horas_requeridas"
+                                    required>
                                 @error('horas_requeridas')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="edit-estado">Estado </label>
-                                <p id="edit-estado" name="estado"></p>
+                                <p id="edit-estado" name="estado" ></p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row mt-3">
-                        <div class="col-md-12">
+                        <div class="row mt-3">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary">Actualizar curso</button>
                             </div>

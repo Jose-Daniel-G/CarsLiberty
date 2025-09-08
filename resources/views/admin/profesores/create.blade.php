@@ -1,7 +1,7 @@
 <!-- Modal de Create -->
 <div class="modal fade" id="createProfesorModal" tabindex="-1" role="dialog" aria-labelledby="createProfesorModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createProfesorModalLabel">Crear Profesor</h5>
@@ -13,7 +13,7 @@
                         <form action="{{ route('admin.profesores.store') }}" method="POST" autocomplete="off">
                             @csrf
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="nombres">Nombre del profesor </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="nombres"
@@ -23,7 +23,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="apellidos">Apellidos </label><b class="text-danger">*</b>
                                         <input type="text" class="form-control" name="apellidos"
@@ -33,7 +33,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="telefono">Telefono </label><b class="text-danger">*</b>
                                         <input type="number" class="form-control" name="telefono"
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="email">Email </label><b class="text-danger">*</b>
                                         <input type="email" class="form-control" name="email" autocomplete="new-email" required>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="password">Contrasena </label><b class="text-danger">*</b>
                                         <input type="password" class="form-control" name="password" autocomplete="new-password" required>
@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="password_confirmation">Verificacion de contrasena </label><b
                                             class="text-danger">*</b>
