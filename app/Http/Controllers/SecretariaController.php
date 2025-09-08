@@ -15,12 +15,7 @@ class SecretariaController extends Controller
         $secretarias = Secretaria::with('user')->get(); // viene con la relacion del secretaria
         return view('admin.secretarias.index', compact('secretarias'));
     }
-
-    public function create()
-    {
-        return view('admin.secretarias.create');
-    }
-
+    // public function create(){return view('admin.secretarias.create');}
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -55,17 +50,8 @@ class SecretariaController extends Controller
 
             return redirect()->route('admin.secretarias.index')
                 ->with(['title' => 'Exito', 'info' => 'Se registro a la secretaria de forma correcta', 'icono' => 'success']);
-                // ->with(['title' => 'Exito', 'info' => 'Se registro a la secretaria de forma correcta', 'icono' => 'success', 'swal' => 'true']);
         } catch (\Exception $exception) {
-                return back()
-                    ->withInput()
-                    ->with([
-                        'title' => 'Error',
-                        'info'  => 'No se registró la secretaria. ' . $exception->getMessage(),
-                        'icono' => 'error',
-                        'openModal' => 'createModal' // <- clave para reabrir el modal
-                    ]);
-            // return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
+                return back()->withInput()->with(['title' => 'Error','info'  => 'No se registró la secretaria. ' . $exception->getMessage(),'icono' => 'error','openModal' => 'createModal' ]);// <- clave para reabrir el modal // return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
     }
 
@@ -75,11 +61,8 @@ class SecretariaController extends Controller
     }
 
     public function edit(Secretaria $secretaria)
-    { 
-        $secretaria->load('user');
-        // Retornar JSON para AJAX
-        return response()->json($secretaria);
-    }
+    { $secretaria->load('user');
+      return response()->json($secretaria);}
 
     public function update(Request $request, Secretaria $secretaria)
     {
@@ -107,12 +90,9 @@ class SecretariaController extends Controller
         $usuario = $secretaria->user;  // Obtén el usuario existente
         $usuario->name = $request->nombres;
         $usuario->email = $request->email;
-        if ($request->filled('password')) {
-            $usuario->password = Hash::make($request->password);
-        }
+        if ($request->filled('password')) {$usuario->password = Hash::make($request->password);}
         $usuario->save();
-        return redirect()->route('admin.secretarias.index')
-            ->with(['title' => 'Exito', 'info' => 'Se actualizo la secretaria de forma correcta', 'icono' => 'success']);
+        return redirect()->route('admin.secretarias.index')->with(['title' => 'Exito', 'info' => 'Se actualizo la secretaria de forma correcta', 'icono' => 'success']);
     }
     public function toggleStatus($id) //DEACTIVATE
     {

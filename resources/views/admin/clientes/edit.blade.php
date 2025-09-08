@@ -93,8 +93,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Cursos del cliente:</label>
-                            <div id="cursos-checkboxes" class="row">
-                                </div>
+                            <div id="cursos-checkboxes" class="row"></div>
                         </div>
                     </div>
                     <div class="row">

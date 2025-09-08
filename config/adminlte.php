@@ -377,8 +377,8 @@ return [
         [
             'text' => 'Clientes',
             'icon' => 'fas fa-users mr-2',
-            'label' => 'check **',
-            'label_color' => 'primary',
+            // 'label' => 'check **',
+            // 'label_color' => 'primary',
             'can' => 'admin.clientes.index',
             'submenu' => [
                 // ['text' => 'Creacion de clientes','icon'=> 'far fa-circle nav-icon','route' => 'admin.clientes.create',],

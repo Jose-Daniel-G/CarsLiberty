@@ -185,9 +185,9 @@ git log --reverse
 
 ## DATA TABLE BY AJAX - when save avoid reload
 - Yajra DataTable
+- composer require yajra/laravel-datatables-oracle
+- php artisan vendor:publish --tag=datatables
+- npm install datatables.net datatables.net-bs5 datatables.net-responsive-bs5 datatables.net-buttons-bs5
 
-composer require yajra/laravel-datatables-oracle
-php artisan vendor:publish --tag=datatables
-npm install datatables.net datatables.net-bs4 datatables.net-responsive datatables.net-buttons
 npm run dev
 ![Imagen del juego](images/cars_liberty.png)

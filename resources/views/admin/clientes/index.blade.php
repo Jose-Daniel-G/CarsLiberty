@@ -34,64 +34,18 @@
                                 <th>Nombres</th>
                                 <th>Apellidos</th>
                                 <th>cc</th>
+                                <th>email</th>
                                 <th>Direccion</th>
                                 <th>Acciones</th>
-                                {{-- <th>Email</th> --}}
-                                {{-- <th>Fecha de Nacimiento</th> --}}
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $contador = 1; ?>
-                            @foreach ($clientes as $cliente)
-                                <tr>
-                                    <td scope="row">{{ $contador++ }}</td>
-                                    <td scope="row">{{ $cliente->nombres }}</td>
-                                    <td scope="row">{{ $cliente->apellidos }}</td>
-                                    <td scope="row">{{ $cliente->cc }}</td>
-                                    <td scope="row">{{ $cliente->direccion }}</td>
-                                    {{-- <td scope="row">{{ $cliente->user->email }}</td> --}}
-                                    <td scope="row ">
-                                        <div class="btn-group" role="group" aria-label="basic example">
-
-                                            <a href="#" class="btn btn-primary" data-id="{{ $cliente->id }}"
-                                                data-toggle="modal" data-target="#showClienteModal">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-warning btn-sm mr-1"
-                                                data-id="{{ $cliente->id }}" data-toggle="modal"
-                                                data-target="#editClienteModal" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-
-                                            <div class="text-center">
-                                                <form id="delete-form-{{ $cliente->id }}"
-                                                    action="{{ route('admin.clientes.toggleStatus', $cliente->user->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PATCH') <!-- Laravel permite cambios parciales con PATCH -->
-                                                    <button type="submit"
-                                                        class="btn {{ $cliente->user->status ? 'btn-success' : 'btn-danger' }}">
-                                                        {!! $cliente->user->status
-                                                            ? '<i class="fa-solid fa-square-check"></i>'
-                                                            : '<i class="fa-solid fa-circle-xmark"></i>' !!}
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            {{-- <form id="delete-form-{{ $cliente->id }}" action="{{ route('admin.clientes.destroy', $cliente->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $cliente->id }})"><i     class="fas fa-trash"></i></button>
-                            </form> --}}
                         </tbody>
                     </table>
-                    </table>
+
                     @include('admin.clientes.create')
                     @include('admin.clientes.edit')
-                    @include('admin.clientes.show')
+                    {{-- @include('admin.clientes.show') --}}
                 </div>
             </div>
         </div>
@@ -100,38 +54,44 @@
 
 @section('js')
     <script>
-        new DataTable('#clientes', {
-            responsive: true,
-            autoWidth: false, //no le vi la funcionalidad
-            dom: 'Bfrtip', // Añade el contenedor de botones
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
-            "language": {
-                "decimal": "",
-                "emptyTable": "No hay datos disponibles en la tabla",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ clientes",
-                "infoEmpty": "Mostrando 0 a 0 de 0 clientes",
-                "infoFiltered": "(filtrado de _MAX_ clientes totales)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Mostrar _MENU_ clientes",
-                "loadingRecords": "Cargando...",
-                "processing": "",
-                "search": "Buscar:",
-                "zeroRecords": "No se encontraron registros coincidentes",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Último",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                },
-                "aria": {
-                    "orderable": "Ordenar por esta columna",
-                    "orderableReverse": "Invertir el orden de esta columna"
+        $(function () {
+            $('#clientes').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                autoWidth: false,
+                ajax: '{{ route("admin.clientes.index") }}',
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'nombres', name: 'nombres' },
+                    { data: 'apellidos', name: 'apellidos' },
+                    { data: 'cc', name: 'cc' },
+                    { data: 'user.email', name: 'user.email' },
+                    { data: 'direccion', name: 'direccion' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay datos disponibles en la tabla",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ clientes",
+                    infoEmpty: "Mostrando 0 a 0 de 0 clientes",
+                    infoFiltered: "(filtrado de _MAX_ clientes totales)",
+                    lengthMenu: "Mostrar _MENU_ clientes",
+                    loadingRecords: "Cargando...",
+                    search: "Buscar:",
+                    zeroRecords: "No se encontraron registros coincidentes",
+                    paginate: {
+                        first: "Primero",
+                        last: "Último",
+                        next: "Siguiente",
+                        previous: "Anterior"
+                    }
                 }
-            }
-
+            });
         });
+
         $('#editClienteModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var id = button.data('id');
@@ -145,7 +105,10 @@
                 method: 'GET',
                 success: function(response) {
                     // Rellenar los campos del cliente
-                    modal.find('#editClienteForm').attr('action',"{{ route('admin.clientes.update', ':id') }}".replace(':id', response.cliente.id));
+                    var formAction = "{{ route('admin.clientes.update', ':id') }}".replace(':id',
+                        response.cliente.id);
+                    modal.find('#editClienteForm').attr('action', formAction);
+
                     modal.find('#edit-nombres').val(response.cliente.nombres);
                     modal.find('#edit-apellidos').val(response.cliente.apellidos);
                     modal.find('#edit-cc').val(response.cliente.cc);
@@ -186,6 +149,29 @@
                 }
             });
         });
+        $('#editClienteForm').submit(function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var formData = form.serialize() + '&_method=PUT'; // <- importante
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    $('#editClienteModal').modal('hide');
+                    Swal.fire({
+                        text: "Cliente actualizado correctamente",
+                        icon: "success"
+                    });
+                    $('#clientes').DataTable().ajax.reload(null, false);
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    alert('Error al actualizar cliente');
+                }
+            });
+        });
+
         // function confirmDelete(id) {
         //     Swal.fire({
         //         title: '¿Estás seguro?',

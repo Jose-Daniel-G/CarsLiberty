@@ -25,8 +25,7 @@ class Event extends Model
     {
         return $this->belongsTo(Curso::class);
     }
-    // Relación con el modelo Asistencia
-    public function asistencias()
+    public function asistencias() // Relación con el modelo Asistencia
     {
         return $this->hasMany(Asistencia::class, 'evento_id');
     }

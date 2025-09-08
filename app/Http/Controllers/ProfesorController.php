@@ -32,7 +32,6 @@ class ProfesorController extends Controller
             'nombres' => 'required',
             'apellidos' => 'required',
             'telefono' => 'required',
-            // 'especialidad' => 'required',
             'email' => 'required|email|max:150|unique:users,email', // Asegúrate de que el email sea único en la tabla users
             'password' => 'min:8|confirmed',
         ]);
@@ -53,26 +52,19 @@ class ProfesorController extends Controller
         Profesor::create($profesor);
         $usuario->assignRole('profesor');// Asignar rol de 'profesor' al nuevo usuario
 
-        return redirect()->route('admin.profesores.index')
-            ->with(['info', 'Se registró el profesor de forma correcta','icono', 'success']);
+        return redirect()->route('admin.profesores.index')->with(['info', 'Se registró el profesor de forma correcta','icono', 'success']);
     }
 
 
     public function show(Profesor $profesor)
-    {
-        $profesor->load('user');
-        // return view('admin.profesores.show', compact('profesor'));
-        \Log::info('profesor',[$profesor]);
-        return response()->json($profesor);
+    {   $profesor->load('user');
+        return response()->json($profesor); // return view('admin.profesores.show', compact('profesor'));
     }
 
     public function edit(Profesor $profesor)
     {
         \Log::info("profesor: ", [$profesor]);
-
-        // incluir también el email del user
         $profesor->load('user');
-
         return response()->json($profesor);
     }
 
@@ -86,25 +78,18 @@ class ProfesorController extends Controller
             'email' => 'required|email|max:50|unique:users,email,' . $profesor->user_id, // Excluyendo el usuario actual
             'password' => 'nullable|min:8|confirmed', // Permitir que la contraseña sea opcional
         ]);
+        
+        $data['user_id'] = $profesor->user_id;// Asignar el user_id actual a los datos
+        $profesor->update($data);             // Actualiza el profesor
 
-        // Asignar el user_id actual a los datos
-        $data['user_id'] = $profesor->user_id;
-        $profesor->update($data); // Actualiza el profesor
-
-        // Obtener el usuario asociado al profesor directamente a través de la relación
-        $usuario = $profesor->user;
-
-        // Actualizar el email del usuario
-        $usuario->email = $data['email']; // Asegúrate de usar el nuevo email validado
-        // Condición para saber si el campo password se ha tocado
-        if ($request->filled('password')) {
-            $usuario->password = Hash::make($request['password']);
-        }
+        $usuario = $profesor->user;           // Obtener el usuario asociado al profesor
+        $usuario->email = $data['email'];     // Actualizar el email del usuario
+    
+        if ($request->filled('password')) {$usuario->password = Hash::make($request['password']);}    // Si el campo password se ha tocado
 
         $usuario->save(); // Guardar cambios del usuario
 
-        return redirect()->route('admin.profesores.index')
-            ->with('info', 'Profesor actualizado correctamente.','icono', 'success');
+        return redirect()->route('admin.profesores.index')->with('info', 'Profesor actualizado correctamente.','icono', 'success');
     }
 
 
@@ -124,15 +109,13 @@ class ProfesorController extends Controller
         return redirect()->route('admin.profesores.index')
             ->with(['info', 'El profesor se eliminó con éxito','icono', 'success']);
     }
-    public function reportes()
-    {
-        return view('admin.profesores.reportes');
-    }
+
+    public function reportes() {return view('admin.profesores.reportes'); }
+
     public function pdf($id)
     {
         $config = Config::latest()->first();
         $profesores = Profesor::all();
-        // dd($profesores);
         $pdf = PDF::loadView('admin.profesores.pdf', compact('config', 'profesores'));
 
         // Incluir la numeración de páginas y el pie de página
@@ -158,8 +141,7 @@ class ProfesorController extends Controller
                 ->select('profesors.*')
                 ->distinct()
                 ->get();
-    
-            // Verificar si se obtuvieron resultados
+     
             if ($profesores->isEmpty()) {
                 return response()->json(['message' => 'No se encontraron profesores para este curso.'], 404);
             }
