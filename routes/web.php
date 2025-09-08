@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\HomeController;
+
+use App\Http\Controllers\Admin\HorarioController;
+use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\HistorialCursoController;
-use App\Http\Controllers\Admin\HorarioController;
 // use App\Http\Controllers\CardController;
 // use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Auth;
@@ -12,9 +14,19 @@ use Illuminate\Support\Facades\Route;
 
 // Auth::routes(['register'=>false]); // Route::get('/', function () {return view('welcome');}); // Route::get('/', function () {return view('auth.login');});
 
-/** LOGIN     **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('auth.login'); });
-/** REGISTER  **/Route::get('/register', function () {return redirect('/');});
+/** LOGIN           **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('auth.login'); });
+/** REGISTER        **/Route::get('/register', function () {return redirect('/');});
+/** CONFIG PROFILE  **/Route::get('/profile', function () {return view('admin/modelo/profile');});
 /** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
+
+// Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
+//     ->group(function () {
+//         Route::put('/users/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
+//     });
+Route::get('/admin/profile/show', [UserProfileController::class, 'show'])->name('admin.profile.show');
+Route::put('/admin/profile', [UserProfileController::class, 'update'])->name('admin.profile.update');
+
+
 
 //RUTAS HORARIOS ADMIN
 Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores'])->name('admin.horarios.show_reserva_profesores');

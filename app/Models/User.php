@@ -27,14 +27,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $casts = ['email_verified_at' => 'datetime',];
 
-    // ADMINLTE
-    protected $appends = ['profile_photo_url',];
+    protected $appends = ['profile_photo_url',];// ADMINLTE
 
     public function adminlte_image() // return auth()->user()->profile_photo_url;// return url($this->profile_photo_url);
-    {  return asset('storage/' . $this->profile_photo_path); }
+    {  return url($this->profile_photo_url); // return asset('storage/' . $this->profile_photo_path);
+         }
 
-    public function adminlte_desc()
-    {   return $this->roles->pluck('name')->implode(', ');   } // return 'Administrador';
+    public function adminlte_desc(){   return $this->roles->pluck('name')->implode(', ');   } // return 'Administrador';
     public function adminlte_profile_url()
     {
         return url('user/profile');

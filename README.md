@@ -146,12 +146,10 @@ npm install jquery-ui
 <i class="fas fa-edit"></i>
 <i class="fas fa-trash"></i>
 
-IF I WANT TO IMPLEMENT NOTIFICATIONS ON PROJECT
+### IF I WANT TO IMPLEMENT NOTIFICATIONS ON PROJECT
 
 php artisan notification:table
 php artisan make:event PostEvent
-
-
 
 HABILITAR EXTENCION EN PHP.INI Xampp u otro: extension=gd
 npm install laravel-mix --save-dev
@@ -178,16 +176,19 @@ composer require nnjeim/world
 php artisan world:install
 php artisan db:seed --class=WorldSeeder
 
-## LIBRERIA SLUG
+### LIBRERIA SLUG
 https://leocaseiro.com.br/jquery-plugin-string-to-slug/#
-## Fecha de creacion
+### Fecha de creacion
 git log --reverse
 
-## DATA TABLE BY AJAX - when save avoid reload
+### DATA TABLE BY AJAX - when save avoid reload
 - Yajra DataTable
 - composer require yajra/laravel-datatables-oracle
 - php artisan vendor:publish --tag=datatables
 - npm install datatables.net datatables.net-bs5 datatables.net-responsive-bs5 datatables.net-buttons-bs5
+- npm run dev
+  
+### profile view
+C:\xampp\htdocs\www\CarsLiberty\resources\views\profile\update-profile-information-form.blade copy.php
 
-npm run dev
 ![Imagen del juego](images/cars_liberty.png)
