@@ -130,7 +130,9 @@ composer require endroid/qr-code
 -   npm install jquery
 
 # -------------------------
-
+composer require jeroennoten/laravel-adminlte
+php artisan adminlte:install
+php artisan adminlte:install --only=main_views
 php artisan adminlte:plugins
 php artisan adminlte:plugins install --plugin=sweetalert2
 php artisan adminlte:plugins install --plugin=fullcalendar
@@ -163,7 +165,6 @@ php artisan notification:table
 php artisan make:notification PostNotification<!-- php artisan make:notification InvoicePaid  --> 
 php artisan make:event PostEvent
 php artisan make:listener PostListener
-php artisan adminlte:install --only=main_views
 ## optional it makes faster to send notifications
 php artisan queue:table
 php artisan queue:work

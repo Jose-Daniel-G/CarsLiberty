@@ -88,7 +88,7 @@ return [
         'img' => [
             'path' => 'vendor/adminlte/dist/img/Hebron.png',
             'alt' => 'Auth Logo',
-            'class' => '',
+            'class' => 'brand-image img-circle elevation-3', // 'class' => '',// JD
             'width' => 50,
             'height' => 50,
         ],
@@ -259,8 +259,8 @@ return [
     'dashboard_url' => '/admin',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
+    'register_url' => false,//'register',
+    'password_reset_url' => 'forgot-password',
     'password_email_url' => 'password/email',
     'profile_url' => false,
 

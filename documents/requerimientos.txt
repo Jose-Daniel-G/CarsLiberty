@@ -26,3 +26,5 @@ agendar varios cursos para el mismo horario para el profesor
 PROGRAMADOR PODER CANCELARLA O A FUTURO SOLICITAR CANCELACION DE CLASE
 EVITAR QUE AGENDE UNA CLASE DE OTRO CURSO SI YA ESTA REALIZANDO uno
 EVITAR ABRIR MODAL PARA AGENDAR SI AUN NO VE CLASE AGENDADA
+
+ConfigServiceProvider ---> configuracion de diseño del login

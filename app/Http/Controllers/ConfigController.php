@@ -23,8 +23,7 @@ class ConfigController extends Controller
         return view('admin.config.create');
     }
     public function store(Request $request)
-    {
-        dd($request->all());
+    {// dd($request->all());
 
         $request->validate([
             'site_name'    => 'required|string',
