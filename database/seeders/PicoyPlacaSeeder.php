@@ -17,7 +17,7 @@ class PicoyPlacaSeeder extends Seeder
             PicoyPlaca::create([
                 'dia' => $day,
                 'horario_inicio' => '07:00:00', // Hora de inicio de la restricción
-                'horario_fin' => '08:00:00',    // Hora de fin de la restricción
+                'horario_fin' => '20:00:00',    // Hora de fin de la restricción
                 'placas_reservadas' => $placas_reservadas[$index], // Placas afectadas
             ]);
         }

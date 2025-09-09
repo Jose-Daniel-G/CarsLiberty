@@ -21,8 +21,8 @@
                 </div>
 
                 <div class="card-body">
-                    @if ($info = Session::get('info'))
-                        <div class="alert alert-success"><strong>{{ $info }}</strong></div>
+                    @if (session('info'))
+                        <div class="alert alert-success"><strong>{{ session('info') }}</strong></div>
                     @endif
                     <table id="cursos" class="table table-striped table-bordered table-hover table-sm">
                         <thead class="thead-dark">
@@ -55,10 +55,6 @@
                                         </form>
                                     </td>
                                     <td scope="row"> 
-                                        <a href="{{ route('admin.cursos.show', $curso->id) }}" class="btn btn-info btn-sm mr-1" title="Ver">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-
                                         <a href="#" class="btn btn-warning btn-sm mr-1" data-id="{{ $curso->id }}"
                                         data-toggle="modal" data-target="#editCursoModal" title="Editar">
                                             <i class="fas fa-edit"></i>
@@ -77,9 +73,9 @@
                             @endforeach
                         </tbody>
                     </table>
-                     @include('admin.cursos.create')
+                    @include('admin.cursos.create')
                     @include('admin.cursos.edit')
-                    {{--@include('admin.cursos.show') --}}
+                    {{-- @include('admin.cursos.show') --}}
                 </div>
             </div>
         </div>

@@ -13,42 +13,29 @@ use Illuminate\Support\Facades\Hash;
 
 class CursoController extends Controller
 {
-    public function index()
-    {
-        $cursos = Curso::all(); // viene con la relacion del curso
-        return view('admin.cursos.index', compact(('cursos')));
-    }
+    public function index() { $cursos = Curso::all();   return view('admin.cursos.index', compact(('cursos'))); }
 
-    public function create()
-    {
-        return view('admin.cursos.create');
-    }
+    // public function create() {  return view('admin.cursos.create'); }
 
     public function store(Request $request)
     {
-        // Validación de los datos
         $request->validate([
             'nombre' => 'required',
             'horas_requeridas' => 'required|integer|min:1',
-            'estado' => 'required|in:A,I', // Asegúrate de que el estado sea válido
+            'estado' => 'required|in:0,1',
             'descripcion' => 'nullable',
         ]);
-        // Crear un nuevo curso
-        Curso::create($request->all());
+        // dd($request->all());
+        Curso::create($request->all());// Crear un nuevo curso
 
-        // Redireccionar con mensaje de éxito
-        return redirect()->route('admin.cursos.index')->with(['info'=> 'Curso registrado correctamente.','icono'=>'success']);
+        return redirect()->route('admin.cursos.index')->with(['title' => 'Exito','info'=> 'Curso registrado correctamente.','icono'=>'success']);
     }
 
 
-    public function show(Curso $curso)
-    {
-        return view('admin.cursos.show', compact('curso'));
-    }
+    // public function show(Curso $curso) { return view('admin.cursos.show', compact('curso')); }
 
     public function edit(Curso $curso)
-    {
-        // return view('admin.cursos.edit', compact('curso'));
+    {   // return view('admin.cursos.edit', compact('curso'));
          return response()->json($curso);
     }
 
@@ -67,7 +54,6 @@ class CursoController extends Controller
             'info' => 'Curso actualizado correctamente.',
             'icono' => 'success'
         ]);
-        
     }
 
 

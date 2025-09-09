@@ -23,33 +23,21 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $fillable = ['name', 'email', 'password',];
 
-
     protected $hidden = ['password', 'remember_token', 'two_factor_recovery_codes', 'two_factor_secret',];
-
 
     protected $casts = ['email_verified_at' => 'datetime',];
 
-    // ADMINLTE
-    protected $appends = [
-        'profile_photo_url',
-    ];
-    public function adminlte_image()
-    {
-        // return auth()->user()->profile_photo_url;
-        // return url($this->profile_photo_url);
-        return asset('storage/' . $this->profile_photo_path);
-        // return 'https://picsum.photos/300/300';
-    }
-    public function adminlte_desc()
-    {
-        return $this->roles->pluck('name')->implode(', ');
-        // return 'Administrador';
-    }
+    protected $appends = ['profile_photo_url',];// ADMINLTE
+
+    public function adminlte_image() // return auth()->user()->profile_photo_url;// return url($this->profile_photo_url);
+    {  return url($this->profile_photo_url); // return asset('storage/' . $this->profile_photo_path);
+         }
+
+    public function adminlte_desc(){   return $this->roles->pluck('name')->implode(', ');   } // return 'Administrador';
     public function adminlte_profile_url()
     {
         return url('user/profile');
     }
-
     public function secretaria()
     {
         return $this->hasOne(Secretaria::class);
@@ -62,7 +50,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Profesor::class, 'user_id');
     }
-
     public function curso()
     {
         return $this->hasOne(Curso::class);
@@ -71,8 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Event::class);
     }
-    // En el modelo User
-    public function horarios()
+    public function horarios()// En el modelo User
     {
         return $this->hasMany(Horario::class);
     }

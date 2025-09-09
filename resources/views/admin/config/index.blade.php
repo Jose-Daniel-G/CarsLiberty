@@ -2,6 +2,14 @@
 
 @section('title', 'Dashboard')
 @section('css')
+    <style>
+        .image-wrapper {position: relative;padding-bottom: 56.25%;}
+
+        .image-wrapper img {position: absolute;object-fit: cover;width: 95%;height: 80%;}
+
+        .image-wrapper img:hover {box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5); transform: scale(1.05);}/* Sombra más oscura al pasar el cursor / Efecto de zoom al hacer hover */
+
+    </style>
 @stop
 @section('content_header')
     <h1>Listado de Configuraciones</h1>
@@ -11,39 +19,26 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Configuraciones registradas</h3>
-                    <div class="card-tools">
-                        @if ($configs->isEmpty())
-                            <a href="{{ route('admin.config.create') }}" class="btn btn-primary">Registrar
-                                {{-- <i class="fa-solid fa-plus"></i> --}}
-                            </a>
-                        @endif
-
-                    </div>
-                </div>
-
                 <div class="card-body">
-                    @if ($info = Session::get('info'))
+                    @if (session('info'))
                         <div class="alert alert-success"><strong>{{ $info }}</strong></div>
                     @endif
-                    <table id="configuraciones" class="table table-striped table-bordered table-hover table-sm">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Nro</th>
-                                <th>Titulo</th>
-                                <th>Direccion</th>
-                                <th>Telefono</th>
-                                <th>Correo</th>
-                                <th>Logo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $contador = 1; ?>
-                            @foreach ($configs as $config)
+                    @if ($config)
+                        <table id="configuraciones" class="table table-bordered table-striped">
+                            <thead>
                                 <tr>
-                                    <td scope="row">{{ $contador++ }}</td>
+                                    <th>#</th>
+                                    <th>Nombre</th>
+                                    <th>Dirección</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                    <th>Logo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
                                     <td scope="row">{{ $config->site_name }}</td>
                                     <td scope="row">{{ $config->address }}</td>
                                     <td scope="row">{{ $config->phone }}</td>
@@ -71,9 +66,20 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    @else
+                        @include('admin.config.create')
+
+                        <div class="alert alert-danger">
+                            No hay configuraciones registradas.
+                            {{-- button create --}}
+                            <a class="btn btn-secondary" data-toggle="modal" data-target="#createModal">Registrar<i
+                                    class="bi bi-plus-circle-fill"></i></a>
+
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -81,17 +87,6 @@
 @stop
 
 @section('js')
-    
-    
-    
-
-    <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
     <script>
         function confirmDelete(id) {
             Swal.fire({
@@ -114,9 +109,7 @@
             responsive: true,
             autoWidth: false, //no le vi la funcionalidad
             dom: 'Bfrtip', // Añade el contenedor de botones
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print', 'colvis' // Botones que aparecen en la imagen
-            ],
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
             "language": {
                 "decimal": "",
                 "emptyTable": "No hay datos disponibles en la tabla",
@@ -146,12 +139,10 @@
                 text: 'Reportes',
                 orientation: 'landscape',
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
-                    'colvis'
-                ], // Botones que aparecen en la imagen
+                'colvis'], // Botones que aparecen en la imagen
             }, ],
             initComplete: function() {
-                // Apply custom styles after initialization
-                $('.dt-button').css({
+                $('.dt-button').css({ // Apply custom styles after initialization
                     'background-color': '#4a4a4a',
                     'color': 'white',
                     'border': 'none',

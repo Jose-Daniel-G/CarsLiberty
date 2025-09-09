@@ -14,41 +14,15 @@ class Cliente extends Model
 
     protected $guard_name = 'web';
     // protected $guarded = ['created_at', 'updated_at'];
-    protected $fillable = [
-        'nombres',
-        'apellidos',
-        'cc',
-        'genero',
-        'celular',
-        'correo',
-        'direccion',
-        'contacto_emergencia',
-        'observaciones',
-        'user_id',
-    ];
+    protected $fillable = ['nombres','apellidos','cc','genero','celular','email','direccion','contacto_emergencia','observaciones','user_id',];
     
-    // Relación: Cliente pertenece a un Usuario
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-    public function events()
-    {
-        return $this->hasMany(Event::class);
-    }
-    public function cursos()
-    {
-        return $this->belongsToMany(Curso::class, 'cliente_curso')
-        ->withPivot('horas_realizadas');
-        // return $this->belongsToMany(Curso::class, 'cliente_curso', 'cliente_id', 'curso_id');
-    }
-    public function asistencias()
-    {
-        return $this->hasMany(Asistencia::class, 'cliente_id'); 
-    }
+  
+    public function user(){   return $this->belongsTo(User::class); }  // Cliente pertenece a un Usuario
+    public function events(){ return $this->hasMany(Event::class);  }  // Cliente tiene muchos Events
+    public function cursos()                                           // Cliente pertenece a muchos Cursos
+    {   return $this->belongsToMany(Curso::class, 'cliente_curso')->withPivot('horas_realizadas');}
     
-    public function cursosCompletados()
-    {
-        return $this->hasMany(HistorialCurso::class);
-    }
+    public function asistencias(){ return $this->hasMany(Asistencia::class, 'cliente_id');  }
+    
+    public function cursosCompletados(){ return $this->hasMany(HistorialCurso::class); }
 }

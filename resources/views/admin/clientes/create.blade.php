@@ -44,12 +44,10 @@
                         </div>
                     </div>
                     <div class="row">
-
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="celular">Celular </label><b class="text-danger">*</b>
-                                <input type="number" class="form-control" name="celular" value="{{ old('celular') }}"
-                                    required>
+                                <input type="number" class="form-control" name="celular" value="{{ old('celular') }}" required>
                                 @error('celular')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
@@ -59,12 +57,9 @@
                             <div class="form-group">
                                 <label for="genero">Sexo </label><b class="text-danger">*</b>
                                 <select name="genero" id="genero" class="form-control">
-                                    <!-- Opción por defecto -->
                                     <option value="" selected disabled>Seleccione una opción</option>
-                                    <option value="M" {{ old('genero') == 'M' ? 'selected' : '' }}>Masculino
-                                    </option>
-                                    <option value="F" {{ old('genero') == 'F' ? 'selected' : '' }}>Femenino
-                                    </option>
+                                    <option value="M" {{ old('genero') == 'M' ? 'selected' : '' }}>Masculino</option>
+                                    <option value="F" {{ old('genero') == 'F' ? 'selected' : '' }}>Femenino</option>
                                 </select>
                                 @error('genero')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
@@ -75,8 +70,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="correo">Correo </label><b class="text-danger">*</b>
-                                <input type="email" class="form-control" name="correo" value="{{ old('correo') }}"
-                                    required>
+                                <input type="email" class="form-control" name="correo" value="{{ old('correo') }}" required>
                                 @error('correo')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
@@ -87,8 +81,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="direccion">Direccion </label><b class="text-danger">*</b>
-                                <input type="address" class="form-control" name="direccion"
-                                    value="{{ old('direccion') }}" required>
+                                <input type="address" class="form-control" name="direccion" value="{{ old('direccion') }}" required>
                                 @error('direccion')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
@@ -98,8 +91,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="contacto_emergencia">Contacto Emergencia</label><b class="text-danger">*</b>
-                                <input type="number" class="form-control" name="contacto_emergencia"
-                                    value="{{ old('contacto_emergencia') }}" required>
+                                <input type="number" class="form-control" name="contacto_emergencia" value="{{ old('contacto_emergencia') }}" required>
                             </div>
                             @error('contacto_emergencia')
                                 <small class="bg-danger text-white p-1">{{ $message }}</small>

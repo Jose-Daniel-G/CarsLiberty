@@ -10,9 +10,12 @@ class ConfigController extends Controller
 {
     public function index()
     {
-        // $configs = Config::first(); // Obtén la primera fila de la tabla de configuración
-        $configs = Config::all(); // Obtén la primera fila de la tabla de configuración
-        return view('admin.config.index', compact('configs'));
+        $config = Config::first(); // Obtén la primera fila de la tabla de configuración
+        \Log::info('config', [$config]);
+        // $configs = Config::all(); // Obtén la primera fila de la tabla de configuración 
+        // \Log::info('configs', [$configs]);
+
+        return view('admin.config.index', compact('config'));
     }
 
     public function create()
@@ -21,6 +24,8 @@ class ConfigController extends Controller
     }
     public function store(Request $request)
     {
+        dd($request->all());
+
         $request->validate([
             'site_name'    => 'required|string',
             'email_contact'    => 'required|email',
@@ -28,7 +33,7 @@ class ConfigController extends Controller
             'phone'  => 'required|numeric',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg',
         ]);
-
+        // dd($request->all());
         // Crear una nueva instancia del modelo Config
         $config = new Config();
         $config->site_name = $request->site_name;
@@ -40,13 +45,18 @@ class ConfigController extends Controller
         if ($request->hasFile('logo')) {
             $logoPath = $request->file('logo')->store('logos', 'public');
             $config->logo = $logoPath;
+        } else {
+            $config->logo = "logos/HEBRON.png";
         }
         $config->save();
 
-        return redirect()->route('admin.config.index')->with(['title', 'Exito','info', 'Configuración creada','icono', 'success']);
+        return redirect()->route('admin.config.index')->with(['title', 'Exito', 'info', 'Configuración creada', 'icono', 'success']);
     }
 
-    public function edit(Config $config){return view('admin.config.edit', compact('config'));}
+    public function edit(Config $config)
+    {
+        return view('admin.config.edit', compact('config'));
+    }
 
     public function update(Request $request, Config $config)
     {
@@ -64,7 +74,7 @@ class ConfigController extends Controller
         $config->address = $request->address;
         $config->phone = $request->phone;
 
-        if ($request->hasFile('logo')) {// Eliminar el logo anterior si existe
+        if ($request->hasFile('logo')) { // Eliminar el logo anterior si existe
             if ($config->logo) {
                 Storage::delete('public/' . $config->logo);
             }
@@ -73,7 +83,7 @@ class ConfigController extends Controller
         }
         $config->save();
 
-        return redirect()->route('admin.config.index')->with(['title', 'Exito','icono', 'success','info', 'Configuración actualizada exitosamente']);
+        return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración actualizada exitosamente']);
     }
 
     public function destroy(Config $config)
@@ -86,6 +96,6 @@ class ConfigController extends Controller
         // Eliminar la configuración
         $config->delete();
 
-        return redirect()->route('admin.config.index')->with(['title', 'Exito','icono', 'success','info', 'Configuración eliminada correctamente']);
+        return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración eliminada correctamente']);
     }
 }

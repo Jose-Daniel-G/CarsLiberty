@@ -24,7 +24,6 @@ class EventController extends Controller
 
     public function store(Request $request)
     {   
-        // dd($request->all());
         $data = $request->validate([
             'cursoid' => 'required',
             'profesorid' => 'required|exists:profesors,id',
@@ -32,7 +31,6 @@ class EventController extends Controller
             'hora_inicio' => 'required',
             'hora_fin' => 'required|numeric|min:1',//'hora_fin' => 'required|date_format:H:i',
         ]);
-        // return response()->json($data);
         // Buscar el profesor por su ID
         $profesor = Profesor::find($request->profesorid);
         $fecha_reserva = $request->fecha_reserva;
@@ -42,8 +40,7 @@ class EventController extends Controller
         $cursoid = $request->cursoid;
 
         // Obtener el cliente para verificar asistencia
-        $cliente_id = Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') ||
-            Auth::user()->hasRole('secretaria') ? $request->cliente_id : Auth::user()->cliente->id;
+        $cliente_id = Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') ? $request->cliente_id : Auth::user()->cliente->id;
             
         if (Auth::user()->hasRole('cliente')) {
             // Verificar si el cliente tiene un evento anterior y si asistió
@@ -51,11 +48,10 @@ class EventController extends Controller
                 ->select('events.start', 'asistencias.*')
                 ->where('asistencias.cliente_id', $cliente_id) // Filtrar por cliente
                 ->orderBy('events.start', 'desc') // Ordenar por fecha para obtener el evento más reciente
-                ->first(); // Obtener solo el último evento
+                ->first();                        // Obtener solo el último evento
 
             // Si hay asistencia y no asistió
             if ($asistencia && $asistencia->asistio === 0) {
-                // if ($asistencia && (!$asistencia->asistio || Carbon::parse($asistencia->start)->isFuture())) {
                 return redirect()->back()->with([
                     'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último evento.',
                     'icono' => 'error',
@@ -64,11 +60,8 @@ class EventController extends Controller
             }
         }
 
-
-        // Obtener el día de la semana en español
-        $dia = date('l', strtotime($fecha_reserva));
-        $dia_de_reserva = DateHelper::traducirDia($dia);
-        // $dia_de_reserva = $this->traducir_dia($dia);
+        $dia = date('l', strtotime($fecha_reserva));         // Obtener el día de la semana en español
+        $dia_de_reserva = DateHelper::traducirDia($dia); 
 
         // Formatear las horas para compararlas en la consulta
         $hora_inicio_formato = $fecha_hora_inicio->format('H:i:s');
@@ -77,12 +70,12 @@ class EventController extends Controller
         // Consultar si el profesor tiene disponibilidad en el intervalo
         $horarios = HorarioProfesorCurso::join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id') // Unimos con la tabla correcta
         ->where('horario_profesor_curso.profesor_id', $profesor->id)
-        ->where('horarios.dia', $dia_de_reserva) // Filtrar por el día en la tabla correcta
+        ->where('horarios.dia', $dia_de_reserva)                    // Filtrar por el día en la tabla correcta
         ->where('horarios.hora_inicio', '<=', $hora_inicio_formato) // Ahora filtramos por horarios.hora_inicio
-        ->where('horarios.hora_fin', '>=', $hora_fin_formato) // Ahora filtramos por horarios.hora_fin
-        ->where('horario_profesor_curso.curso_id', $cursoid) // Si la tabla maneja cursos
-        ->get();
-        // dd($horarios);
+        ->where('horarios.hora_fin', '>=', $hora_fin_formato)       // Ahora filtramos por horarios.hora_fin
+        ->where('horario_profesor_curso.curso_id', $cursoid)        // Si la tabla maneja cursos
+        ->get(); 
+
         // Si no hay horarios disponibles, retornar mensaje de error
         if ($horarios->isEmpty()) {
             return redirect()->back()->with([
@@ -92,46 +85,14 @@ class EventController extends Controller
             ]);
         }
 
-        // // Verificar si alguno de los horarios coincide con el curso seleccionado
-        // $curso_encontrado = $horarios->where('curso_id', $cursoid);
-
-        // // Si el profesor está disponible pero no tiene asignado ese curso
-        // if ($curso_encontrado->isEmpty()) {
-        //     return redirect()->back()->with([
-        //         'info' => 'El profesor no tiene asignado este curso en este horario.',
-        //         'icono' => 'error',
-        //         'title' => 'Oh!.',
-        //     ]);
-        // }
-
-        // // Verificar si hay más de un curso en el mismo intervalo
-        // if ($horarios->count() > 1) {
-        //     return redirect()->back()->with([
-        //         'info' => 'No es posible agendar en este intervalo, hay otros cursos en el mismo horario.',
-        //         'icono' => 'error',
-        //         'title' => 'Oh!.',
-        //     ]);
-        // }
-
-        // Si el profesor solo tiene el curso solicitado, se puede continuar normalmente
-
-
         // Validar si existen eventos duplicados
         $eventos_duplicados = CalendarEvent::where('profesor_id', $profesor->id)
         ->where(function ($query) use ($fecha_hora_inicio, $fecha_hora_fin) {
             $query->whereBetween('start', [$fecha_hora_inicio, $fecha_hora_fin])
                   ->orWhereBetween('end', [$fecha_hora_inicio, $fecha_hora_fin]);
-        })
-        ->exists();
-    
+        })->exists();
 
-        if ($eventos_duplicados) {
-            return redirect()->back()->with([
-                'info' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',
-                'icono' => 'error',
-                'title' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',
-            ]);
-        }
+        if ($eventos_duplicados) {return redirect()->back()->with(['info' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.','icono' => 'error','title' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',]);}
 
         $curso = Curso::find($cursoid);
         // Crear una nueva instancia de CalendarEvent
