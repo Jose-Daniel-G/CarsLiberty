@@ -458,8 +458,8 @@ return [
                 [
                     'text' => 'Picoyplaca',
                     'icon'        => 'far fa-circle nav-icon',
-                    'label' => 'create, edit,show',
-                    'label_color' => 'warning',
+                    // 'label' => 'create, edit,show',
+                    // 'label_color' => 'warning',
                     'route' => 'admin.picoyplaca.index',
                 ],
 

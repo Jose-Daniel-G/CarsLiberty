@@ -24,6 +24,8 @@ class ConfigController extends Controller
     }
     public function store(Request $request)
     {
+        dd($request->all());
+
         $request->validate([
             'site_name'    => 'required|string',
             'email_contact'    => 'required|email',

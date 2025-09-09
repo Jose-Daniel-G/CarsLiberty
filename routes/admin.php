@@ -48,8 +48,8 @@ Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtener
 // Route::middleware('can:admin.vehiculos')->group(function () {
     Route::resource('vehiculos', VehiculoController::class)->names('admin.vehiculos');
     Route::resource('picoyplaca', PicoyplacaController::class)->names('admin.picoyplaca');
-    Route::put('/picoyplaca/update', [PicoyPlacaController::class, 'updateAll'])->name('picoyplaca.updateAll');
-// });
+    Route::put('/picoyplaca', [PicoyPlacaController::class, 'updateAll'])->name('picoyplaca.updateAll');
+// });  
 
 
 

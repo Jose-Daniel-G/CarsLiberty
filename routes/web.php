@@ -16,17 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 /** LOGIN           **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('auth.login'); });
 /** REGISTER        **/Route::get('/register', function () {return redirect('/');});
-/** CONFIG PROFILE  **/Route::get('/profile', function () {return view('admin/modelo/profile');});
-/** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
-
-// Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
-//     ->group(function () {
-//         Route::put('/users/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
-//     });
-Route::get('/admin/profile/show', [UserProfileController::class, 'show'])->name('admin.profile.show');
-Route::put('/admin/profile', [UserProfileController::class, 'update'])->name('admin.profile.update');
-
-
+/** DASHBOARD       **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
+/** CONFIG PROFILE  **/
+// Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']) ->group(function () {
+    Route::get('/admin/profile/index', [UserProfileController::class, 'index'])->name('admin.profile.index');
+    Route::put('/user/profile-information', [UserProfileController::class, 'update'])->name('admin.user-profile-information.update');
+    Route::put('/user/profile-password', [UserProfileController::class, 'updatePassword'])->name('admin.user-profile-password.updatePassword');
+//  Route::get('/admin/profile/show', [UserProfileController::class, 'show'])->name('admin.profile.show');
+//});
 
 //RUTAS HORARIOS ADMIN
 Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores'])->name('admin.horarios.show_reserva_profesores');

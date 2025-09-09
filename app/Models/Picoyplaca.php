@@ -9,4 +9,5 @@ class Picoyplaca extends Model
 {
     use HasFactory;
     protected $table = 'picoyplaca'; 
+    protected $fillable = ['horario_inicio','horario_fin', 'placas_reservadas'];
 }
