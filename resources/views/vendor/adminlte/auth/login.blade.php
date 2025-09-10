@@ -11,7 +11,7 @@
 @if (config('adminlte.use_route_url', false))
     @php( $login_url = $login_url ? route($login_url) : '' )
     @php( $register_url = $register_url ? route($register_url) : '' )
-    @php( $password_reset_url = $password_reset_url ? route($password_reset_url) : '' )
+    {{-- @php( $password_reset_url = $password_reset_url ? route($password_reset_url) : '' ) --}}
 @else
     @php( $login_url = $login_url ? url($login_url) : '' )
     @php( $register_url = $register_url ? url($register_url) : '' )

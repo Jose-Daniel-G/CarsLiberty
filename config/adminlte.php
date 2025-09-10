@@ -255,15 +255,25 @@ return [
     |
     */
 
-    'use_route_url' => false,
-    'dashboard_url' => '/admin',
+    // 'use_route_url' => false,
+    // 'dashboard_url' => '/admin',
+    // 'logout_url' => 'logout',
+    // 'login_url' => 'login',
+    // 'register_url' => false,//'register',
+    // 'password_reset_url' => 'forgot-password',
+    // 'password_email_url' => 'password/email',
+    // 'profile_url' => false,
+
+    'use_route_url' => true,
+    'dashboard_url' => 'admin.index',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => false,//'register',
     'password_reset_url' => 'forgot-password',
-    'password_email_url' => 'password/email',
+    'password_email_url' => 'password.email',
+    // 'password_reset_url' => 'forgot-password',
+    // 'password_email_url' => 'password/email',
     'profile_url' => false,
-
     /*
     |--------------------------------------------------------------------------
     | Laravel Mix
@@ -300,24 +310,6 @@ return [
             'icon' => 'fas fa-home fa-fw ',
         ],
         [
-            'text'        => 'Configuraciones',
-            'route'         => 'admin.config.index',
-            'icon' => 'bi bi-gear',
-            // 'label' => 'waiting',
-            // 'label_color' => 'light',
-            'can'  => 'admin.config.index',
-            'submenu' => [
-                // [ 'text' => 'Crear configuracion', 'icon'=> 'far fa-circle nav-icon', 'route' => 'admin.config.create', ],
-                [
-                    'text' => 'Listado de configuracion',
-                    'icon'        => 'far fa-circle nav-icon',
-                    // 'label' => '?',
-                    // 'label_color' => 'light',
-                    'route' => 'admin.config.index',
-                ],
-            ],
-        ],
-        [
             'text'        => 'Usuarios',
             'route'         => 'admin.users.index',
             'icon' => 'fas fa-fw fa-user',
@@ -342,7 +334,7 @@ return [
                     'label' => '?',
                     'label_color' => 'light',
                     'route' => 'admin.asistencias.index',
-                    'can' => 'admin.asistencias.registrar_asistencia',
+                    'can' => 'admin.asistencias.index',
                 ],
                 [
                     'text' => 'Listado de Inacistencias',
@@ -350,7 +342,7 @@ return [
                     'label' => '?',
                     'label_color' => 'light',
                     'route' => 'admin.secretarias.inasistencias',
-                    'can' => 'admin.asistencias.list_inacistencias',
+                    'can' => 'admin.asistencias.inasistencias',
                 ],
 
             ],
@@ -360,8 +352,7 @@ return [
         ['header' => 'ADMINISTRADOR', 'can' => 'admin.secretarias.index',],
         [
             'text' => 'Programador',
-            'icon' => 'fas fa-laptop',
-            // 'label' => 'fix validate',
+            'icon' => 'fas fa-laptop', 
             // 'label_color' => 'warning',
             'can' => 'admin.secretarias.index',
             'submenu' => [
@@ -376,9 +367,7 @@ return [
         ],
         [
             'text' => 'Clientes',
-            'icon' => 'fas fa-users mr-2',
-            // 'label' => 'check **',
-            // 'label_color' => 'primary',
+            'icon' => 'fas fa-users mr-2', 
             'can' => 'admin.clientes.index',
             'submenu' => [
                 // ['text' => 'Creacion de clientes','icon'=> 'far fa-circle nav-icon','route' => 'admin.clientes.create',],
@@ -408,9 +397,7 @@ return [
         ],
         [
             'text' => 'Profesores',
-            'icon' => 'ion fas bi bi-person-lines-fill',
-            // 'label' => 'check *',
-            // 'label_color' => 'primary',
+            'icon' => 'ion fas bi bi-person-lines-fill', 
             'can' => 'admin.profesores.index',
             'submenu' => [
                 // ['text' => 'Creacion de profesores','icon' => 'far fa-circle nav-icon','route' => 'admin.profesores.create', ],
@@ -420,14 +407,11 @@ return [
                     'route' => 'admin.profesores.index',
                 ],
                 // [ 'text'  => 'Reportes',  'icon'  => 'far fa-circle nav-icon', 'route' => 'admin.profesores.reportes', ],
-
             ],
         ],
         [
             'text' => 'Horarios',
-            'icon' => 'fas fa-calendar-alt',
-            // 'label' => 'edit,show',
-            // 'label_color' => 'danger',
+            'icon' => 'fas fa-calendar-alt', 
             'can' => 'admin.horarios.index',
             'submenu' => [
                 [
@@ -445,9 +429,7 @@ return [
         ],
         [
             'text' => 'Vehiculos',
-            'icon' => 'bi bi-car-front',
-            // 'label' => 'edit,show',
-            // 'label_color' => 'danger',
+            'icon' => 'bi bi-car-front', 
             'can'  => 'admin.vehiculos.index',
             'submenu' => [
                 [
@@ -457,14 +439,44 @@ return [
                 ],
                 [
                     'text' => 'Picoyplaca',
-                    'icon'        => 'far fa-circle nav-icon',
-                    // 'label' => 'create, edit,show',
-                    // 'label_color' => 'warning',
+                    'icon'        => 'far fa-circle nav-icon', 
                     'route' => 'admin.picoyplaca.index',
                 ],
-
             ],
         ],
+        
+        [
+            'text' => 'Configuraciones',
+            'icon' => 'bi bi-gear',
+            'can'  => 'admin.config.index',
+            'submenu' => [
+                [
+                    'text'        => 'Usuarios',
+                    'route'         => 'admin.users.index',
+                    'icon' => 'fas fa-users fa-fw ',
+                    'permissions'  => 'admin.users.index',
+                ],
+                [
+                    'text'        => 'permisos',
+                    'route'         => 'admin.permissions.index',
+                    'icon' => 'fas fa-key fa-fw ',
+                    'permissions'  => 'admin.users.index',
+                ],
+                [
+                    'text'        => 'roles',
+                    'route'         => 'admin.roles.index',
+                    'icon' => 'fa-solid fa-address-book',
+                    'permissions'  => 'admin.roles.index',
+                ],          
+                [
+                    'text' => 'Configuracion',
+                    'icon' => 'fa-solid fa-gears',
+                    'route' => 'admin.config.index',
+                ],
+            ],        
+            // 'classes' => 'sidebar-footer', // aplica el CSS del footer
+        ],
+        
         // ['text'=> 'Agenda','route' => 'admin.users.index','icon' => 'fas fa-envelope',],
         // ['text' => 'information','icon_color' => 'cyan','url' => '#', ],
     ],

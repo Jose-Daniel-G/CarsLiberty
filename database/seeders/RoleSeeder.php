@@ -92,16 +92,26 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.horarios.show_reserva_profesores'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.show_reservas'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
         Permission::create(['name' => 'admin.events'])->syncRoles([$superAdmin, $admin, $secretaria]);
-        Permission::create(['name' => 'admin.listUsers'])->syncRoles([$superAdmin, $admin, $secretaria]); //modal agendamiento de clase admin
+        Permission::create(['name' => 'admin.listUsers'])->syncRoles([$superAdmin, $admin, $secretaria]); 
         Permission::create(['name' => 'admin.reservas.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
         //rutas para el admin - asistencias
-        Permission::create(['name' => 'admin.asistencias.registrar_asistencia'])->syncRoles([$superAdmin, $admin, $secretaria, $profesor]);
-        Permission::create(['name' => 'admin.asistencias.list_inacistencias'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.asistencias.index'])->syncRoles([$superAdmin, $admin, $secretaria, $profesor]);
+        Permission::create(['name' => 'admin.asistencias.inasistencias'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.event_delete'])->syncRoles([$superAdmin, $admin, $secretaria]);
-        /*OLD*/ //Permission::create(['name' => 'admin.asistenciass.registrar_asistencia'])->syncRoles([$superAdmin, $admin, $secretaria, $profesor]);
-        /*OLD*/ //Permission::create(['name' => 'admin.asistenciass.list_inacistencias'])->syncRoles([$superAdmin, $admin, $secretaria, $profesor]);
+        //rutas para el admin - horarios
+        Permission::create(['name' => 'admin.horarios'])->syncRoles([$superAdmin, $admin, $secretaria]); 
         // $superAdmin->givePermissionTo(Permission::all());
-
+        //----------------------------------------------------------------------------------------
+        //PERMISSIONS ROUTES
+        Permission::create(['name' => 'permissions.index'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'permissions.create'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'permissions.edit'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'permissions.delete'])->syncRoles([$superAdmin]);
+        //ROLES ROUTES
+        Permission::create(['name' => 'roles.index'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'roles.create'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'roles.edit'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'roles.destroy'])->syncRoles([$superAdmin]);
         //----------------------------------------------------------------------------------------
 
         // Permission::create(['name' => 'admin.users.index'])->syncRoles([$superAdmin, $admin]);
@@ -115,19 +125,5 @@ class RoleSeeder extends Seeder
         // Permission::create(['name' => 'admin.usuarios.destroy'])->syncRoles([$superAdmin, $admin]);
 
         // $admin->permissions()->attach();
-
-
-
-        // //CURSOS
-        // Permission::create(['name'=>'admin.cursos.index'])->syncRoles([$superAdmin, $admin,$role3,$role4]);
-        // Permission::create(['name'=>'admin.cursos.create'])->syncRoles([$superAdmin, $admin]);
-        // Permission::create(['name'=>'admin.cursos.update'])->syncRoles([$superAdmin, $admin]);
-
-        // //CLASES
-        // Permission::create(['name'=>'admin.clases.index'])->syncRoles([$superAdmin, $admin,$role3,$role4]);
-        // Permission::create(['name'=>'admin.clases.create'])->syncRoles([$superAdmin, $admin,$role3]);
-        // Permission::create(['name'=>'admin.clases.update'])->syncRoles([$superAdmin, $admin,$role3]);
-
-
     }
 }

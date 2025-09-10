@@ -21,6 +21,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        // $this->middleware('can:admin.show_reservas')->only('show');
     }
     public function index()
     {
@@ -89,9 +90,8 @@ class HomeController extends Controller
             return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesorSelect', 'events', 'total_configuraciones'));
         }
     }
-
     public function show($id) //show_reservas
-    { // echo $id;
+    { 
         if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
             $events = CalendarEvent::with('cliente')->get(); // $events = CalendarEvent::all();
         } else {
@@ -123,10 +123,5 @@ class HomeController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error: ' . $exception->getMessage()]);
         }
-    }
-
-    // public function create()
-    // {
-    //     return view('admin.usuarios.create');
-    // }
+    } 
 }

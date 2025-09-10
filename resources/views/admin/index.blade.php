@@ -207,7 +207,6 @@
                                 Agendar
                             </button>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -244,11 +243,9 @@
                         </div>
                     </div>
                 @endcan
-                                            <!-- Modal -->
-                            @include('admin.events.event')
+                @include('admin.events.event')
             </div>
         </div>
-
     </div>
     @if (Auth::check() && Auth::user()->profesor)
         <div class="row">
@@ -434,25 +431,16 @@
                     var endTime = evento.end;
 
                     // Mostrar la información en el modal
-                    var profesorNombres = evento.extendedProps.profesor ? evento.extendedProps.profesor
-                        .nombres : 'No disponible';
-                    var profesorApellidos = evento.extendedProps.profesor ? evento.extendedProps
-                        .profesor.apellidos : 'No disponible';
-                    var clienteNombres = evento.extendedProps.cliente ? evento.extendedProps.cliente
-                        .nombres : 'No disponible';
-                    var clienteApellidos = evento.extendedProps.cliente ? evento.extendedProps.cliente
-                        .apellidos : 'No disponible';
+                    var profesorNombres = evento.extendedProps.profesor ? evento.extendedProps.profesor.nombres : 'No disponible';
+                    var profesorApellidos = evento.extendedProps.profesor ? evento.extendedProps.profesor.apellidos : 'No disponible';
+                    var clienteNombres = evento.extendedProps.cliente ? evento.extendedProps.cliente.nombres : 'No disponible';
+                    var clienteApellidos = evento.extendedProps.cliente ? evento.extendedProps.cliente.apellidos : 'No disponible';
 
-                    document.getElementById('nombres_cliente').textContent =
-                        `${clienteNombres} ${clienteApellidos}`;
-                    document.getElementById('nombres_teacher').textContent =
-                        `${profesorNombres} ${profesorApellidos}`;
-                    document.getElementById('fecha_reserva1').textContent = startTime.toISOString()
-                        .split('T')[0]; // Fecha
-                    document.getElementById('hora_inicio1').textContent = startTime
-                        .toLocaleTimeString(); // Hora de inicio
-                    document.getElementById('hora_fin1').textContent = endTime
-                        .toLocaleTimeString(); // Hora de FIN
+                    document.getElementById('nombres_cliente').textContent =`${clienteNombres} ${clienteApellidos}`;
+                    document.getElementById('nombres_teacher').textContent =`${profesorNombres} ${profesorApellidos}`;
+                    document.getElementById('fecha_reserva1').textContent = startTime.toISOString().split('T')[0]; // Fecha
+                    document.getElementById('hora_inicio1').textContent = startTime.toLocaleTimeString(); // Hora de inicio
+                    document.getElementById('hora_fin1').textContent = endTime.toLocaleTimeString(); // Hora de FIN
 
                     // Mostrar el modal
                     $("#mdalSelected").modal("show");
@@ -479,7 +467,6 @@
                 dataType: 'json',
                 success: function(data) {
                     console.log(data);
-                    // Asegúrate de que 'data' esté en el formato correcto
                     calendar.addEventSource(data); // Añade los eventos al calendario
                 },
                 error: function() {
@@ -488,8 +475,8 @@
             });
         });
 
-        // carga contenido de tabla en  curso_info
-        $('#profesor_select').on('change', function() {
+      
+        $('#profesor_select').on('change', function() {             // carga contenido de tabla en  curso_info
             var curso_id = $('#profesor_select').val();
             var url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}";
             url = url.replace(':id', curso_id);
@@ -508,7 +495,6 @@
                 });
             } else {
                 $('#curso_info').html('');
-
             }
         });
         // carga contenido de tabla en profesor_info
@@ -522,9 +508,7 @@
             responsive: true,
             autoWidth: false,
             dom: 'Bfrtip', // Añade el contenedor de botones
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print', 'colvis' // Botones que aparecen en la imagen
-            ],
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis' ], // Botones que aparecen en la imagen
             "language": {
                 "decimal": "",
                 "emptyTable": "No hay datos disponibles en la tabla",
@@ -554,29 +538,22 @@
     </script>
     <script>
         $(document).ready(function() {
-            // Establece el evento para llamar a la función cargarProfesores al cambiar el curso
-            $('#cursoid').on('change', function() {
-                var cursoid = $(this).val(); // Obtén el valor seleccionado
-                // Función para cargar profesores
-                if (!cursoid) return; // Salir si no hay curso seleccionado
-                var url = "{{ route('obtenerProfesores', ':id') }}";
+            
+            $('#cursoid').on('change', function() {     // Establece el evento para llamar a la función cargarProfesores al cambiar el curso
+                var cursoid = $(this).val();            // Obtén el valor seleccionado
+                if (!cursoid) return;                   // Salir si no hay curso seleccionado
+                var url = "{{ route('obtenerProfesores', ':id') }}";// Función para cargar profesores
                 url = url.replace(':id', cursoid);
-                // alert('url ' + url);
 
-                // Realizar una llamada AJAX para obtener los profesores disponibles
                 $.ajax({
-                    url: url, // URL a la que se realiza la solicitud
+                    url: url,  
                     method: 'GET',
-
-                    success: function(data) {
-
-                        // Verifica si hay profesores y si es un array
-                        if (data && Array.isArray(data)) {
-                            // Limpia el select de profesores antes de llenarlo
-                            $('#profesorid').empty().append(
+                    success: function(data) { 
+                        
+                        if (data && Array.isArray(data)) {    // Verifica si hay profesores y si es un array
+                            $('#profesorid').empty().append(  // Limpia el select de profesores antes de llenarlo
                                 '<option value="" selected disabled>Seleccione un Profesor</option>'
                             );
-
                             data.forEach(function(profesor) {
                                 $('#profesorid').append(
                                     `<option value="${profesor.id}">${profesor.nombres} ${profesor.apellidos}</option>`
@@ -587,36 +564,28 @@
                         }
                     },
                     error: function(xhr) {
-                        // console.error('Error al cargar los profesores:', xhr.responseText);
-                        alert('Error al cargar los profesores. Intenta nuevamente.');
+                        alert('Error al cargar los profesores. Intenta nuevamente.');// console.error('Error al cargar los profesores:', xhr.responseText);
                     }
                 });
             });
             $('#cliente_id').on('change', function() {
                 var cliente_id = $(this).val(); // Obtén el valor seleccionado
-                // Función para cargar profesores
-                if (!cliente_id) return; // Salir si no hay curso seleccionado
+                if (!cliente_id) return;        // Salir si no hay curso seleccionado
                 var url = "{{ route('obtenerCursos', ':id') }}";
                 url = url.replace(':id', cliente_id); 
 
-                // Realizar una llamada AJAX para obtener los curso disponibles
                 $.ajax({
-                    url: url, // URL a la que se realiza la solicitud
+                    url: url,  
                     method: 'GET',
-
                     success: function(data) {
-
-                        // Verifica si hay cursos y si es un array
-                        if (data && Array.isArray(data)) {
-                            // Limpia el select de cursos antes de llenarlo
-                            $('#cursoid').empty().append(
+                        
+                        if (data && Array.isArray(data)) { // Verifica si hay cursos y si es un array
+                            $('#cursoid').empty().append(  // Limpia el select de cursos antes de llenarlo
                                 '<option value="" selected disabled>Seleccione un Curso</option>'
                             );
 
                             data.forEach(function(curso) {
-                                $('#cursoid').append(
-                                    `<option value="${curso.id}">${curso.nombre}</option>`
-                                );
+                                $('#cursoid').append( `<option value="${curso.id}">${curso.nombre}</option>` );
                             });
                         } else {
                             alert('No se encontraron cursos.');

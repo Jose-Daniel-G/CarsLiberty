@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfesorController extends Controller
 {
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.profesores.index')->only('index');
+        $this->middleware('can:admin.profesores.create')->only('create', 'store');
+        $this->middleware('can:admin.profesores.edit')->only('edit', 'update');
+        $this->middleware('can:admin.profesores.destroy')->only('destroy');
+    }
     public function index()
     {
         $profesores = Profesor::with('user')->get(); // viene con la relacion del profesor

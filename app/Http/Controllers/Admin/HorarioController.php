@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\DB;
 
 class HorarioController extends Controller
 {
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.horarios')->only('index'); 
+    }
     public function index()
     {
         $cursos = Curso::all();
@@ -181,7 +185,7 @@ class HorarioController extends Controller
             'hora_inicio' => $request->hora_inicio,
             'hora_fin' => $request->hora_fin,
         ]);
- 
+
         $horario->profesores()->syncWithPivotValues(
             [$request->profesor_id],
             ['curso_id' => $request->curso_id]

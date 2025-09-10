@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class PicoyPlacaController extends Controller
 {
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.vehiculos.pico_y_placa.index')->only('index');
+    }
     public function index()
     {
         $picoyplaca = PicoyPlaca::all()->groupBy('dia');
@@ -24,7 +28,7 @@ class PicoyPlacaController extends Controller
         $horariosFin = $request->input('horario_fin', []);
         $placasReservadas = $request->input('placas_reservadas', []);
 
-        foreach ($horariosInicio as $id => $horarioInicio) {// Itera sobre los IDs de los horarios
+        foreach ($horariosInicio as $id => $horarioInicio) { // Itera sobre los IDs de los horarios
             $horarioFin = $horariosFin[$id];
             $placas = $placasReservadas[$id];
 
@@ -39,5 +43,5 @@ class PicoyPlacaController extends Controller
             }
         }
         return redirect()->route('admin.picoyplaca.index')->with('success', 'Horarios actualizados correctamente.');
-    } 
+    }
 }

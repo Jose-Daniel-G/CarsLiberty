@@ -10,6 +10,13 @@ use Carbon\Carbon;
 
 class SecretariaController extends Controller
 {
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.secretarias.index')->only('index');
+        $this->middleware('can:admin.secretarias.create')->only('create', 'store');
+        $this->middleware('can:admin.secretarias.edit')->only('edit', 'update');
+        $this->middleware('can:admin.secretarias.destroy')->only('destroy');
+    }
     public function index()
     {
         $secretarias = Secretaria::with('user')->get(); // viene con la relacion del secretaria

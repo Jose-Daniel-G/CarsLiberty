@@ -11,35 +11,26 @@ use Illuminate\Support\Facades\Storage;
 
 class UserProfileController extends Controller
 {
-    public function index()
+    public function __construct()
     {
-        $user = Auth::user();
+        $this->middleware('can:admin.user.index')->only('index');
+    }
+    public function index(){ $user = Auth::user(); return view('admin.profile.index', compact('user')); }
 
-        return view('admin.profile.index', compact('user'));
-    }
-    public function show()
-    {
-        return view('admin.profile.show');
-    }
+    public function show(){ return view('admin.profile.show');  }
+
     public function update(Request $request)
-    {  //dd($request->all());
-        $user = Auth::user();
-        $request->validate([
-            'photo' => 'nullable|image|max:2048', // Aseguramos que es opcional
-        ]);
+    {   $user = Auth::user();  $request->validate([ 'photo' => 'nullable|image|max:2048',  ]);
 
-        // Subir foto de perfil si viene en el request
-        if ($request->hasFile('photo')) {
-            // Borrar foto anterior si existe
-            if ($user->profile_photo_path) {
+        if ($request->hasFile('photo')) {                                       // Subir foto de perfil si viene en el request
+            if ($user->profile_photo_path) {                                    // Borrar foto anterior si existe
                 Storage::disk('public')->delete($user->profile_photo_path);
             }
             $path = $request->file('photo')->store('profile_photos', 'public');
             $user->profile_photo_path = $path;
         }
 
-        // Actualizar nombre y email
-        $user->name = $request->name;
+        $user->name = $request->name;                                           // Actualizar nombre y email
         $user->email = $request->email;
 
         $user->save();

@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 
 class VehiculoController extends Controller
 {
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.vehiculos.index')->only('index');
+        $this->middleware('can:admin.vehiculos.create')->only('create', 'store');
+        $this->middleware('can:admin.vehiculos.edit')->only('edit', 'update');
+        $this->middleware('can:admin.vehiculos.destroy')->only('destroy');
+    }
+    
     public function index()
     {
         $vehiculos = Vehiculo::leftJoin('profesors', 'vehiculos.profesor_id', '=', 'profesors.id')

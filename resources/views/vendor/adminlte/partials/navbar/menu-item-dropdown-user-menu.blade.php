@@ -6,7 +6,8 @@
 @endif
 
 @if (config('adminlte.use_route_url', false))
-    @php( $profile_url = $profile_url ? route($profile_url) : '' )
+    @php( $profile_url = route('admin.profile.index') )
+    {{-- @php( $profile_url = $profile_url ? route($profile_url) : '' ) --}}
     @php( $logout_url = $logout_url ? route($logout_url) : '' )
 @else
     @php( $profile_url = $profile_url ? url($profile_url) : '' )
@@ -63,9 +64,8 @@
         {{-- User menu footer --}}
         <li class="user-footer">
             @if($profile_url)
-                <a href="{{ $profile_url }}" class="nav-link btn btn-default btn-flat d-inline-block">
-
-                {{-- <a href="{{ route('profile')}}" class="nav-link btn btn-default btn-flat d-inline-block"> --}}
+                {{-- <a href="{{ $profile_url }}" class="nav-link btn btn-default btn-flat d-inline-block"> --}}
+                <a href="{{ route('admin.profile.index')}}" class="nav-link btn btn-default btn-flat d-inline-block">
                     <i class="fa fa-fw fa-user text-lightblue"></i>
                     {{ __('adminlte::menu.profile') }}
                 </a>

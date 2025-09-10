@@ -40,7 +40,7 @@ class EventController extends Controller
         $profesor = Profesor::find($request->profesorid);
         $fecha_reserva = $request->fecha_reserva;
         $hora_inicio = $request->hora_inicio . ':00';                          // Asegurarse de que la hora esté en formato correcto
-        $fecha_hora_inicio = Carbon::parse("{$fecha_reserva} {$hora_inicio}"); // Crear un objeto Carbon para la fecha y hora de inicio
+        $fecha_hora_inicio = Carbon::parse("{$fecha_reserva} {$hora_inicio}");  // Crear un objeto Carbon para la fecha y hora de inicio
         $fecha_hora_fin = $fecha_hora_inicio->copy()->addHours($request->hora_fin); // Sumamos las horas ingresadas en el campo 'hora_fin'
         $cursoid = $request->cursoid;
 
@@ -53,7 +53,6 @@ class EventController extends Controller
                 ->where('asistencias.cliente_id', $cliente_id)  // Filtrar por cliente
                 ->orderBy('events.start', 'desc')->first();     // Ordenar por fecha para obtener el evento más reciente
 
-           
             if ($asistencia && $asistencia->asistio === 0) {     // Si hay asistencia y no asistió
                 return redirect()->back()->with([
                     'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último evento.',
@@ -62,32 +61,29 @@ class EventController extends Controller
             }
         }
 
-        $dia = date('l', strtotime($fecha_reserva));         // Obtener el día de la semana en español
+        $dia = date('l', strtotime($fecha_reserva));                      // Obtener el día de la semana en español
         $dia_de_reserva = DateHelper::traducirDia($dia);
-
-        // Formatear las horas para compararlas en la consulta
-        $hora_inicio_formato = $fecha_hora_inicio->format('H:i:s');
+        
+        $hora_inicio_formato = $fecha_hora_inicio->format('H:i:s');       // Formatear las horas para compararlas en la consulta
         $hora_fin_formato    = $fecha_hora_fin->format('H:i:s');
 
         // Consultar si el profesor tiene disponibilidad en el intervalo
-        $horarios = HorarioProfesorCurso::join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id') // Unimos con la tabla correcta
+        $horarios=HorarioProfesorCurso::join('horarios','horario_profesor_curso.horario_id','=','horarios.id') // Unimos con la tabla correcta
             ->where('horario_profesor_curso.profesor_id', $profesor->id)
-            ->where('horarios.dia', $dia_de_reserva)                    // Filtrar por el día en la tabla correcta
-            ->where('horarios.hora_inicio', '<=', $hora_inicio_formato) // Ahora filtramos por horarios.hora_inicio
-            ->where('horarios.hora_fin', '>=', $hora_fin_formato)       // Ahora filtramos por horarios.hora_fin
-            ->where('horario_profesor_curso.curso_id', $cursoid)        // Si la tabla maneja cursos
+            ->where('horarios.dia', $dia_de_reserva)                        // Filtrar por el día en la tabla correcta
+            ->where('horarios.hora_inicio', '<=', $hora_inicio_formato)     // Ahora filtramos por horarios.hora_inicio
+            ->where('horarios.hora_fin', '>=', $hora_fin_formato)           // Ahora filtramos por horarios.hora_fin
+            ->where('horario_profesor_curso.curso_id', $cursoid)            // Si la tabla maneja cursos
             ->get();
 
-        // Si no hay horarios disponibles, retornar mensaje de error
-        if ($horarios->isEmpty()) {
+        if ($horarios->isEmpty()) {                                         // Si no hay horarios disponibles, retornar mensaje de error
             return redirect()->back()->with([
                 'icono' => 'error','title' => 'Oh!.',
                 'info' => 'El profesor no está disponible en ese horario.',
             ]);
         }
 
-        // Validar si existen eventos duplicados
-        $eventos_duplicados = CalendarEvent::where('profesor_id', $profesor->id)
+        $eventos_duplicados = CalendarEvent::where('profesor_id', $profesor->id)    // Validar si existen eventos duplicados
             ->where(function ($query) use ($fecha_hora_inicio, $fecha_hora_fin) {
                 $query->whereBetween('start', [$fecha_hora_inicio, $fecha_hora_fin])
                     ->orWhereBetween('end', [$fecha_hora_inicio, $fecha_hora_fin]);
@@ -128,10 +124,6 @@ class EventController extends Controller
         ]);
     }
 
-    // private function traducir_dia($dia)
-    // { $dias = ['Monday'=>'LUNES','Tuesday'=>'MARTES','Wednesday'=>'MIERCOLES','Thursday'=>'JUEVES','Friday'=>'VIERNES','Saturday'=>'SABADO','Sunday'=>'DOMINGO',];
-    //     return $dias[$dia] ?? $dias; }
-
     public function show()
     {  try {
             $events = CalendarEvent::with('profesor', 'cliente')->get(); // Carga la relación 'profesor'
@@ -140,7 +132,6 @@ class EventController extends Controller
             return response()->json(['error' => 'Error al obtener eventos'], 500);
         }
     }
-
 
     public function update(Request $request, CalendarEvent $event)
     {
@@ -154,6 +145,10 @@ class EventController extends Controller
         $evento->delete();
         return redirect()->back()->with(['mensaje' => 'Se eliminó la reserva de manera correcta', 'icono' => 'success',]);
     }
+    
+    // private function traducir_dia($dia)
+    // { $dias = ['Monday'=>'LUNES','Tuesday'=>'MARTES','Wednesday'=>'MIERCOLES','Thursday'=>'JUEVES','Friday'=>'VIERNES','Saturday'=>'SABADO','Sunday'=>'DOMINGO',];
+    //     return $dias[$dia] ?? $dias; }
     ///================ [ NO SE ESTAN USANDO ]================
 
     // public function reportes(){

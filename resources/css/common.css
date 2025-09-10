@@ -1,0 +1,28 @@
+.container{
+    @apply mx-auto max-w-7xl px-2;
+}
+
+@media(min-width:640px){
+    .container{
+        @apply px-6;
+    }
+}
+
+@media(min-width:1024px){
+    .container{
+        @apply px-8;
+    }
+} 
+/* Mantener el footer siempre al fondo del sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid #495057;
+    background-color: #343a40;
+    padding-top: 5px;
+}
