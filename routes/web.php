@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\News\CategoriesController;
+use App\Http\Controllers\News\PostController;
+
 use App\Http\Controllers\Admin\HomeController;
 
 use App\Http\Controllers\Admin\HorarioController;
-use App\Http\Controllers\Admin\UserProfileController;
-use App\Http\Controllers\AsistenciaController;
-use App\Http\Controllers\HistorialCursoController; 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,6 +21,9 @@ Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 's
 Route::get('/admin/show/{id}', [HomeController::class, 'show'])->name('admin.reservas.show');
 Route::resource('/admin/horarios', HorarioController::class)->names('admin.horarios');
 Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('admin.horarios.show_datos_cursos');
+
+Route::resource('categories',CategoriesController::class)->names('categories');
+Route::resource('posts', PostController::class)->names('posts');
 
 
 // Route::post('/historial/registrar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'registrarCursoCompletado']);

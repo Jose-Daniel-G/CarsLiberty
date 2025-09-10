@@ -310,16 +310,28 @@ return [
             'icon' => 'fas fa-home fa-fw ',
         ],
         [
+            'text' => 'Categorias',
+            'route' => 'categories.index',
+            'icon' => 'fas fa-home fa-fw ',
+        ],
+        [
+            'text' => 'Posts',
+            'route' => 'posts.index',
+            'icon' => 'fas fa-home fa-fw ',
+        ],
+        [
             'text'        => 'Usuarios',
-            'route'         => 'admin.users.index',
+            'url'         => '#',
+            // 'route'         => 'admin.users.index',
             'icon' => 'fas fa-fw fa-user',
-            'can'  => 'admin.users.index',
+            // 'can'  => 'admin.users.index',
         ],
         [
             'text'        => 'Usuarios (citas)',
-            'route'         => 'admin.usuarios.index',
+            'url'         => '#',
+            // 'route'         => 'admin.usuarios.index',
             'icon' => 'fas fa-fw fa-user',
-            'can'  => 'admin.users.index',
+            // 'can'  => 'admin.users.index',
         ],
         [
             'text'        => 'Gestión de Asistencias',

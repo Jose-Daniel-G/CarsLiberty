@@ -74,7 +74,6 @@ php artisan view:clear
 php artisan route:clear
 php artisan view:clear
 php artisan route:clear
-php artisan optimize
 ```
 
 ###### INSTALL LANGUAGE
@@ -94,6 +93,7 @@ composer require endroid/qr-code
 
 ###### RECONSTUIR
 ```
+ php artisan optimize
  composer dump-autoload
  composer install --ignore-platform-reqs
  git rm --cached DB_HEBRON.jpg

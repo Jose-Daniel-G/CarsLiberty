@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin;
 use App\Models\Curso;
 use App\Models\Profesor;
 use App\Models\Event as CalendarEvent;  // Usa un alias para el modelo Event
@@ -12,7 +11,7 @@ use App\Models\Secretaria;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\Config;
-use Illuminate\Http\Request;
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -39,6 +38,14 @@ class HomeController extends Controller
         $profesores = Profesor::all();
         $events = CalendarEvent::all(); // dd(Auth::user()->getRoleNames());
 
+        if (Auth::user()->hasRole('espectador')) {
+            $posts = Post::with(['category', 'image'])
+                ->latest()
+                ->get();
+
+                // dd($posts);
+            return view('home', compact('posts'));
+        }
         if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') || Auth::user()->hasRole('profesor')) {
             $cursos = Curso::all();
             $clientes = Cliente::all();
@@ -66,7 +73,7 @@ class HomeController extends Controller
             return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'events', 'total_configuraciones', 'role'));
         } else {
             $cliente = Cliente::where('user_id', Auth::id())->first();
-            \Log::info('cliente',[$cliente]);
+            \Log::info('cliente', [$cliente]);
             $cursos = $cliente->cursos; // Cursos del cliente
 
             $profesorSelect = DB::table('profesors')
@@ -91,7 +98,7 @@ class HomeController extends Controller
         }
     }
     public function show($id) //show_reservas
-    { 
+    {
         if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
             $events = CalendarEvent::with('cliente')->get(); // $events = CalendarEvent::all();
         } else {
@@ -123,5 +130,5 @@ class HomeController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error: ' . $exception->getMessage()]);
         }
-    } 
+    }
 }

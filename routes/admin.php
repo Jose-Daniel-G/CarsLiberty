@@ -16,7 +16,7 @@ use App\Http\Controllers\ProfesorController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PicoyplacaController;
 
-Route::get("/", [HomeController::class, "index"])->name("admin.home")->middleware('can:admin.home');
+// Route::get("/", [HomeController::class, "index"])->name("admin.home")->middleware('can:admin.home');
 //RUTAS TOGGLE ACTIVATE / DEACTIVATE
 Route::patch('/users/{id}/toggle-status', [ClienteController::class, 'toggleStatus'])->name('admin.clientes.toggleStatus');
 Route::patch('/programador/{id}/toggle-status', [SecretariaController::class, 'toggleStatus'])->name('admin.secretarias.toggleStatus');
