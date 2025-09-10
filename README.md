@@ -59,13 +59,12 @@ luego dirigirse a esta ruta y editar el siguiente archivo
         ServerName laravel9.test
         DocumentRoot "/xampp/htdocs/www/carsliberty/public"
     </VirtualHost>
-    ```                    # RUTA
     ````
 
-### FILES ROUTE
+###### FILES ROUTE
 -php artisan storage:link
 
-### CLEAN GRABAGE
+###### CLEAN GRABAGE
 
 ```
 php artisan cache:clear
@@ -91,7 +90,7 @@ php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"
 composer require endroid/qr-code
 ```
 
-###### RECONSTUIR
+###### RECONSTUIR / REBUILD
 ```
  php artisan optimize
  composer dump-autoload
@@ -114,17 +113,19 @@ npm install jquery
 npm install toastr
 
 ```
-#### EN EL ARCHIO APP.JS PONER
+##### EN EL ARCHIO APP.JS PONER
 
 -   import Swal from 'sweetalert2
 -   import 'jquery-ui/ui/widgets/datepicker'; // El widget de datepicker
 
-#### HABILITAR EXTENCION EN PHP.INI Xampp u otro: 
+###### HABILITAR EXTENCION EN PHP.INI Xampp u otro: 
 - extension=gd
 - extension=zip
+###### Aunmetar peso de carga de archivo
+- upload_max_filesize = 40M
 
 ###### NOT IMPLEMENTED ##########################
-#### Notifications
+###### Notifications
 php artisan notification:table
 php artisan make:notification PostNotification<!-- php artisan make:notification InvoicePaid  --> 
 php artisan make:event PostEvent
@@ -159,13 +160,21 @@ C:\xampp\htdocs\www\CarsLiberty\resources\views\profile\update-profile-informati
 
 ![Imagen del juego](images/cars_liberty.png)
 
-## OTHER PROJECTS
+###### OTHER PROJECTS
 php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider"
 
-#### TO IMPLEMENT NOTIFICATIONS ON PROJECT
-```
- php artisan notification:table
- php artisan make:event PostEvent
-```
-### INSTALL CALENDAR
+###### INSTALL CALENDAR
 npm install @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid
+###### USE & INSTALL QUEUE
+- QUEUE_CONNECTION=database
+  
+```
+php artisan queue:table
+php artisan migrate
+php artisan make:job ProcessReport
+php artisan queue:work
+php artisan queue:listen
+php artisan queue:failed
+php artisan queue:retry {id}
+
+```

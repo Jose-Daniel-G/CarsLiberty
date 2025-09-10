@@ -47,8 +47,8 @@ class PostController extends Controller
     public function create(){}
 
     public function store(Request $request)
-    {
-        $request->validate(['foto' => 'required|image|max:2048', 'category_id' => 'required']);
+    { // se ha cambiado el tamano max:2048 a 40960 
+        $request->validate(['foto'=>'required|image|max:40960','category_id'=>'required']);
 
         $post = new Post();
         $post->title = $request->txtTitulo;
