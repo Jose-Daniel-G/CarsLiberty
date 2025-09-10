@@ -13,21 +13,23 @@ use Illuminate\Support\Facades\Validator;
 
 class AsistenciaController extends Controller
 {
-    public function index() // verFormulario()
+    public function __construct()
+    { // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.asistencias.registrar_asistencia')->only('index');
+        $this->middleware('can:admin.asistencias.list_inacistencias')->only('create', 'store'); 
+    }
+
+    public function index()  
     {
         $clientes = Cliente::all();
-
-        // Fecha de hoy
-        $hoy = Carbon::now()->format('Y-m-d');
+        $hoy = Carbon::now()->format('Y-m-d'); // Fecha de hoy
         // $events = CalendarEvent::whereDate('start', '>=', now())->get(); // Filtra solo los eventos futuros o del día actual
         // $events = CalendarEvent::whereDate('start', $hoy)->get();
 
         // ================ [ TEMPORAL ] ===================
-        $asistencias = Asistencia::with('event', 'cliente')
-            ->get()
-            ->keyBy(function ($item) {
-                return $item->evento_id . '-' . $item->cliente_id;
-            });
+        $asistencias = Asistencia::with('event', 'cliente')->get()->keyBy(function ($item) {
+                            return $item->evento_id . '-' . $item->cliente_id;
+                        });
         // ================ [ FINAL/CODIGO CORRECTO ] ===================
         // Obtener las asistencias del día actual y organizarlas en un array con clave 'evento_id-cliente_id'
         // $asistencias = Asistencia::with('event', 'cliente')
@@ -38,7 +40,6 @@ class AsistenciaController extends Controller
         //     ->keyBy(function ($item) {
         //         return $item->evento_id . '-' . $item->cliente_id;
         //     });
-
 
         // Obtener eventos basados en el rol del usuario
         if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('superAdmin')) {
@@ -136,11 +137,8 @@ class AsistenciaController extends Controller
         return response()->json(['message' => 'Evento actualizado correctamente']);
     }
 
-
-    // Función para la secretaria de ver inasistencias y habilitar cliente
-    public function show() //verInasistencias() //INASISTENCIAS
-    {
-        // Filtra los clientes que tengan inasistencias con penalidad
+    public function show()  //ver INASISTENCIAS y habilitar cliente
+    {   // Filtra los clientes que tengan inasistencias con penalidad
         if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('superAdmin')) {
             $clientes = Cliente::select(
                 'clientes.id',
@@ -159,16 +157,13 @@ class AsistenciaController extends Controller
                 ->join('asistencias', 'clientes.id', '=', 'asistencias.cliente_id')
                 ->join('events', 'asistencias.evento_id', '=', 'events.id')
                 ->get();
-
-            // 🚀 Depurar antes de retornar la vista
-            // dd($clientes->toArray());
-            // Calcular las horas penalizadas en PHP
-            foreach ($clientes as $cliente) {
+            
+            foreach ($clientes as $cliente) {             // Calcular las horas penalizadas en PHP
                 $start = new \DateTime($cliente->start);
                 $end = new \DateTime($cliente->end);
                 $diff = $start->diff($end);
-                $hours = $diff->h + ($diff->i / 60); // Calcular horas con minutos convertidos a horas
-                $cliente->cant_horas = round($hours, 2); // Asignar la cantidad de horas calculadas
+                $hours = $diff->h + ($diff->i / 60);      // Calcular horas con minutos convertidos a horas
+                $cliente->cant_horas = round($hours, 2);  // Asignar la cantidad de horas calculadas
             }
             return view('admin.asistencias.inasistencias', compact('clientes'));
         } else {
@@ -178,21 +173,20 @@ class AsistenciaController extends Controller
                 ->where('asistencias.asistio', 0)
                 ->where('asistencias.penalidad', '>=', 0)
                 ->get();
-
-            // Calcular las horas penalizadas en PHP
-            foreach ($clientes as $cliente) {
+            
+            foreach ($clientes as $cliente) {             // Calcular las horas penalizadas en PHP
                 $start = new \DateTime($cliente->start);
                 $end = new \DateTime($cliente->end);
                 $diff = $start->diff($end);
-                $hours = $diff->h + ($diff->i / 60); // Calcular horas con minutos convertidos a horas
-                $cliente->cant_horas = round($hours, 2); // Asignar la cantidad de horas calculadas
+                $hours = $diff->h + ($diff->i / 60);      // Calcular horas con minutos convertidos a horas
+                $cliente->cant_horas = round($hours, 2);  // Asignar la cantidad de horas calculadas
             }
             return view('admin.asistencias.inasistencias', compact('clientes'));
         }
     }
 
 
-    // Función para habilitar al cliente después de pagar la penalidad
+    // Habilitar al cliente después de pagar la penalidad
     public function habilitarCliente($cliente_id)
     {
         $cliente = Cliente::findOrFail($cliente_id);

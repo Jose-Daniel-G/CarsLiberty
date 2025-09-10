@@ -97,7 +97,7 @@ class ClienteSeeder extends Seeder
             'direccion' => 'Cll 7 oeste',
             'contacto_emergencia' => '65495113',
             'observaciones' => 'migrana',
-            'user_id' => '10',
+            'user_id' => '11',
         ]);
         $cursos = Curso::whereIn('id', [2])->get(); // Obtener los cursos con ID 1 y 2
         $cliente->cursos()->attach($cursos); // Crear las relaciones

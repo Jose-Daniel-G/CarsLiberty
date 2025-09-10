@@ -48,7 +48,7 @@ Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtener
 // Route::middleware('can:admin.vehiculos')->group(function () {
     Route::resource('vehiculos', VehiculoController::class)->names('admin.vehiculos');
     Route::resource('picoyplaca', PicoyplacaController::class)->names('admin.picoyplaca');
-    Route::put('/picoyplaca', [PicoyPlacaController::class, 'updateAll'])->name('picoyplaca.updateAll');
+    Route::put('/picoyplaca', [PicoyPlacaController::class, 'update'])->name('picoyplaca.update');
 // });  
 
 
@@ -71,19 +71,16 @@ Route::get('/reservas/pdf/{id}', [EventController::class, 'pdf'])->name('admin.r
 /*NO INCLUDO */
 Route::get('/reservas/pdf_fechas', [EventController::class, 'pdf_fechas'])->name('admin.reservas.pdf_fechas')->middleware('auth', 'can:admin.event.pdf_fechas');
 //RUTAS para el historial clinico
-Route::get('/historial/pdf', [HistorialController::class, 'pdf'])->name('admin.historial.pdf')->middleware('auth', 'can:admin.historial');
-Route::resource('/historial', HistorialController::class)->names('admin.historial')->middleware('auth', 'can:admin.historial');
+// Route::get('/historial/pdf', [HistorialController::class, 'pdf'])->name('admin.historial.pdf')->middleware('auth', 'can:admin.historial');
+// Route::resource('/historial', HistorialController::class)->names('admin.historial')->middleware('auth', 'can:admin.historial');
 
 
-Route::group(['middleware'=>['auth']], function(){
-    Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
+// Route::group(['middleware'=>['auth']], function(){
     Route::get('events/mostrar', [EventController::class, 'show'])->name('admin.events.show');
+    Route::post('events/agregar', [EventController::class, 'store'])->name('admin.events.store');
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('admin.events.destroy');
+    // Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
     // Route::post('events/editar/{id}', [EventController::class, 'edit'])->name('admin.events.edit');
     // Route::put('events/actualizar/{evento}', [EventController::class, 'update'])->name('admin.events.update');
-
     // Route::post('events/actualizar/{evento}', [EventController::class, 'edit'])->name('admin.events.update');
-    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('admin.events.destroy');
-
-    Route::post('events/agregar', [EventController::class, 'store'])->name('admin.events.store');
-
-});
+// });

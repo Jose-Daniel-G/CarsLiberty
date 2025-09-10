@@ -8,23 +8,21 @@ use Illuminate\Support\Facades\Storage;
 
 class ConfigController extends Controller
 {
-    public function index()
-    {
-        $config = Config::first(); // Obtén la primera fila de la tabla de configuración
-        \Log::info('config', [$config]);
-        // $configs = Config::all(); // Obtén la primera fila de la tabla de configuración 
-        // \Log::info('configs', [$configs]);
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.config.index')->only('index');
+        $this->middleware('can:admin.config.create')->only('create', 'store');
+        $this->middleware('can:admin.config.edit')->only('edit', 'update');
+        $this->middleware('can:admin.config.destroy')->only('destroy');
+    }
 
+    public function index()
+    {  $config = Config::first(); // Obtén la primera fila de la tabla de configuración
         return view('admin.config.index', compact('config'));
     }
-
-    public function create()
-    {
-        return view('admin.config.create');
-    }
+    // public function create()  {  return view('admin.config.create'); }
     public function store(Request $request)
     {// dd($request->all());
-
         $request->validate([
             'site_name'    => 'required|string',
             'email_contact'    => 'required|email',
@@ -32,7 +30,6 @@ class ConfigController extends Controller
             'phone'  => 'required|numeric',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg',
         ]);
-        // dd($request->all());
         // Crear una nueva instancia del modelo Config
         $config = new Config();
         $config->site_name = $request->site_name;
@@ -85,15 +82,12 @@ class ConfigController extends Controller
         return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración actualizada exitosamente']);
     }
 
-    public function destroy(Config $config)
+    public function destroy(Config $config)// Eliminar el logo si existe
     {
-        // Eliminar el logo si existe
         if (Storage::exists('logos/' . $config->logo)) {
-            Storage::delete('logos/' . $config->logo);
-        }
+            Storage::delete('logos/' . $config->logo); }
 
-        // Eliminar la configuración
-        $config->delete();
+            $config->delete();  // Eliminar la configuración
 
         return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración eliminada correctamente']);
     }

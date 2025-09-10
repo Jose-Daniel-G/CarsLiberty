@@ -1,81 +1,54 @@
-### FIRST OF ALL MAKE AN DATABASE MANUALLY CALLED carsherbron
-php artisan storage:link
+# Software para una Academia Automovilística
 
-SOFTWARE PARA UNA ACADEMIA AUTOMOVILISTICA DONDE SE LLEVE UN REGISTRO
-DE LAS CLASES POR CADA ALUMNO
-EN UNA ESCUELA AUTOMOVILISCA, HAY ALUMNOS, PROFESORES Y UN ADMINISTRADOR
+Este proyecto es un software para una academia automovilística, diseñado para llevar un registro detallado de las clases de cada alumno. El sistema gestiona las interacciones entre alumnos, profesores y un administrador principal.
 
-A LOS ALUMNOS QUE SE INSCRIBEN A UN CURSO SOLO LES APARECEN LOS PROFESORES DISPONIBLES.
-AL ALUMNO ACEPTAR LA PROGRAMACION NO SE PUEDE INSCRIBIR EN OTRO HASTA NO HABER TERMINADO LA
-TOTALIDAD DE HORA DEL PRESENTE
+---
 
-EL ALUMNO SI DESEA CANCELAR LAS CLASES EL SISTEMA NO LO PERMITE,
-ESTE DEBE DE COMUNICARSE CON LA ESCUELA
+### **FIRST OF ALL: CREATE A DATABASE MANUALLY CALLED `cars_liberty`**
 
-PARA EVITAR QUE SE DESCONTROLE LA PROGRAMACION.
-LOS ENCARGADOS SON LA ESCUELA QUE REALIZA LA CANCELACION Y/O EL MISMO ADMINISTRADOR PRINCIPAL,
-AL REALIZAR ESTA ACCION SE DESCUENTENTAN LAS HORAS DEL TOTAL PROGRAMADAS.
+---
 
-SI SE AVERIA UN VEHICULO O SE LE PRESENTA UNA CALAMIDAD AL INSTUCTOR, LA RESPECTIVA ESCUELA
-NOTIFICA AL ALUMNO Y DESPROGRAMA LA CLASE SI NO HAY FORMA DE SOLUCIONAR EL IMPREVISTO,
-DE HABER SOLUCION SE DA LA CLASE NORMAL
+### **Funcionalidades del Sistema**
 
-SOLO SE PUEDEN PROGRAMAR UN MINIMO DE 2 HORAS Y UN MAXIMO DE 4
+- **Inscripción y Programación de Clases**:
+  - A los alumnos que se inscriben a un curso, solo se les muestran los profesores que están **disponibles**.
+  - Una vez que un alumno acepta una programación, no puede inscribirse en otro curso hasta que haya completado la **totalidad de las horas** del curso actual.
+  - Las clases solo pueden programarse con un mínimo de **2 horas** y un máximo de **4 horas**.
+  - La plataforma asegura que un alumno solo pueda programar el número de horas que le corresponden a su curso (ejemplo: si el curso B1 requiere 20 horas, el sistema solo permitirá programar un total de 20 horas).
 
-DEPENDIENDO EL CURSO DE CONDUCCION TIENE UNA CANTIDAD DE HORAS A REALIZAR, SI LA PERSONA
-ESTA HACIENDO UN CURSO EJEMPLO EL B1, QUE LA PLATAFORMA SOLO LE DEJE PROGRAMAR
-LAS 20 HORAS
+- **Cancelación de Clases**:
+  - Los alumnos **no pueden cancelar** clases directamente desde el sistema. Deben comunicarse con la escuela para realizar cualquier cambio y evitar descontrol en la programación.
+  - La **cancelación** la realiza la escuela o el administrador principal.
+  - Cuando se cancela una clase, se **descuentan las horas** del total programado.
 
-EN CUANTO AL VEHICULO SI TIENE PICO Y PLACA ESTARIA INHABILITADO PARA SU USO,
-LOS DIAS FESTIVOS SOLO SE PUEDE PROGRMAMAR A HASTA LAS 2PM
+- **Manejo de Imprevistos**:
+  - Si un vehículo sufre una avería o un instructor tiene una calamidad, la escuela notifica al alumno.
+  - Si no hay una solución para el imprevisto, la clase se **desprograma**. Si hay una solución, la clase se lleva a cabo normalmente.
 
-curso:
+---
 
--   id
--   nombre (varchar)
--   horas_requeridas (int)
-    clase:
--   curso_id (int)
--   alumno_id (int)
--   profesor_id (int)
--   vehiculo_id (int)
--   duracion (int)
+### **Reglas y Restricciones**
 
-vehiculo:
+- **Vehículos**: Si un vehículo tiene **pico y placa**, estará inhabilitado para su uso en las clases programadas para ese día.
+- **Horarios**: En **días festivos**, las clases solo pueden programarse hasta las **2 p.m.**
 
--   placa (varchar)
--   modelo (int)
--   disponble (bool)
--   pico_y_placa (varchar)
+| Curso | Vehículo | Rol | Usuario |
+|:---|:---|:---|:---|
+| - id | - placa | - id | - id |
+| - nombre | - modelo | - nombre | - nombre |
+| - descripcion | - disponible  | | - email |
+| - horas_requeridas | - pico_y_placa | | - paswword |
+| - estado | - profesor_id  | |- rol_id | 
 
-role:
-
--   id
--   nombre
-
-usuario
-
--   id
--   nombre
--   tefono
--   email
--   paswword
--   rol_id
--   curso_id
-
-## CREATE LOCAL SERVER CON XAMMP
-
+#### CREATE LOCAL SERVER CON XAMMP
 como administrador habre este documento
-
 -   C:\Windows\System32\drivers\etc\hosts
     `adicionar estas lineas`
 -   127.0.0.1 laravel9.test
-
 luego dirigirse a esta ruta y editar el siguiente archivo
 
 -   C:\xampp\apache\conf\extra\httpd-vhosts.conf
     adicionar estas lineas
-
     ````
     <VirtualHost *:80>
         ServerName localhost
@@ -90,7 +63,6 @@ luego dirigirse a esta ruta y editar el siguiente archivo
     ````
 
 ### FILES ROUTE
-
 -php artisan storage:link
 
 ### CLEAN GRABAGE

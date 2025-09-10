@@ -17,7 +17,7 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <form action="{{ route('picoyplaca.updateAll') }}" method="POST">
+        <form action="{{ route('picoyplaca.update') }}" method="POST">
             @csrf
             @method('PUT')
             <table class="table table-striped table-bordered table-hover table-sm">

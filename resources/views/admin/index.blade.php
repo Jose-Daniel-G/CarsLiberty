@@ -170,8 +170,7 @@
             <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link " id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home"
-                        role="tab" aria-controls="custom-tabs-three-home" aria-selected="false">Horario de
-                        profesores</a>
+                        role="tab" aria-controls="custom-tabs-three-home" aria-selected="false">Horario de profesores</a>
                 </li>
                 @can('show_datos_cursos')
                     <li class="nav-item">
@@ -233,8 +232,7 @@
                                     <i class="bi bi-calendar-check"></i>Ver las reservas
                                 </a>
                             </div>
-                            <!-- Modal -->
-                            @include('admin.events.event')
+
                             <!-- Incluir Modal INFO-->
                             @include('admin.events.show')
                         </div>
@@ -246,6 +244,8 @@
                         </div>
                     </div>
                 @endcan
+                                            <!-- Modal -->
+                            @include('admin.events.event')
             </div>
         </div>
 

@@ -1,0 +1,28 @@
+cliente    -> dashboard
+Profesor   -> /profesor/asistencia
+Secretaria -> /profesor/asistencia | /secretaria/inasistencias | /clientes    | /horarios | /cursos | /profesores 
+admin      -> /profesor/asistencia | /secretaria/inasistencias | /secretarias | /clientes | /cursos | /profesores | /horarios
+admin      -> /profesor/asistencia | /secretaria/inasistencias | /secretarias | /clientes | /cursos | /profesores | /horarios | /config |
+
+Problema:
+Al agendar un curso con un profesor en un día en el que no está disponible o ya tiene otro curso asignado, el sistema muestra el registro como exitoso, lo cual es incorrecto. Debe corregirse.
+
+Además, no se está validando si la agenda se cruza con otra existente, y aun así se muestra como exitoso. Debe corregirse.
+
+clientes esta ingresando a los siguientes moudulo por la url (ARREGLAR)
+http://127.0.0.1:8000/admin/config
+http://127.0.0.1:8000/admin/profesor/asistencia
+http://127.0.0.1:8000/admin/secretaria/inasistencias
+http://127.0.0.1:8000/admin/secretarias
+http://127.0.0.1:8000/admin/clientes
+http://127.0.0.1:8000/admin/cursos
+http://127.0.0.1:8000/admin/profesores
+http://127.0.0.1:8000/admin/horarios/create
+http://127.0.0.1:8000/admin/horarios
+http://127.0.0.1:8000/admin/vehiculos
+http://127.0.0.1:8000/admin/picoyplaca
+
+   SELECT c.*
+FROM cursos c
+INNER JOIN cliente_curso cc ON c.id = cc.curso_id
+WHERE cc.cliente_id = 4 LIMIT 100

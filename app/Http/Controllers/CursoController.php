@@ -13,10 +13,17 @@ use Illuminate\Support\Facades\Hash;
 
 class CursoController extends Controller
 {
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.cursos.index')->only('index');
+        $this->middleware('can:admin.cursos.create')->only('create', 'store');
+        $this->middleware('can:admin.cursos.edit')->only('edit', 'update');
+        $this->middleware('can:admin.cursos.destroy')->only('destroy');
+    }
+
     public function index() { $cursos = Curso::all();   return view('admin.cursos.index', compact(('cursos'))); }
-
     // public function create() {  return view('admin.cursos.create'); }
-
+    // public function show(Curso $curso) { return view('admin.cursos.show', compact('curso')); }
     public function store(Request $request)
     {
         $request->validate([
@@ -31,17 +38,11 @@ class CursoController extends Controller
         return redirect()->route('admin.cursos.index')->with(['title' => 'Exito','info'=> 'Curso registrado correctamente.','icono'=>'success']);
     }
 
-
-    // public function show(Curso $curso) { return view('admin.cursos.show', compact('curso')); }
-
     public function edit(Curso $curso)
-    {   // return view('admin.cursos.edit', compact('curso'));
-         return response()->json($curso);
-    }
+    {    return response()->json($curso); }
 
     public function update(Request $request, Curso $curso)
-    { //dd($request->all());
-
+    { //dd($request->all()); 
         $request->validate([
             'nombre' => 'required',
             'descripcion' => 'required',
@@ -52,10 +53,8 @@ class CursoController extends Controller
 
         return redirect()->route('admin.cursos.index')->with([
             'info' => 'Curso actualizado correctamente.',
-            'icono' => 'success'
-        ]);
+            'icono' => 'success']);
     }
-
 
     public function completados()
     {
@@ -109,9 +108,7 @@ class CursoController extends Controller
         return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
     }
     public function obtenerCursos($clienteId)
-    {
-        $cliente = Cliente::with('cursos')->findOrFail($clienteId);
+    {   $cliente = Cliente::with('cursos')->findOrFail($clienteId);
         return response()->json($cliente->cursos);
     }
-    
 }

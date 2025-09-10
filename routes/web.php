@@ -5,11 +5,9 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\HorarioController;
 use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\AsistenciaController;
-use App\Http\Controllers\HistorialCursoController;
-// use App\Http\Controllers\CardController;
-// use App\Http\Controllers\WebController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\HistorialCursoController; 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 
 // Auth::routes(['register'=>false]); // Route::get('/', function () {return view('welcome');}); // Route::get('/', function () {return view('auth.login');});
@@ -32,18 +30,15 @@ Route::resource('/admin/horarios', HorarioController::class)->names('admin.horar
 Route::get('/admin/show/{id}', [HomeController::class, 'show'])->name('admin.reservas.show')->middleware('auth', 'can:admin.show_reservas');
 Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('admin.horarios.show_datos_cursos')->middleware('auth');
 
-// CHATGPT
-Route::middleware('auth')->group(function () {
-  // Rutas para profesores
-  Route::post('/admin/asistencia/registrar', [AsistenciaController::class, 'store'])->name('admin.asistencias.store'); //Registrar Asistencia
-  Route::get('/admin/profesor/asistencia', [AsistenciaController::class, 'index'])->name('admin.asistencias.index');
+// Rutas para profesores
+Route::post('/admin/asistencia/registrar', [AsistenciaController::class, 'store'])->name('admin.asistencias.store'); //Registrar Asistencia
+Route::get('/admin/profesor/asistencia', [AsistenciaController::class, 'index'])->name('admin.asistencias.index');
 
-  // Rutas para secretarias
-  Route::get('/admin/secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('admin.secretarias.inasistencias'); //Listado de Inacistencias
-  Route::post('/admin/asistencia/habilitar/{id}', [AsistenciaController::class, 'habilitarCliente'])->name('asistencia.habilitar');
-});
+// Rutas para secretarias
+Route::get('/admin/secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('admin.secretarias.inasistencias'); //Listado de Inacistencias
+Route::post('/admin/asistencia/habilitar/{id}', [AsistenciaController::class, 'habilitarCliente'])->name('asistencia.habilitar');
 
-Route::post('/historial/registrar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'registrarCursoCompletado']);
-Route::get('/historial/completar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'completarCurso']);
-Route::get('/historial/listar/{clienteId}', [HistorialCursoController::class, 'listarCursosCompletados']);
+// Route::post('/historial/registrar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'registrarCursoCompletado']);
+// Route::get('/historial/completar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'completarCurso']);
+// Route::get('/historial/listar/{clienteId}', [HistorialCursoController::class, 'listarCursosCompletados']);
 // Route::get('/admin/profesores/reportes', [ProfesorController::class, 'reportes'])->name('admin.profesores.reportes');

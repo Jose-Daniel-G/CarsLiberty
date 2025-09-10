@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Curso;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -13,24 +12,31 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ClienteController extends Controller
 {
+
+    public function __construct()
+    {  // Solo los que tengan el permiso pueden acceder a estas acciones
+        $this->middleware('can:admin.clientes.index')->only('index');
+        $this->middleware('can:admin.clientes.create')->only('create', 'store');
+        $this->middleware('can:admin.clientes.edit')->only('edit', 'update');
+        $this->middleware('can:admin.clientes.destroy')->only('destroy');
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
             $query = Cliente::with('user')->select('clientes.*');
-            // Puedes devolver botones (renderizar un partial)
-            return DataTables::eloquent($query)->addColumn('action', function ($cliente) { 
+
+            return DataTables::eloquent($query)->addColumn('action', function ($cliente) { // Puedes devolver botones (renderizar un partial)
                 return view('admin.clientes.partials.actions', compact('cliente'))->render();
             })->toJson();
         }
- 
+
         $cursos = Curso::all(); // si los necesitas en la vista
         return view('admin.clientes.index', compact('cursos'));
     }
     // public function create(){// $cursos = Curso::all();// return view('admin.clientes.create', compact('cursos'));}
     public function store(Request $request)
     {
-        // dd($request->all());
-
         $validatedData = $request->validate([
             'nombres' => 'required',
             'apellidos' => 'required',
@@ -47,21 +53,20 @@ class ClienteController extends Controller
             $usuario = User::create(['name' => $request->nombres, 'email' => $request->correo, 'password' => Hash::make($request->password ?? $request->cc),]);
             $usuario->assignRole('cliente');
 
-            $validatedData['user_id'] = $usuario->id; // Asociar el user_id al cliente
+            $validatedData['user_id'] = $usuario->id;                            // Asociar el user_id al cliente
             unset($validatedData['correo']);
             $validatedData['observaciones'] = $request->observaciones;
 
-            // Crear cliente
-            $cliente = Cliente::create($validatedData);
+            $cliente = Cliente::create($validatedData);                          // Crear cliente
             $usuarioId = $usuario->id;
-            // Asignar cursos si existen
-            if ($request->has('cursos') && is_array($request->cursos)) {
+
+            if ($request->has('cursos') && is_array($request->cursos)) {          // Asignar cursos si existen
                 foreach ($request->cursos as $cursoId) {
                     $cliente->cursos()->attach($cursoId, ['horas_realizadas' => 0]);
                 }
             }
             if (!isset($cliente)) { // $evento->delete();      
-                DB::rollBack();         // Revertir todo si algo falla
+                DB::rollBack();                                                   // Revertir todo si algo falla
                 DB::table('users')->where('id', $usuarioId)->delete(); // Definir $ultimoId tomando el máximo ID de la tabla
             }
             DB::commit();  // ⬅️ Si todo salió bien, guarda en la base de datos
@@ -119,7 +124,6 @@ class ClienteController extends Controller
         return redirect()->route('admin.clientes.index')
             ->with(['title' => 'Exito', 'info' => 'Cliente actualizado correctamente.', 'icono' => 'success']);
     }
-
 
     public function toggleStatus($id) //DEACTIVATE
     {

@@ -65,6 +65,7 @@ class HomeController extends Controller
             return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'events', 'total_configuraciones', 'role'));
         } else {
             $cliente = Cliente::where('user_id', Auth::id())->first();
+            \Log::info('cliente',[$cliente]);
             $cursos = $cliente->cursos; // Cursos del cliente
 
             $profesorSelect = DB::table('profesors')
