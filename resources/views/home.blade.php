@@ -55,14 +55,16 @@
                 <div class="col-sm-2 mx-auto">
                     <div class="card">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group">
-                                <img style="height: 7rem;" src="{{ $post->image->url }}" class="card-img-top"alt="...">
+                            <li class="list-group border border-primary" style="height: 170px;">
+                                <img src="{{ $post->image->url }}" class="card-img-top mx-auto d-block" alt="..."
+                                    style="height: 200px; object-fit: cover;" alt="...">
                             </li>
-                            <li class="list-group-item">
+                            <li class="list-group-item" style="height: 70px;">
                                 <h6 class="card-title">{{ $post->title }}</h6>
                             </li>
                             <li class="list-group-item">
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#modal-{{ $post->id }}">Ver Noticia</button>
+                                <button class="btn btn-primary" data-toggle="modal"
+                                    data-target="#modal-{{ $post->id }}">Ver Noticia</button>
                             </li>
                         </ul>
                     </div>

@@ -1,3 +1,11 @@
+##### MISSING 
+- NEWS: delete, edit
+- COMMENTS: create, edit, delete
+- USERS: create, edit, delete
+- ROLES: Create: admin, writer, reader
+
+##### NEXT STEP: COFFEE GARDEN ALBUM
+users, posts, categories 
 # Software para una Academia Automovilística
 
 Este proyecto es un software para una academia automovilística, diseñado para llevar un registro detallado de las clases de cada alumno. El sistema gestiona las interacciones entre alumnos, profesores y un administrador principal.
@@ -156,7 +164,9 @@ git log --reverse
 ### profile view
 C:\xampp\htdocs\www\CarsLiberty\resources\views\profile\update-profile-information-form.blade copy.php
 
-![Imagen del juego](images/cars_liberty.png)
+![CarsLiberty Dashboard](images/cars_liberty.png)
+![SrpingfieldNews](images/springfield_admilte.png)
+![Springfield](images/springfield_admilte.png)
 
 ###### OTHER PROJECTS
 php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider"
