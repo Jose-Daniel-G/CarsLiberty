@@ -1,60 +1,56 @@
-@extends('adminlte::page')
+<!-- Modal de Create -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+               <h5 class="modal-title" id="createModalLabel">Crear {{ __('Role') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-@section('title', 'Dashboard')
+            <div class="modal-body"> 
 
-@section('content_header')
-    <h1>Sistema de reservas </h1>
-@stop
+                <form action="{{ route('admin.roles.store') }}" method="POST">
+                    @csrf
 
-@section('content')
-    <div class="d-flex justify-content-between">
-        <h2 class="font-semibold fs-xl text-gray-800 leading-tight">
-            Roles / Crear
-        </h2>
-        <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary btn-sm rounded">Volver</a>
-    </div>
-    <div class="py-3">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm rounded">
-                <div class="p-3 text-gray-900">
-                    <form action="{{ route('admin.roles.store') }}" method="POST">
-                        @csrf
-                        {{-- @method('POST') --}}
+                    <div class="mb-3 row align-items-end">
+                        <div class="col">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input value="{{ old('name') }}" type="text" placeholder="Ingresa el nombre"
+                                name="name" id="name" class="form-control">
 
-                        <label for="name" class="form-label fs-lg fw-medium">Nombre</label>
-                        <div class="mb-3">
-                            <input value="{{ old('name') }}" type="text" placeholder="Ingresa el nombre" name="name"
-                                   id="name" class="form-control border-gray-300 shadow-sm rounded-lg">
                             @error('name')
-                                <p class="text-danger fw-medium">{{ $message }}</p>
+                                <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="row row-cols-4 g-2">
-                            @if ($permissions->isNotEmpty())
-                                @foreach ($permissions as $permission)
-                                    <div class="mt-3">
-                                        <div class="form-check">
-                                            <input type="checkbox" name="permission[]" id="permission-{{ $permission->id }}"
-                                                   class="form-check-input rounded" value="{{ $permission->name }}">
-                                            <label class="form-check-label" for="permission-{{ $permission->id }}">{{ $permission->name }}</label>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
 
-                        <button class="btn btn-primary btn-sm rounded">Enviar</button>
-                    </form>
-                </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Enviar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
+                        @foreach ($permissions as $permission)
+                            <div class="col">
+                                <div class="form-check">
+                                    <input type="checkbox" name="permission[]"
+                                        id="permission-{{ $permission->id }}"
+                                        class="form-check-input"
+                                        value="{{ $permission->name }}">
+                                    <label class="form-check-label" for="permission-{{ $permission->id }}">
+                                        {{ $permission->name }}
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
-@stop
-
-@section('css')
-
-@stop
-
-@section('js')
-
-@stop
+</div>

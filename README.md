@@ -166,7 +166,7 @@ C:\xampp\htdocs\www\CarsLiberty\resources\views\profile\update-profile-informati
 
 ![CarsLiberty Dashboard](images/cars_liberty.png)
 ![SrpingfieldNews](images/springfield_admilte.png)
-![Springfield](images/springfield_admilte.png)
+![Springfield](images/springfield_admilte_modal.png)
 
 ###### OTHER PROJECTS
 php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider"

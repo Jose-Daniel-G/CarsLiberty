@@ -13,7 +13,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-outline card-primary">
+            <div class="card card-outline card-primary">    
                 <div class="card-header">
                     <h3 class="card-title">Usuarios registrados</h3>
                     <div class="card-tools">
@@ -61,15 +61,13 @@
                 responsive: true,
                 autoWidth: false,
                 ajax: '{{ route("admin.clientes.index") }}',
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'nombres', name: 'nombres' },
-                    { data: 'apellidos', name: 'apellidos' },
-                    { data: 'cc', name: 'cc' },
-                    { data: 'user.email', name: 'user.email' },
-                    { data: 'direccion', name: 'direccion' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
-                ],
+                columns: [{ data: 'id', name: 'id' },
+                        { data: 'nombres', name: 'nombres' },
+                        { data: 'apellidos', name: 'apellidos' },
+                        { data: 'cc', name: 'cc' },
+                        { data: 'user.email', name: 'user.email' },
+                        { data: 'direccion', name: 'direccion' },
+                        { data: 'action', name: 'action', orderable: false, searchable: false }],
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
                 language: {
@@ -82,12 +80,7 @@
                     loadingRecords: "Cargando...",
                     search: "Buscar:",
                     zeroRecords: "No se encontraron registros coincidentes",
-                    paginate: {
-                        first: "Primero",
-                        last: "Último",
-                        next: "Siguiente",
-                        previous: "Anterior"
-                    }
+                    paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior"}
                 }
             });
         });
@@ -97,7 +90,6 @@
             var id = button.data('id');
             var modal = $(this);
 
-            // Ruta del endpoint de edición
             var url = "{{ route('admin.clientes.edit', ':id') }}".replace(':id', id);
 
             $.ajax({
@@ -144,7 +136,6 @@
                 },
                 error: function(xhr) {
                     console.error('Error al cargar los datos del cliente:', xhr);
-                    // Opcional: mostrar un mensaje de error al usuario
                     alert('No se pudieron cargar los datos del cliente. Por favor, intente de nuevo.');
                 }
             });

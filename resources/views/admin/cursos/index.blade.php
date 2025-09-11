@@ -133,7 +133,7 @@
         }
         new DataTable('#cursos', {
             responsive: true,
-            autoWidth: false, //no le vi la funcionalidad
+            autoWidth: true,  
             dom: 'Bfrtip', // Añade el contenedor de botones
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print', 'colvis' // Botones que aparecen en la imagen

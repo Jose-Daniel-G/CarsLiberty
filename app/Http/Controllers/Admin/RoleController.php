@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -21,25 +22,23 @@ class RoleController extends Controller
     }
     public function index()
     {
+        $permissions = ModelsPermission::orderBy('name', 'ASC')->get();
         $roles = Role::orderBy('created_at', 'ASC')->paginate(10);
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.roles.index', compact('roles', 'permissions'));
     }
 
-    public function create()
-    {
-        $permissions = ModelsPermission::orderBy('name','ASC')->get();
-        return view('admin.roles.create',compact('permissions'));
-    }
+    // public function create(){$permissions = ModelsPermission::orderBy('name', 'ASC')->get();return view('admin.roles.create', compact('permissions'));}
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), ['name' => 'required|unique:roles|min:3']);
 
         if ($validator->passes()) {
-            $role = Role::create(['name' => $request->name,
-            'guard_name' => 'web', // <- necesario para evitar el error
-        ]);
-            if(!empty($request->permission)){
+            $role = Role::create([
+                'name' => $request->name,
+                'guard_name' => 'web', // <- necesario para evitar el error
+            ]);
+            if (!empty($request->permission)) {
                 foreach ($request->permission as $name) {
                     $role->givePermissionTo($name);
                 }
@@ -50,25 +49,24 @@ class RoleController extends Controller
         }
     }
 
-    public function show(Role $role)
-    {
-        return view('admin.roles.index');
-    }
+    public function show(Role $role){return view('admin.roles.index');}
 
-    public function edit($id) 
+    public function edit($id)
     {
-        $role = Role::findOrFail($id);
-        $hasPermissions = $role->permissions->pluck('name');
-        $permissions = ModelsPermission::orderBy('name','ASC')->get();
+    $role = Role::with('permissions')->findOrFail($id);
+    $hasPermissions = $role->permissions->pluck('id'); // ids
+        $permissions = ModelsPermission::orderBy('name', 'ASC')->get();
 
-        return view('admin.roles.edit', compact('hasPermissions','permissions','role'));
+        return response()->json(['hasPermissions'=>$hasPermissions, 'permissions'=>$permissions, 'role'=>$role]);// return view('admin.roles.edit', compact('hasPermissions', 'permissions', 'role'));
     }
 
     public function update(Request $request, $id)
-    {   
+    {
         $role = Role::findOrFail($id);
-        $validator = Validator::make($request->all(),
-         ['name' => 'required|unique:roles,name,'.$id.',id']);
+        $validator = Validator::make(
+            $request->all(),
+            ['name' => 'required|unique:roles,name,' . $id . ',id']
+        );
 
         if ($validator->passes()) {
             $role->name = $request->name;
@@ -80,25 +78,26 @@ class RoleController extends Controller
             }
             return redirect()->route('admin.roles.index')->with('success', 'Role actualizado exitosamente');
         } else {
-            return redirect()->route('admin.roles.edit',$id)->withInput()->withErrors($validator);
+            return redirect()->route('admin.roles.edit', $id)->withInput()->withErrors($validator);
         }
         return view('admin.roles.index');
     }
 
-    public function destroy(Request $request) {
+    public function destroy(Request $request)
+    {
         $id = $request->id;
-    
+
         $role = Role::find($id);
-    
+
         if ($role == null) {
             session()->flash('error', 'Role not found');
             // return response()->json([
             //     'status' => false
             // ]);
         }
-    
+
         $role->delete();
-    
+
         session()->flash('success', 'Role deleted successfully');
         return redirect()->back()->with('success', 'Role eliminado exitosamente.');
         // return response()->json([

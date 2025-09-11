@@ -20,44 +20,41 @@ class UserController extends Controller
     // }
     public function index()
     {
-       $users = User::where('id', '!=', Auth::id())->get();
+        $users = User::where('id', '!=', Auth::id())->get();
         return view('admin.users.index', compact('users'));
     }
-    public function create() {  return view('admin.users.create'); }
+    // public function create() {  return view('admin.users.create'); }
     public function store(Request $request)
-    {  
-        $request->validate([
-            'name' => 'required|max:250',
-            'email' => 'required|email|max:250|unique:users', 
-            'password' => 'required|min:8|max:250|confirmed',
-        ]);
-        //  dd($request->all());
+    {
+        $request->validate(['name' => 'required|max:250', 'email' => 'required|email|max:250|unique:users', 'password' => 'required|min:8|max:250|confirmed',]);
         $usuario = new User();
         $usuario->name = $request->name;
-        $usuario->email = $request->email; 
+        $usuario->email = $request->email;
         $usuario->password = Hash::make($request->password);
         $usuario->save();
 
-        // // Extraer la parte antes del @ del email
-        // $username = explode('@', $usuario->email)[0];
+        // $username = explode('@', $usuario->email)[0];// // Extraer la parte antes del @ del email
 
-        // // Crear la carpeta en storage/app/users/{username}
-        // Storage::makeDirectory("users/{$username}");
+        // Storage::makeDirectory("users/{$username}");// // Crear la carpeta en storage/app/users/{username}
 
-        return redirect()->route('admin.users.index')
-            ->with('info', 'Se registro al usuario de forma correcta')
-            ->with('icono', 'success');
+        return redirect()->route('admin.users.index')->with('info', 'Se registro al usuario de forma correcta')->with('icono', 'success');
     }
     // public function show($id)  {  }
-    public function edit(User $user)
+    public function edit($id)
     {
+        $user = User::with('roles')->findOrFail($id);
         $roles = Role::all();
-        return view('admin.users.edit', compact('user', 'roles'));
+
+        return response()->json([
+            'user' => $user,
+            'roles' => $roles
+        ]);
     }
+
     public function update(Request $request, User $user)
     {
         $user->roles()->sync($request->roles);
-        return redirect()->route('admin.users.edit', $user)->with('info', 'Se asigno los roles correctamente');
+        return redirect()->route('admin.users.index', $user)->with('info', 'Se asigno los roles correctamente');
     }
 
     public function toggleStatus($id) //DEACTIVATE
