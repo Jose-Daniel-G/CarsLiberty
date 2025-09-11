@@ -14,14 +14,8 @@ class Vehiculo extends Model
     protected $fillable = ['placa','modelo','disponible','tipo_id','profesor_id',];
     
     public function profesor()
-    {
-        return $this->belongsTo(Profesor::class, 'profesor_id');
-    }
+    { return $this->belongsTo(Profesor::class, 'profesor_id');}// Muchos a uno inverso
+    
     public function tipo()
-    {
-        return $this->belongsTo(TipoVehiculo::class,  'tipo_id');// Relación de muchos a uno: un vehículo tiene un tipo
-    }
-    // protected $fillable = ['marca','anio','color', 'pico_y_placa', 'placa','nombre','modelo', 'tipo','disponible',];
-
-    // protected $casts = [ 'anio' => 'integer',     ];
+    { return $this->belongsTo(TipoVehiculo::class,  'tipo_id');}// Muchos a uno inverso
 }

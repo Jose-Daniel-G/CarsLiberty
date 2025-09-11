@@ -12,6 +12,5 @@ class Tag extends Model
     
     // public function getRouteKeyName() { return "slug";  }// POR ALGUNA RAZON NO QUIERE SERVIR EL METODO getRouteKeyName
     
-    // Relacion Muchos a Muchos Inversa
-    public function post(){ return $this->belongsToMany(Post::class);}
+    public function post(){ return $this->belongsToMany(Post::class);} // Muchos a Muchos Inversa
 }

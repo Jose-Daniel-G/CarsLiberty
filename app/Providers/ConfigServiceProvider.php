@@ -28,7 +28,7 @@ class ConfigServiceProvider extends ServiceProvider
             if ($config) {
                 config([
                     'adminlte.logo' => '<b>' . $config->site_name . '</b>LTE',
-                    'adminlte.logo_img' => 'storage/' . $config->logo,
+                    'adminlte.logo_img' => $config->logo,
                     'adminlte.logo_img_class' => 'brand-image img-circle elevation-3',
                     'adminlte.logo_img_alt' => $config->site_name,
 
@@ -36,7 +36,7 @@ class ConfigServiceProvider extends ServiceProvider
                     'adminlte.auth_logo' => [
                         'enabled' => true,
                         'img' => [
-                            'path'  => 'storage/' . $config->logo,   // dinámico
+                            'path'  => $config->logo,   // dinámico
                             'alt'   => $config->site_name,
                             'class' => 'brand-image img-circle elevation-3', // 👈 clase aquí
                             'width' => 70,

@@ -13,7 +13,7 @@ class UserProfileController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:admin.user.index')->only('index');
+        // $this->middleware('can:admin.user.index')->only('index');
     }
     public function index(){ $user = Auth::user(); return view('admin.profile.index', compact('user')); }
 

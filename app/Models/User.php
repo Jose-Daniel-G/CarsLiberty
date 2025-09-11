@@ -30,37 +30,16 @@ class User extends Authenticatable // AQUI ESTA DESACTIVADO
 
     protected $appends = ['profile_photo_url',];// ADMINLTE
 
-    public function adminlte_image() // return auth()->user()->profile_photo_url;// return url($this->profile_photo_url);
-    {  return url($this->profile_photo_url); // return asset('storage/' . $this->profile_photo_path);
-         }
 
-    public function adminlte_desc(){   return $this->roles->pluck('name')->implode(', ');   } // return 'Administrador';
-    public function adminlte_profile_url()
-    {
-        return url('user/profile');
-    }
-    public function secretaria()
-    {
-        return $this->hasOne(Secretaria::class);
-    }
-    public function cliente()
-    {
-        return $this->hasOne(Cliente::class);
-    }
-    public function profesor()
-    {
-        return $this->hasOne(Profesor::class, 'user_id');
-    }
-    public function curso()
-    {
-        return $this->hasOne(Curso::class);
-    }
-    public function events()
-    {
-        return $this->hasMany(Event::class);
-    }
-    public function horarios()// En el modelo User
-    {
-        return $this->hasMany(Horario::class);
-    }
+    public function curso(){      return $this->hasOne(Curso::class);}   // Uno a Uno
+    public function events(){     return $this->hasMany(Event::class);}  // Uno a Muchos
+    public function cliente(){    return $this->hasOne(Cliente::class);} // Uno a Uno
+    public function profesor(){   return $this->hasOne(Profesor::class, 'user_id');} // Uno a Uno
+    public function horarios(){   return $this->hasMany(Horario::class);}// Uno a Muchos
+    public function secretaria(){ return $this->hasOne(Secretaria::class);}// Uno a Uno
+
+    public function adminlte_image(){       return url($this->profile_photo_url); } // USER PICTURE
+    public function adminlte_profile_url(){ return url('user/profile'); }
+    public function adminlte_desc(){ return $this->roles->pluck('name')->implode(', '); } // RETURN ROLE
+
 }

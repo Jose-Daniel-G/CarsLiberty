@@ -83,7 +83,7 @@
                                         <!-- Mostrar la imagen actual si existe -->
                                         @if ($config->logo)
                                             <div class="mb-3 text-center">
-                                                <img src="{{ asset('storage/' . $config->logo) }}" alt="Logo actual"
+                                                <img src="{{ asset($config->logo) }}" alt="Logo actual"
                                                     width="150" class="img-thumbnail">
                                             </div>
                                         @endif

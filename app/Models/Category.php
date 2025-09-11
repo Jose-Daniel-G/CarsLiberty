@@ -9,8 +9,4 @@ class Category extends Model
 {
     use HasFactory;
     protected $table = 'categories';
-
-    public function breakingNews(){
-        return $this->hasMany(BreakingNew::class);
-    }
 }

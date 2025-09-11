@@ -67,12 +67,10 @@ luego dirigirse a esta ruta y editar el siguiente archivo
 ###### CLEAN GRABAGE
 
 ```
-php artisan cache:clear
 php artisan config:clear
-php artisan view:clear
 php artisan route:clear
 php artisan view:clear
-php artisan route:clear
+php artisan cache:clear 
 ```
 
 ###### INSTALL LANGUAGE
@@ -121,23 +119,23 @@ npm install toastr
 ###### HABILITAR EXTENCION EN PHP.INI Xampp u otro: 
 - extension=gd
 - extension=zip
-###### Aunmetar peso de carga de archivo
+**Aunmetar peso de carga de archivo**
 - upload_max_filesize = 40M
 
-###### NOT IMPLEMENTED ##########################
+###### NOT IMPLEMENTED ########################
 ###### Notifications
 php artisan notification:table
 php artisan make:notification PostNotification<!-- php artisan make:notification InvoicePaid  --> 
 php artisan make:event PostEvent
 php artisan make:listener PostListener
-## optional it makes faster to send notifications
+#### optional it makes faster to send notifications
 php artisan queue:table
 php artisan queue:work
 
 php artisan migrate --step
 php artisan migrate:rollback --step
 
-## DESEAS TENER PAISES / CIUDADES
+###### DESEAS TENER PAISES / CIUDADES
 composer require nnjeim/world
 php artisan world:install
 php artisan db:seed --class=WorldSeeder

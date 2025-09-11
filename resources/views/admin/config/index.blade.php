@@ -44,7 +44,7 @@
                                     <td scope="row">{{ $config->phone }}</td>
                                     <td scope="row">{{ $config->email_contact }}</td>
                                     <td scope="row">
-                                        <img src="{{ asset('storage/' . $config->logo) }}" alt="logo" width="100">
+                                        <img src="{{ asset($config->logo) }}" alt="logo" width="100">
                                     </td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">

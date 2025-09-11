@@ -1,181 +1,76 @@
-@extends('layouts.app')
-@section('content')
-    <br>
-    <br>
-    <br>
-    <br>
+<!-- Modal BUSCAR -->
+<div class="modal fade" id="modal-{{ $post->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document" style="max-width: 80%;">
 
-    <div class="container-fluid">
-
-        <div class="border flex-md-row mb-4 box-shadow h-md-250 pb-2">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb p-2 bg-body-tertiary justify-content-end border-bottom">
-                    <li class="breadcrumb-item">
-                        <a class="link-body-emphasis" href="/">
-                            <i class="fa-solid fa-house"></i>
-                            <span class="visually-hidden">Home</span>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a class="link-body-emphasis fw-semibold text-decoration-none" href="#">Noticia</a>
-                    </li>
-                    {{-- <li class="breadcrumb-item active" aria-current="page">
-                        Data
-                    </li> --}}
-                </ol>
-            </nav>
-            <div class="container-fluid">
-                <div class="row page-titles">
-                    <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">Detalles de la noticia</h4>
-                    </div>
-                </div>
-
+        <div class="modal-content">
+            <div class="text-center modal-header">
+                <h3 class="w-100 modal-title">Noticia</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-5 col-xlg-5 col-md-5">
-                        <img class="card-img" src="{{ asset($post->image->url) }}" height="456" alt="Card image">
-                        <small class="text-muted p-t-30 db">Social Profile</small>
-
-                        <br>
-                        <button class="btn btn-circle btn-secondary"><i class="fab fa-facebook"></i></button>
-                        <button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button>
-                        <button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button>
-                    </div>
-                    <div class="col-lg-3 col-xlg-3 col-md-3">
-                        <h3>{{ $post->title }}</h3>
-
-                        <p>{{ $post->body }}</p>
-                        <br>
-
-                    </div>
-                    <div class="col-lg-4 col-xlg-4 col-md-4">
+                    <div class="col-6 border">
                         <div class="row">
-                            <div class="col-12">
-                                <ul class="list-inline">
-                                    <li class="list-inline-item">Elemento 1</li>
-                                    <li class="list-inline-item">Elemento 2</li>
-                                    <li class="list-inline-item">Elemento 3</li>
-                                </ul>
+                            <div class="col-5">
+                                <img src="{{ asset($post->image->url) }}" class="mt-2 rounded" width="178"
+                                    height="178" />
+                                <p><input type="checkbox" name="option" id="me_gusta">
+                                    <label for="check1">
+                                        <span class="fa-stack">
+                                            <i class="fa fa-thumbs-up fa-stack-1x"></i>
+                                        </span>
+                                    </label>
+                                    <b id="n_likes"> 0</b> Me gusta
+                                </p>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-
-                                    <div class="card-body">
-                                        @if (Route::has('login'))
-                                            @auth
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" name="comentario" id="comentario"
-                                                        placeholder="Realice un comentario" aria-label="Input group example"
-                                                        aria-describedby="btnGroupAddon">
-                                                    <div class="input-group-prepend ">
-                                                        <button class="btn btn-primary" id="btnGroupAddon" type="submit">
-                                                            <i class="far fa-paper-plane"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                            @else
-                                                <h2>Comentarios</h2>
-                                            @endauth
-                                        @endif
-
-                                        <div class="sl-item">
-                                            <div class="sl-left">
-                                                <img src="{{ asset($post->image->url) }}" width="50" alt="user"
-                                                    class="rounded-circle">
-                                                <a href="javascript:void(0)" class="link">John Doe</a>
-                                                {{-- <span class="sl-date">5 minutes ago</span> --}}
-
-                                            </div>
-                                            <div class="sl-right">
-
-
-                                                <div class="row">
-                                                    <div class="col-lg-12 col-md-12 m-b-20">
-                                                        <p>Type your note, and hit enter to add it </p>
-
-                                                    </div>
-
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-2 col-md-1 m-b-20">
-                                                        <div class="" id="accordionFlushExample">
-                                                            <div class="accordion-item">
-                                                                <h3 class="accordion-header" id="flush-headingOne">
-                                                                    <a class="accordion-button collapsed" type="button"
-                                                                        data-bs-toggle="collapse"
-                                                                        data-bs-target="#flush-collapseOne"
-                                                                        aria-expanded="false"
-                                                                        aria-controls="flush-collapseOne">
-                                                                        2 comment
-                                                                    </a>
-
-                                                                </h3>
-
-
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-3 col-md-3 m-b-20">
-                                                        <a href="javascript:void(0)" class="link m-r-10"><i
-                                                                class="fa fa-heart text-danger"></i> 5 Love</a>
-                                                    </div>
-
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                                            aria-labelledby="flush-headingOne"
-                                                            data-bs-parent="#accordionFlushExample">
-                                                            {{-- <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block "> --}}
-                                                            @auth
-                                                                <div class="input-group">
-                                                                    <input type="text" class="form-control" name="comentario"
-                                                                        id="comentario" placeholder="Realice un comentario"
-                                                                        aria-label="Input group example"
-                                                                        aria-describedby="btnGroupAddon">
-                                                                    <div class="input-group-prepend ">
-                                                                        <button class="btn btn-primary" id="btnGroupAddon"
-                                                                            type="submit">
-                                                                            <i class="far fa-paper-plane"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                                <br>
-                                                            @else
-                                                                <div class="accordion-body">Placeholder content for this
-                                                                    accordion, which is intended to demonstrate the
-                                                                    <code>.accordion-flush</code> class. This is the
-                                                                    first item's accordion body.
-                                                                </div>
-                                                            @endauth
-                                                            {{-- </div> --}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {{-- <div class="vr"></div> --}}
-                                            <hr>
-                                            <div class="sl-item">
-
-                                                <div class="sl-left">
-                                                    <img src="{{ asset('images/users/2.jpg') }}" width="50"
-                                                        alt="user" class="rounded-circle">
-                                                    <a href="javascript:void(0)" class="link">John Doe</a>
-                                                    <span class="sl-date">5 minutes ago</span>
-                                                </div>
-                                                <div class="sl-right">
-                                                    <div>
-                                                        <p>Ando desarrollando</p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            <div class="col-7">
+                                <div class="row" style="height: 80%;">
+                                    <div class="col">
+                                        <h4 id="titulo_notice">{{ $post->title }}</h4>
+                                        <p class="">{{ $post->body }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="rating" id="rating_number">
+                                            <input type="radio" name="rating" value="5" id="5"><label
+                                                for="5">☆</label>
+                                            <input type="radio" name="rating" value="4" id="4"><label
+                                                for="4">☆</label>
+                                            <input type="radio" name="rating" value="3" id="3"><label
+                                                for="3">☆</label>
+                                            <input type="radio" name="rating" value="2" id="2"><label
+                                                for="2">☆</label>
+                                            <input type="radio" name="rating" value="1" id="1"><label
+                                                for="1">☆</label>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="row">
+                            <div class="col">
+                                <form id="form_comment">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="comentario" id="comentario"
+                                            placeholder="Realice un comentario">
+                                        <div class="input-group-prepend ">
+                                            <button class="btn btn-primary" type="submit"><i
+                                                    class="far fa-paper-plane"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="col">
+                                <div class="border rounded" id="comentar">
+                                    <!-- <p><b>${res.usuario} : </b>${res.comentarios}</b> -->
                                 </div>
                             </div>
                         </div>
@@ -184,4 +79,4 @@
             </div>
         </div>
     </div>
-@endsection
+</div>

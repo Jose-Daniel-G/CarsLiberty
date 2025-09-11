@@ -29,14 +29,12 @@ class SettingsController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
         $request->validate([
             'nombre' => 'required',
             'email-modal' => 'required|email|unique:users,email|string|max:255',
             'photo-modal' => 'required|image|max:2048',
             'password' => 'required',
             'password-confirm' => 'required|same:password',
-            // 'rol' => 'required'
         ]);
         $user = new User();
 
@@ -55,22 +53,12 @@ class SettingsController extends Controller
             $imagen_id = $user->getKey(); // Obtener el ID del modelo "Post" después de guardarlo en la base de datos
 
             Image::create(['url' => $url, 'imageable_id' => $imagen_id, 'imageable_type' => User::class]);
-            // $nombre =  time() . "_" . $file->getClientOriginalName();
-            // $imagenes = $file->storeAs('public/uploads', $nombre);
-            // $url = Storage::url($imagenes);
-            // File::create(['url' => $url]);
-            // $user->photo = $url;
+ 
         } else {
             $user->save();
         }
         return back()->with('message', 'User Created');
-    }
-    // public function store(StoreContact $request)
-    // {
-    //     $correo = new ContactanosMailable($request->all());
-    //     Mail::to("jose.jdgo97@gmail.com")->send($correo);
-    //     return redirect()->route('contactanos.index')->with('info', 'Mensaje enviado');
-    // }
+    } 
     public function show($id)
     {
     }
