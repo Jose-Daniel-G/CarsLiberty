@@ -1,3 +1,11 @@
+##### MISSING 
+- NEWS: delete, edit
+- COMMENTS: create, edit, delete
+- USERS: create, edit, delete
+- ROLES: Create: admin, writer, reader
+
+##### NEXT STEP: COFFEE GARDEN ALBUM
+users, posts, categories 
 # Software para una Academia Automovilística
 
 Este proyecto es un software para una academia automovilística, diseñado para llevar un registro detallado de las clases de cada alumno. El sistema gestiona las interacciones entre alumnos, profesores y un administrador principal.
@@ -59,22 +67,18 @@ luego dirigirse a esta ruta y editar el siguiente archivo
         ServerName laravel9.test
         DocumentRoot "/xampp/htdocs/www/carsliberty/public"
     </VirtualHost>
-    ```                    # RUTA
     ````
 
-### FILES ROUTE
+###### FILES ROUTE
 -php artisan storage:link
 
-### CLEAN GRABAGE
+###### CLEAN GRABAGE
 
 ```
-php artisan cache:clear
 php artisan config:clear
-php artisan view:clear
 php artisan route:clear
 php artisan view:clear
-php artisan route:clear
-php artisan optimize
+php artisan cache:clear 
 ```
 
 ###### INSTALL LANGUAGE
@@ -92,8 +96,9 @@ php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"
 composer require endroid/qr-code
 ```
 
-###### RECONSTUIR
+###### RECONSTUIR / REBUILD
 ```
+ php artisan optimize
  composer dump-autoload
  composer install --ignore-platform-reqs
  git rm --cached DB_HEBRON.jpg
@@ -114,29 +119,31 @@ npm install jquery
 npm install toastr
 
 ```
-#### EN EL ARCHIO APP.JS PONER
+##### EN EL ARCHIO APP.JS PONER
 
 -   import Swal from 'sweetalert2
 -   import 'jquery-ui/ui/widgets/datepicker'; // El widget de datepicker
 
-#### HABILITAR EXTENCION EN PHP.INI Xampp u otro: 
+###### HABILITAR EXTENCION EN PHP.INI Xampp u otro: 
 - extension=gd
 - extension=zip
+**Aunmetar peso de carga de archivo**
+- upload_max_filesize = 40M
 
-###### NOT IMPLEMENTED ##########################
-#### Notifications
+###### NOT IMPLEMENTED ########################
+###### Notifications
 php artisan notification:table
 php artisan make:notification PostNotification<!-- php artisan make:notification InvoicePaid  --> 
 php artisan make:event PostEvent
 php artisan make:listener PostListener
-## optional it makes faster to send notifications
+#### optional it makes faster to send notifications
 php artisan queue:table
 php artisan queue:work
 
 php artisan migrate --step
 php artisan migrate:rollback --step
 
-## DESEAS TENER PAISES / CIUDADES
+###### DESEAS TENER PAISES / CIUDADES
 composer require nnjeim/world
 php artisan world:install
 php artisan db:seed --class=WorldSeeder
@@ -157,15 +164,25 @@ git log --reverse
 ### profile view
 C:\xampp\htdocs\www\CarsLiberty\resources\views\profile\update-profile-information-form.blade copy.php
 
-![Imagen del juego](images/cars_liberty.png)
+![CarsLiberty Dashboard](images/cars_liberty.png)
+![SrpingfieldNews](images/springfield_admilte.png)
+![Springfield](images/springfield_admilte.png)
 
-## OTHER PROJECTS
+###### OTHER PROJECTS
 php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider"
 
-#### TO IMPLEMENT NOTIFICATIONS ON PROJECT
-```
- php artisan notification:table
- php artisan make:event PostEvent
-```
-### INSTALL CALENDAR
+###### INSTALL CALENDAR
 npm install @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid
+###### USE & INSTALL QUEUE
+- QUEUE_CONNECTION=database
+  
+```
+php artisan queue:table
+php artisan migrate
+php artisan make:job ProcessReport
+php artisan queue:work
+php artisan queue:listen
+php artisan queue:failed
+php artisan queue:retry {id}
+
+```

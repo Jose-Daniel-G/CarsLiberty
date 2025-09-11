@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Config;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,12 +18,13 @@ class ConfigController extends Controller
     }
 
     public function index()
-    {  $config = Config::first(); // Obtén la primera fila de la tabla de configuración
+    {
+        $config = Config::first(); // Obtén la primera fila de la tabla de configuración
         return view('admin.config.index', compact('config'));
     }
     // public function create()  {  return view('admin.config.create'); }
     public function store(Request $request)
-    {// dd($request->all());
+    { // dd($request->all());
         $request->validate([
             'site_name'    => 'required|string',
             'email_contact'    => 'required|email',
@@ -36,15 +38,21 @@ class ConfigController extends Controller
         $config->email_contact = $request->email_contact;
         $config->address = $request->address;
         $config->phone = $request->phone;
+        $config->save();
 
         // Manejo de archivo logo si se ha subido
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('logos', 'public');
-            $config->logo = $logoPath;
-        } else {
-            $config->logo = "logos/HEBRON.png";
+            $file     = $request->file('logo');
+            $nombre = time() . "_" . $file->getClientOriginalName();
+            $ruta = $file->storeAs('logo', $nombre);
+            $url = 'storage/' . $ruta;
+            $config->logo = $url;
+            $config->save();
+
+            $imagen_id = $config->getKey();
+
+            Image::create(['url' => $url, 'imageable_id' => $imagen_id, 'imageable_type' => Config::class]); // $post->image()->create(['url' => $url]);
         }
-        $config->save();
 
         return redirect()->route('admin.config.index')->with(['title', 'Exito', 'info', 'Configuración creada', 'icono', 'success']);
     }
@@ -82,12 +90,16 @@ class ConfigController extends Controller
         return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración actualizada exitosamente']);
     }
 
-    public function destroy(Config $config)// Eliminar el logo si existe
+    public function destroy(Config $config) // Eliminar el logo si existe
     {
-        if (Storage::exists('logos/' . $config->logo)) {
-            Storage::delete('logos/' . $config->logo); }
 
-            $config->delete();  // Eliminar la configuración
+        if ($config->image) {              // Borrar imagen asociada
+            $path = str_replace('storage/', '', $config->image->url);
+            Storage::disk('public')->delete($path);
+            $config->image->delete();
+        }
+
+        $config->delete();  // Eliminar la configuración
 
         return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración eliminada correctamente']);
     }

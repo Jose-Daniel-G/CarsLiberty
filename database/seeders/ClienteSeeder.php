@@ -99,8 +99,16 @@ class ClienteSeeder extends Seeder
             'observaciones' => 'migrana',
             'user_id' => '11',
         ]);
+        
         $cursos = Curso::whereIn('id', [2])->get(); // Obtener los cursos con ID 1 y 2
         $cliente->cursos()->attach($cursos); // Crear las relaciones
+
+        User::create([
+            'name' => 'Espectador',
+            'email' => 'espectador@email.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('123123123'),
+        ])->assignRole('espectador');
         //    //-------------[ USUARIOS ]----------------]
         //         User::create([
         //             'name' => 'Juan David Grijalba Osorio',

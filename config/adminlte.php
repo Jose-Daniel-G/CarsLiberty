@@ -305,21 +305,19 @@ return [
     'menu' => [
 
         [
-            'text' => 'Dashboard',
+            'text'  => 'Dashboard',
             'route' => 'admin.home',
-            'icon' => 'fas fa-home fa-fw ',
+            'icon'  => 'fas fa-home fa-fw ',
         ],
         [
-            'text'        => 'Usuarios',
-            'route'         => 'admin.users.index',
-            'icon' => 'fas fa-fw fa-user',
-            'can'  => 'admin.users.index',
+            'text'  => 'Categorias',
+            'route' => 'categories.index',
+            'icon'  => 'fa-solid fa-layer-group',
         ],
         [
-            'text'        => 'Usuarios (citas)',
-            'route'         => 'admin.usuarios.index',
-            'icon' => 'fas fa-fw fa-user',
-            'can'  => 'admin.users.index',
+            'text'  => 'Posts',
+            'route' => 'posts.index',
+            'icon'  => 'nav-icon fas fa-copy',
         ],
         [
             'text'        => 'Gestión de Asistencias',
@@ -445,7 +443,7 @@ return [
             ],
         ],
         
-        [
+      [
             'text' => 'Configuraciones',
             'icon' => 'bi bi-gear',
             'can'  => 'admin.config.index',
@@ -475,7 +473,7 @@ return [
                 ],
             ],        
             // 'classes' => 'sidebar-footer', // aplica el CSS del footer
-        ],
+        ],  
         
         // ['text'=> 'Agenda','route' => 'admin.users.index','icon' => 'fas fa-envelope',],
         // ['text' => 'information','icon_color' => 'cyan','url' => '#', ],

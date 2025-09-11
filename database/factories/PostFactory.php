@@ -12,10 +12,10 @@ class PostFactory extends Factory
 
     public function definition(): array
     {
-        $name = $this->faker->unique()->sentence();
+        $title = $this->faker->unique()->sentence();
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
+            'title' => $title,
+            'slug' => Str::slug($title),
             'extract' => $this->faker->text(250),
             'body' => $this->faker->text(2000),
             'status' => $this->faker->randomElement([1, 2]),

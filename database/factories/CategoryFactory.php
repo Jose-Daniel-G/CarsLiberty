@@ -11,6 +11,7 @@ class CategoryFactory extends Factory
     {
 
         $name = $this->faker->unique()->word(20);
+        // $name = ['accion','crimen','asaltos','infidelidades'];
 
         return [
             'name' => $name,

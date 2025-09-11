@@ -113,16 +113,6 @@
         });
     });
 </script>
-
-
-    <!-- Buttons JS -->
-
-
-
-
-
-
-
     <script>
         function confirmDelete(id) {
             Swal.fire({

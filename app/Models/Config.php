@@ -9,6 +9,7 @@ class Config extends Model
 {
     use HasFactory;
     protected $fillable = ['site_name', 'address', 'phone', 'email_contact', 'logo'];
+    public function image(){ return $this->morphOne(Image::class, 'imageable');}// Relacion uno a uno Polimorfica
     
     protected static function booted()
     {

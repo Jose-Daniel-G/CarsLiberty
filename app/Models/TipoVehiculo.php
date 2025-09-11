@@ -16,7 +16,5 @@ class TipoVehiculo extends Model
      * Un tipo de vehículo puede tener muchos vehículos.
      * Define la relación uno-a-muchos (one-to-many).
      */
-    public function vehiculos(){
-         return $this->hasMany(Vehiculo::class, 'tipo_id');
-    }
+    public function vehiculos(){ return $this->hasMany(Vehiculo::class, 'tipo_id'); } // Uno a Muchos
 }

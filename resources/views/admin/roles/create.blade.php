@@ -18,8 +18,9 @@
             <div class="bg-white overflow-hidden shadow-sm rounded">
                 <div class="p-3 text-gray-900">
                     <form action="{{ route('admin.roles.store') }}" method="POST">
-                        {{-- @method('POST') --}}
                         @csrf
+                        {{-- @method('POST') --}}
+
                         <label for="name" class="form-label fs-lg fw-medium">Nombre</label>
                         <div class="mb-3">
                             <input value="{{ old('name') }}" type="text" placeholder="Ingresa el nombre" name="name"
