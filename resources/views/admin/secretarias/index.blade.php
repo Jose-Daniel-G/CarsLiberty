@@ -112,9 +112,7 @@
                 extend: 'collection',
                 text: 'Reportes',
                 orientation: 'landscape',
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
-                    'colvis'
-                ], // Botones que aparecen en la imagen
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print','colvis'], // Botones que aparecen en la imagen
             }, ],
             "language": {
                 "decimal": "",
@@ -129,12 +127,7 @@
                 "processing": "",
                 "search": "Buscar:",
                 "zeroRecords": "No se encontraron registros coincidentes",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Último",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                },
+                "paginate": {"first": "Primero","last": "Último","next": "Siguiente","previous": "Anterior"},
                 "aria": {
                     "orderable": "Ordenar por esta columna",
                     "orderableReverse": "Invertir el orden de esta columna"
@@ -186,8 +179,7 @@
                 method: 'GET',
                 success: function(data) {
                     // Cambiar la acción del form
-                    var formAction = "{{ route('admin.secretarias.update', ':id') }}".replace(':id',
-                        data.id);
+                    var formAction = "{{ route('admin.secretarias.update', ':id') }}".replace(':id',data.id);
                     modal.find('#editForm').attr('action', formAction);
 
                     // Llenar los campos

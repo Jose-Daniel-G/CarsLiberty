@@ -101,9 +101,7 @@
                 extend: 'collection',
                 text: 'Reportes',
                 orientation: 'landscape',
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
-                    'colvis'
-                ], // Botones que aparecen en la imagen
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print','colvis'], // Botones que aparecen en la imagen
             }, ],
             "language": {
                 "decimal": "",
@@ -118,28 +116,15 @@
                 "processing": "",
                 "search": "Buscar:",
                 "zeroRecords": "No se encontraron registros coincidentes",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Último",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                },
-                "aria": {
-                    "orderable": "Ordenar por esta columna",
-                    "orderableReverse": "Invertir el orden de esta columna"
-                }
+                "paginate": {"first": "Primero","last": "Último","next": "Siguiente","previous": "Anterior"},
+                "aria": {"orderable": "Ordenar por esta columna","orderableReverse": "Invertir el orden de esta columna"}
             },
             initComplete: function() {
                 // Apply custom styles after initialization
-                $('.dt-button').css({
-                    'background-color': '#4a4a4a',
-                    'color': 'white',
-                    'border': 'none',
-                    'border-radius': '4px',
-                    'padding': '8px 12px',
-                    'margin': '0 5px',
-                    'font-size': '14px'
-                });
+                $('.dt-button').css({'background-color': '#4a4a4a', 
+                                     'color': 'white','border': 'none',
+                                     'border-radius': '4px','padding': '8px 12px',
+                                     'margin': '0 5px','font-size': '14px'});
             },
         });
     </script>
