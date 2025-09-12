@@ -45,10 +45,7 @@ class UserController extends Controller
         $user = User::with('roles')->findOrFail($id);
         $roles = Role::all();
 
-        return response()->json([
-            'user' => $user,
-            'roles' => $roles
-        ]);
+        return response()->json(['user' => $user,'roles' => $roles]);
     }
 
     public function update(Request $request, User $user)
