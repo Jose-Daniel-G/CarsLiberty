@@ -5,10 +5,9 @@ admin      -> /profesor/asistencia | /secretaria/inasistencias | /secretarias | 
 admin      -> /profesor/asistencia | /secretaria/inasistencias | /secretarias | /clientes | /cursos | /profesores | /horarios | /config |
 espectador -> /posts | /categories
 
-no esta actualizando permisos de los roles
 
 Problema:
-Al agendar un curso con un profesor en un daa en el que no esta disponible o ya tiene otro curso asignado, el sistema muestra el registro como exitoso, lo cual es incorrecto. Debe corregirse.
+Al agendar un curso con un profesor en un dia en el que no esta disponible o ya tiene otro curso asignado, el sistema muestra el registro como exitoso, lo cual es incorrecto. Debe corregirse.
 
 Ademas, no se esta validando si la agenda se cruza con otra existente, y aun asi se muestra como exitoso. Debe corregirse.
 

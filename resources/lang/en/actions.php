@@ -1,11 +1,14 @@
 <?php
 
 return [
-    'Inicio' => 'Home',
-    'Acerca de' => 'About',
-    'Características' => 'Features',
-    'Habilidades' => 'Skills',
-    'Equipo' => 'Team',
-    'Descargar' => 'Download',
-    'Contacto' => 'Contact',
+    'home'   => 'Inicio',
+    'about'  => 'Acerca',
+    'login'  => 'Iniciar sesión',
+    'features' => 'características',
+    'skills' => 'habilidades',
+    'team' => 'rquipo',
+    'download' => 'descargar',
+    'contact' => 'contacto',
+    'newsletter' => 'BOLETÍN INFORMATIVO',
+    'schedules' => 'Horarios',
 ];

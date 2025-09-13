@@ -32,7 +32,7 @@
 	<div class="header">
 
 		<!-- Navbar -->
-		<nav class="navbar navbar-default">
+		<nav class="navbar navbar-default navbar-fixed">
 			<div class="container-fluid">
 
 				<div class="navbar-header">
@@ -47,14 +47,14 @@
 
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<li class="hover-effect"><a href="#">{{ __('Home') }}</a></li>
-						<li class="hover-effect"><a href="#about">{{ __('about') }}</a></li>
+						<li class="hover-effect"><a href="#">{{ __('actions.home') }}</a></li>
+						<li class="hover-effect"><a href="#about">{{ __('actions.about') }}</a></li>
 						{{-- <li class="hover-effect"><a href="#features">{{ __('Features') }}</a></li>
 						<li class="hover-effect"><a href="#skills">{{ __('Skills') }}</a></li>
 						<li class="hover-effect"><a href="#team">{{ __('Team') }}</a></li>
 						<li class="hover-effect"><a href="#download">{{ __('Download') }}</a></li> 
 						<li class="hover-effect"><a href="#contact">{{ __('Contact') }}</a></li>--}}
-						<li class="hover-effect"><a href="{{ url("login")}}">Inciar sesion</a></li>
+						<li class="hover-effect"><a href="{{ url("login")}}">{{ __('actions.login') }}</a></li>
 					</ul>
 				</div>
 
@@ -63,14 +63,14 @@
 		<!-- //Navbar -->
 
 		<!-- Slider -->
-	@include('template.slider')
+	 	@include('template.slider')
 		<!-- //Slider -->
 
 	</div>
 	<!-- //Header -->
 
 	<!-- About -->
-	@include('template.about')
+	 	@include('template.about')
 	<!-- //About -->
 
 	<!-- Features -->
@@ -105,7 +105,7 @@
 
 	<!-- Map-iFrame -->
 	<div class="map">
-		<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22702.22744502486!2d11.113366067229226!3d44.662878362361056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477fc3eca9065c15%3A0x12ec8a03aadae866!2s40019+Sant&#39;Agata+Bolognese+BO%2C+Italy!5e0!3m2!1sen!2sin!4v1451281303075" allowfullscreen></iframe>
+	<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3982.7311611414207!2d-76.55994502373747!3d3.415556487686575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30a41b5db4bd23%3A0x95a1a161104c94c6!2sCl.%201%20Oe.%20%2352-112%2C%20Belisario%20Caicedo%2C%20Cali%2C%20Valle%20del%20Cauca!5e0!3m2!1sen!2sco!4v1757708874529!5m2!1sen!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 	</div>
 	<!-- //Map-iFrame -->
 
@@ -114,7 +114,7 @@
 	<!-- //Contact -->
 
 	<!-- Footer -->
- 	@include('template.footer')
+ 		@include('template.footer')
 	<!-- //Footer -->
 
 	<!-- Custom-JavaScript-File-Links -->

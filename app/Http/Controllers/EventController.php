@@ -79,7 +79,7 @@ class EventController extends Controller
         if ($horarios->isEmpty()) {                                         // Si no hay horarios disponibles, retornar mensaje de error
             return redirect()->back()->with([
                 'icono' => 'error','title' => 'Oh!.',
-                'info' => 'El profesor no está disponible en ese horario.',
+                'danger' => 'El profesor no está disponible en ese horario.',
             ]);
         }
 
@@ -90,7 +90,7 @@ class EventController extends Controller
             })->exists();
 
         if ($eventos_duplicados) {
-            return redirect()->back()->with(['info' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.', 'icono' => 'error', 'title' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',]);
+            return redirect()->back()->with(['danger' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.', 'icono' => 'error', 'title' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',]);
         }
 
         $curso = Curso::find($cursoid);
@@ -119,7 +119,7 @@ class EventController extends Controller
         ]);
         
         return redirect()->back()->with([               // Redirigir con un mensaje de éxito
-            'info' => 'Recuerda que no puedes faltar a tu clase, si faltas a las clases sin justificación se cobran 20 mil pesos por hora no vista.',
+            'swal'=>'1','info' => 'Recuerda que no puedes faltar a tu clase, si faltas a las clases sin justificación se cobran 20 mil pesos por hora no vista.',
             'icono' => 'success','title' => 'Se ha agendado de forma correcta.',
         ]);
     }

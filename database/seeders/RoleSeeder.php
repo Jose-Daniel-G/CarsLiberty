@@ -76,7 +76,14 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.horarios.store'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.horarios.show'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.horarios.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
-
+        // rutas para EVENTOS
+        Permission::create(['name' => 'admin.events.index'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.events.create'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.events.store'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.events.show'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.events.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.events.update'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.events.destroy'])->syncRoles([$superAdmin, $admin, $secretaria]);
         // //rutas para el admin VEHICULOS
         Permission::create(['name' => 'admin.vehiculos.index'])->syncRoles([$superAdmin]);
         Permission::create(['name' => 'admin.vehiculos.create'])->syncRoles([$superAdmin]);
@@ -91,15 +98,14 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'show_datos_cursos'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
         Permission::create(['name' => 'admin.horarios.show_reserva_profesores'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.show_reservas'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
-        Permission::create(['name' => 'admin.events'])->syncRoles([$superAdmin, $admin, $secretaria]);
-        Permission::create(['name' => 'admin.listUsers'])->syncRoles([$superAdmin, $admin, $secretaria]); 
+
+        Permission::create(['name' => 'admin.listUsers'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.reservas.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
         //rutas para el admin - asistencias
         Permission::create(['name' => 'admin.asistencias.index'])->syncRoles([$superAdmin, $admin, $secretaria, $profesor]);
         Permission::create(['name' => 'admin.asistencias.inasistencias'])->syncRoles([$superAdmin, $admin, $secretaria]);
-        Permission::create(['name' => 'admin.event_delete'])->syncRoles([$superAdmin, $admin, $secretaria]);
         //rutas para el admin - horarios
-        Permission::create(['name' => 'admin.horarios'])->syncRoles([$superAdmin, $admin, $secretaria]); 
+        Permission::create(['name' => 'admin.horarios'])->syncRoles([$superAdmin, $admin, $secretaria]);
         // $superAdmin->givePermissionTo(Permission::all());
         //----------------------------------------------------------------------------------------
         //PERMISSIONS ROUTES

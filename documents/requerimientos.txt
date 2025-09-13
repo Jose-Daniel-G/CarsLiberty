@@ -28,3 +28,20 @@ EVITAR QUE AGENDE UNA CLASE DE OTRO CURSO SI YA ESTA REALIZANDO uno
 EVITAR ABRIR MODAL PARA AGENDAR SI AUN NO VE CLASE AGENDADA
 
 ConfigServiceProvider ---> configuracion de diseño del login
+__________________________________________________________________________________________
+
+Gestión de usuarios con roles (Spatie) → Admin, profesores, secretarias, clientes (alumnos).
+
+Cursos de automovilismo (antes consultorios).
+
+Profesores y asignación de vehículos.
+
+Vehículos y pico y placa.
+
+Agenda/Eventos (reservas de clases).
+
+Autenticación con Jetstream y personalización de login/empresa.
+
+Módulo de configuración de empresa (logo, datos de contacto, etc.).
+
+Posiblemente reportes/dashboards.

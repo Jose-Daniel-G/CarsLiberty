@@ -268,7 +268,7 @@ return [
     'dashboard_url' => 'admin.index',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => false,//'register',
+    'register_url' => false, //'register',
     'password_reset_url' => 'forgot-password',
     'password_email_url' => 'password.email',
     // 'password_reset_url' => 'forgot-password',
@@ -310,16 +310,6 @@ return [
             'icon'  => 'fas fa-home fa-fw ',
         ],
         [
-            'text'  => 'Categorias',
-            'route' => 'categories.index',
-            'icon'  => 'fa-solid fa-layer-group',
-        ],
-        [
-            'text'  => 'Posts',
-            'route' => 'posts.index',
-            'icon'  => 'nav-icon fas fa-copy',
-        ],
-        [
             'text'        => 'Gestión de Asistencias',
             'icon' => 'fas fa-fw fa-user',
             'label' => 'waiting',
@@ -350,7 +340,7 @@ return [
         ['header' => 'ADMINISTRADOR', 'can' => 'admin.secretarias.index',],
         [
             'text' => 'Programador',
-            'icon' => 'fas fa-laptop', 
+            'icon' => 'fas fa-laptop',
             // 'label_color' => 'warning',
             'can' => 'admin.secretarias.index',
             'submenu' => [
@@ -365,7 +355,7 @@ return [
         ],
         [
             'text' => 'Clientes',
-            'icon' => 'fas fa-users mr-2', 
+            'icon' => 'fas fa-users mr-2',
             'can' => 'admin.clientes.index',
             'submenu' => [
                 // ['text' => 'Creacion de clientes','icon'=> 'far fa-circle nav-icon','route' => 'admin.clientes.create',],
@@ -395,7 +385,7 @@ return [
         ],
         [
             'text' => 'Profesores',
-            'icon' => 'ion fas bi bi-person-lines-fill', 
+            'icon' => 'ion fas bi bi-person-lines-fill',
             'can' => 'admin.profesores.index',
             'submenu' => [
                 // ['text' => 'Creacion de profesores','icon' => 'far fa-circle nav-icon','route' => 'admin.profesores.create', ],
@@ -409,7 +399,7 @@ return [
         ],
         [
             'text' => 'Horarios',
-            'icon' => 'fas fa-calendar-alt', 
+            'icon' => 'fas fa-calendar-alt',
             'can' => 'admin.horarios.index',
             'submenu' => [
                 [
@@ -427,7 +417,7 @@ return [
         ],
         [
             'text' => 'Vehiculos',
-            'icon' => 'bi bi-car-front', 
+            'icon' => 'bi bi-car-front',
             'can'  => 'admin.vehiculos.index',
             'submenu' => [
                 [
@@ -437,13 +427,12 @@ return [
                 ],
                 [
                     'text' => 'Picoyplaca',
-                    'icon'        => 'far fa-circle nav-icon', 
+                    'icon'        => 'far fa-circle nav-icon',
                     'route' => 'admin.picoyplaca.index',
                 ],
             ],
         ],
-        
-      [
+        [
             'text' => 'Configuraciones',
             'icon' => 'bi bi-gear',
             'can'  => 'admin.config.index',
@@ -465,16 +454,32 @@ return [
                     'route'         => 'admin.roles.index',
                     'icon' => 'fa-solid fa-address-book',
                     'permissions'  => 'admin.roles.index',
-                ],          
+                ],
                 [
                     'text' => 'Configuracion',
                     'icon' => 'fa-solid fa-gears',
                     'route' => 'admin.config.index',
                 ],
-            ],        
-            // 'classes' => 'sidebar-footer', // aplica el CSS del footer
-        ],  
-        
+            ],
+
+        ],
+            [
+                'text' => 'News-post',
+                'icon' => 'fa-regular fa-circle-question',
+                'can'  => 'admin.config.index',
+                'submenu' => [
+                    [
+                        'text'  => 'Categorias',
+                        'route' => 'categories.index',
+                        'icon'  => 'fa-solid fa-layer-group',
+                    ],
+                    [
+                        'text'  => 'Posts',
+                        'route' => 'posts.index',
+                        'icon'  => 'nav-icon fas fa-copy',
+                    ],
+                ],
+            ]
         // ['text'=> 'Agenda','route' => 'admin.users.index','icon' => 'fas fa-envelope',],
         // ['text' => 'information','icon_color' => 'cyan','url' => '#', ],
     ],

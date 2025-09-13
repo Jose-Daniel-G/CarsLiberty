@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="card-body">
-                    @if ($info = Session::get('info'))
+                    @if (session('info') && session('icono'))
                         <div class="alert alert-success"><strong>{{ $info }}</strong></div>
                     @endif
                     <table id="reservas" class="table table-striped table-bordered table-hover table-sm">
@@ -30,7 +30,7 @@
                                 <th>Hora de inicio</th>
                                 <th>Hora de fin</th>
                                 {{-- <th>Fecha y hora de registro</th> --}}
-                                @can('admin.event_delete')
+                                @can('admin.events.destroy')
                                     <th>Acciones</th>
                                 @endcan
 
@@ -55,7 +55,7 @@
                                         {{ \Carbon\Carbon::parse($evento->end)->format('H:i') }}</td>
                                     {{-- <td scope="row" class="text-center">{{ $evento->created_at }}</td> --}}
                                     {{-- <td scope="row" class="text-center">{{ $evento->id }}</td> --}}
-                                    @can('admin.event_delete')
+                                    @can('admin.events.destroy')
                                         <td scope="row">
                                             {{-- <a href=""  class="btn btn-info btn-sm">Ver</a> --}}
                                             <div class="btn-group" role="group" aria-label="basic example">
@@ -83,17 +83,7 @@
 @stop
 
 @section('js')
-    
-    
-    
 
-    <!-- Buttons JS -->
-    
-    
-    
-    
-    
-    
     <script>
         function confirmDelete(id) {
             Swal.fire({
@@ -145,12 +135,6 @@
             }
 
         });
-        @if (session('info') && session('icono'))
-            Swal.fire({
-                title: "{{ session('title') }}!",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
-        @endif
+
     </script>
 @stop

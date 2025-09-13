@@ -87,6 +87,16 @@ a:focus, a:hover {
 	padding: 10px 0;
 }
 
+.navbar-fixed {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    background-color: rgba(0, 0, 0, 0.9); /* un poco más oscuro */
+    padding: 15px 0;
+}
+
 a.navbar-brand {
 	font-family: 'Racing Sans One', cursive;
 	font-size: 50px;

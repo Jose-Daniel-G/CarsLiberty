@@ -58,6 +58,7 @@
     {{-- @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
         <script></script>
         @endif --}}
+        {{-- JDGO SWEETALERT TOASTR --}}
     @if (session('swal') && session('info') && session('icono'))
         <script>
             Swal.fire({
@@ -70,6 +71,10 @@
     @if (session('info'))
         <script>
             toastr.success('{{ session('info') }}');
+        </script>
+    @elseif (session('danger'))
+            <script>
+            toastr.error('{{ session('danger') }}');
         </script>
     @endif
 

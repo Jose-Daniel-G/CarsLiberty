@@ -154,6 +154,5 @@ class ProfesorController extends Controller
     {  $user = User::findOrFail($id);
         $user->status = !$user->status;
         $user->save();
-        return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
     }
 }

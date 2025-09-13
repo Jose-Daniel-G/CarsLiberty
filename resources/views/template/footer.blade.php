@@ -5,11 +5,11 @@
 				<div class="col-md-4 col-sm-4 footer-info-grid links">
 					<h4>QUICK LINKS</h4>
 					<ul>
-						<li><a href="#about">About</a></li>
-						<li><a href="#features">Features</a></li>
-						<li><a href="#skills">Skills</a></li>
-						<li><a href="#team">Team</a></li>
-						<li><a href="#">Home</a></li>
+						<li><a href="#about">{{ __('actions.about')}}</a></li>
+						<li><a href="#features">{{ __('actions.features')}}</a></li>
+						<li><a href="#skills">{{ __('actions.skills')}}</a></li>
+						<li><a href="#team">{{ __('actions.team')}}</a></li>
+						<li><a href="#">{{ __('actions.home')}}</a></li>
 					</ul>
 				</div>
 				<div class="col-md-4 col-sm-4 footer-info-grid address">
@@ -17,16 +17,16 @@
 					<address>
 						<ul>
 							<li>Parma Via Modena</li>
-							<li>40019 Sant'Agata Bolognese</li>
-							<li>BO, Italy</li>
+							<li>Cl. 1 Oe. #52-112</li>
+							<li>Cali -Colombia</li>
 							<li>Telephone : +1 (734) 123-4567</li>
 							<li>Email : <a class="mail" href="mailto:mail@example.com">info(at)example.com</a></li>
 						</ul>
 					</address>
 				</div>
 				<div class="col-md-4 col-sm-4 footer-info-grid email">
-					<h4>NEWSLETTER</h4>
-					<p>Subscribe to our newsletter and we will inform you about newest projects and promotions.
+					<h4>{{__('actions.newsletter')}}</h4>
+					<p>Suscríbete a nuestra newsletter y te informaremos de nuestros nuevos proyectos y promociones.
 					</p>
 
 					<form class="newsletter">
@@ -39,7 +39,7 @@
 
 			<div class="connect">
 				<div class="connect-social">
-					<h4>CONNECT</h4>
+					<h4>CONECTAR</h4>
 					<ul>
 						<li><a href="#" class="facebook" title="Go to Our Facebook Page"></a></li>
 						<li><a href="#" class="twitter" title="Go to Our Twitter Account"></a></li>
