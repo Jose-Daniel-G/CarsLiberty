@@ -87,6 +87,20 @@
 
 @section('js')
     <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Estás seguro de que deseas eliminar este rol?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) { document.getElementById('delete-form-' + id).submit();  }
+            });
+        }
         new DataTable('#roles', {
             responsive: true,
             autoWidth: true,
@@ -144,8 +158,8 @@
                         var html = `
                     <div class="col">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="permissions[]"
-                                value="${permission.id}" id="permission_${permission.id}" ${checked}>
+                            <input type="checkbox" class="form-check-input" name="permission[]"
+                                value="${permission.name}" id="permission_${permission.id}" ${checked}>
                             <label class="form-check-label" for="permission_${permission.id}">
                                 ${permission.name}
                             </label>

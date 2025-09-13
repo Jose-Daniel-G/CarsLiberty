@@ -22,7 +22,7 @@
                 @endif
 
 
-                        <form action="{{ route('admin.roles.update', $role->id) }}" method="POST">
+                        <form id="editForm" method="POST">
                             @csrf
                             @method('PUT')
 

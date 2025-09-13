@@ -109,10 +109,7 @@
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
-                }
+                if (result.isConfirmed) { document.getElementById('delete-form-' + id).submit();  }
             });
         }
         new DataTable('#permissions', {

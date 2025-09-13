@@ -63,6 +63,8 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
+                // dd($request->all());
+
         $validator = Validator::make(
             $request->all(),
             ['name' => 'required|unique:roles,name,' . $id . ',id']
