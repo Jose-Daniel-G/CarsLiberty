@@ -86,20 +86,17 @@
                 $imagenPrevisualizacion = document.querySelector("#img_preview");
 
             // Escuchar cuando cambie
-            $seleccionArchivos.addEventListener("change", () => {
-                // Los archivos seleccionados, pueden ser muchos o uno
-                const archivos = $seleccionArchivos.files;
-                // Si no hay archivos salimos de la función y quitamos la imagen
-                if (!archivos || !archivos.length) {
+            $seleccionArchivos.addEventListener("change", () => { 
+                const archivos = $seleccionArchivos.files;// Los archivos seleccionados, pueden ser muchos o uno
+                
+                if (!archivos || !archivos.length) {      // Si no hay archivos salimos de la función y quitamos la imagen
                     $imagenPrevisualizacion.src = "";
                     return;
                 }
-                // Ahora tomamos el primer archivo, el cual vamos a previsualizar
-                const primerArchivo = archivos[0];
-                // Lo convertimos a un objeto de tipo objectURL
-                const objectURL = URL.createObjectURL(primerArchivo);
-                // Y a la fuente de la imagen le ponemos el objectURL
-                $imagenPrevisualizacion.src = objectURL;
+               
+                const primerArchivo = archivos[0];        // Ahora tomamos el primer archivo, el cual vamos a previsualizar
+                const objectURL = URL.createObjectURL(primerArchivo); // Lo convertimos a un objeto de tipo objectURL
+                $imagenPrevisualizacion.src = objectURL;   // Y a la fuente de la imagen le ponemos el objectURL
             });
         }
     </script>
@@ -116,15 +113,14 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
+                    document.getElementById('delete-form-' + id).submit();// Si el usuario confirma, se envía el formulario.
                 }
             });
         }
         new DataTable('#posts', {
-            responsive: true,
-            autoWidth: false, //no le vi la funcionalidad
-            dom: 'Bfrtip', // Añade el contenedor de botones
+            responsive: true,scrollX: true,
+            autoWidth: false,  
+            dom: 'Bfrtip',                                              // Añade el contenedor de botones
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
             "language": {
                 "decimal": "",
@@ -151,13 +147,6 @@
                 }
             }
 
-        });
-        @if (session('info') && session('icono'))
-            Swal.fire({
-                title: "{{ session('title') }}!",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
-        @endif
+        }); 
     </script>
 @stop

@@ -111,8 +111,7 @@
             var url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}";
             url = url.replace(':id', profesor_id);
 
-            // console.log("Profesor ID:", profesor_id);
-            // console.log("URL generada:", url);
+            // console.log("Profesor ID:", profesor_id);  console.log("URL generada:", url);
 
             if (profesor_id) {
                 $.ajax({

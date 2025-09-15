@@ -36,9 +36,8 @@
 
                             <div class="form-group text-center">
                                 <!-- Foto de Perfil Actual -->
-                                <img id="current-photo" src="{{ asset('storage/' . $user->profile_photo_path) }}"
-                                    alt="{{ $user->name }}" class="profile-user-img img-fluid img-circle"
-                                    style="width: 100px; height: 100px; object-fit: cover" />
+                            <img id="current-photo" src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" onerror="this.onerror=null; this.src='{{ $user->adminlte_image() }}';" alt="{{ $user->name }}" class="profile-user-img img-fluid img-circle" style="width: 100px; height: 100px; object-fit: cover;" />
+
 
                             </div>
                             <div class="form-group">

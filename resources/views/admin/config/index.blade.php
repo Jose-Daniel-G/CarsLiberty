@@ -3,12 +3,24 @@
 @section('title', 'Dashboard')
 @section('css')
     <style>
-        .image-wrapper {position: relative;padding-bottom: 56.25%;}
+        .image-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+        }
 
-        .image-wrapper img {position: absolute;object-fit: cover;width: 95%;height: 80%;}
+        .image-wrapper img {
+            position: absolute;
+            object-fit: cover;
+            width: 95%;
+            height: 80%;
+        }
 
-        .image-wrapper img:hover {box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5); transform: scale(1.05);}/* Sombra más oscura al pasar el cursor / Efecto de zoom al hacer hover */
+        .image-wrapper img:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+            transform: scale(1.05);
+        }
 
+        /* Sombra más oscura al pasar el cursor / Efecto de zoom al hacer hover */
     </style>
 @stop
 @section('content_header')
@@ -107,7 +119,8 @@
         }
         new DataTable('#configuraciones', {
             responsive: true,
-            autoWidth: false, //no le vi la funcionalidad
+            scrollX: true,
+            autoWidth: false, 
             dom: 'Bfrtip', // Añade el contenedor de botones
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
             "language": {
@@ -139,7 +152,8 @@
                 text: 'Reportes',
                 orientation: 'landscape',
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
-                'colvis'], // Botones que aparecen en la imagen
+                    'colvis'
+                ], // Botones que aparecen en la imagen
             }, ],
             initComplete: function() {
                 $('.dt-button').css({ // Apply custom styles after initialization

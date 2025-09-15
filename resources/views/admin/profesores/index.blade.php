@@ -2,14 +2,12 @@
 
 @section('title', 'Dashboard')
 @section('css')
-    <!-- DataTables core CSS --> <!-- DataTables Buttons extension CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css"> --}}
-    {{-- Add here extra stylesheets --}}
-    {{-- NOTA: DESEO TOMAR ESTOS ESTILOS PARA LOS BOTONES DE LA TABLA, MAS NO HE PODIDO --}}
-    {{-- <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}"> --}}
+{{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css">
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script> --}}
 @stop
 @section('content_header')
     <h1>Listado de profesores</h1>
@@ -122,66 +120,44 @@
                 }
             });
         }
-        new DataTable('#profesores', {
-            "language": {
-                "decimal": "",
-                "emptyTable": "No hay datos disponibles en la tabla",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ profesores",
-                "infoEmpty": "Mostrando 0 a 0 de 0 profesores",
-                "infoFiltered": "(filtrado de _MAX_ profesores totales)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Mostrar _MENU_ profesores",
-                "loadingRecords": "Cargando...",
-                "processing": "",
-                "search": "Buscar:",
-                "zeroRecords": "No se encontraron registros coincidentes",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Último",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                },
-                "aria": {
-                    "orderable": "Ordenar por esta columna",
-                    "orderableReverse": "Invertir el orden de esta columna"
-                }
-            },
-            initComplete: function() {
-                // Apply custom styles after initialization
-                $('.dt-button').css({
-                    'background-color': '#4a4a4a',
-                    'color': 'white',
-                    'border': 'none',
-                    'border-radius': '4px',
-                    'padding': '8px 12px',
-                    'margin': '0 5px',
-                    'font-size': '14px'
-                });
-            },
-            responsive: true,
-            autoWidth: false, //no le vi la funcionalidad
-            dom: 'Bfrtip', // Añade el contenedor de botones
-            buttons: [{
-                extend: 'collection',
-                text: 'Reportes',
-                orientation: 'landscape',
-                buttons: [{
-                    text: 'Copiar',
-                    extend: 'copy'
-                }, {
-                    extend: 'pdf'
-                }, {
-                    extend: 'csv'
-                }, {
-                    extend: 'excel'
-                }, {
-                    text: 'Imprimir',
-                    extend: 'print'
-                }]
-            }, ],
+        $(document).ready(function() {
 
+            // Destruir solo si ya existe la instancia jQuery DataTable
+            if ($.fn.DataTable.isDataTable('#profesores')) {
+                $('#profesores').DataTable().clear().destroy();
+            }
+
+            // Inicialización segura
+            $('#profesores').DataTable({
+                responsive: true,
+                scrollX: true,
+                autoWidth: false,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'collection',
+                        text: 'Reportes',
+                        className: 'btn btn-primary', // Aplica clase Bootstrap
+                        buttons: [
+                            { text: 'Copiar', extend: 'copy', className: 'btn btn-secondary' },
+                            { extend: 'pdf', className: 'btn btn-danger' },
+                            { extend: 'csv', className: 'btn btn-success' },
+                            { extend: 'excel', className: 'btn btn-info' },
+                            { text: 'Imprimir', extend: 'print', className: 'btn btn-warning' }
+                        ]
+                    }
+                ],
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay datos disponibles en la tabla",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ profesores",
+                    lengthMenu: "Mostrar _MENU_ profesores",
+                    search: "Buscar:",
+                    paginate: { "first": "Primero","last": "Último","next": "Siguiente","previous": "Anterior" }
+                }
+            });
         });
+
         @if (session('info') && session('icono'))
             Swal.fire({
                 title: "{{ session('info') }}",

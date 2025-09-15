@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     // public function __construct()
-    // {
-    //     $this->middleware('can:admin.user.index')->only('index');
+    // {   $this->middleware('can:admin.user.index')->only('index');
     //     $this->middleware('can:admin.user.edit')->only('edit', 'update');
     // }
     public function index()
@@ -39,7 +38,7 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('info', 'Se registro al usuario de forma correcta')->with('icono', 'success');
     }
-    // public function show($id)  {  }
+    // public function show($id) {}
     public function edit($id)
     {
         $user = User::with('roles')->findOrFail($id);
@@ -56,9 +55,7 @@ class UserController extends Controller
 
     public function toggleStatus($id) //DEACTIVATE
     {
-        $user = User::findOrFail($id);
-        $user->status = !$user->status;
-        $user->save();
+        $user = User::findOrFail($id); $user->status = !$user->status;  $user->save();
         return redirect()->back()->with('success', 'Estado del usuario actualizado.');
     }
 }

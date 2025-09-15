@@ -28,8 +28,7 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>Nro</th>
-                                <th>Profesor</th>
-                                {{-- <th>Especialidad</th> --}}
+                                <th>Profesor</th> 
                                 <th>Curso</th>
                                 <th>Dia de atencion</th>
                                 <th>Hora Inicio</th>
@@ -42,8 +41,7 @@
                             @foreach ($horarios as $horario)
                                 <tr>
                                     <td scope="row">{{ $contador++ }}</td>
-                                    <td scope="row">{{ $horario->profesores->first()->nombres ?? '' }}</td>
-                                    {{-- <td scope="row">{{ $horario->profesor->especialidad }}</td> --}}
+                                    <td scope="row">{{ $horario->profesores->first()->nombres ?? '' }}</td> 
                                     <td scope="row">{{ $horario->cursos->pluck('nombre')->join(', ') }}</td>
 
                                     <td scope="row">{{ $horario->dia }}</td>
@@ -166,7 +164,8 @@
     <script>
         new DataTable('#horarios', {
             responsive: true,
-            autoWidth: false, //no le vi la funcionalidad
+            autoWidth: false,
+            scrollX: true,
             dom: 'Bfrtip', // Añade el contenedor de botones
             "language": {
                 "decimal": "",

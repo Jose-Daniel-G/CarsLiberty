@@ -113,8 +113,8 @@
             });
         }
         new DataTable('#permissions', {
-            responsive: true,
-            autoWidth: true,
+            responsive: true,scrollX: true,
+            autoWidth: false,
             dom: 'Bfrtip', // Añade el contenedor de botones
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
             "language": {

@@ -3,7 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    {{-- <h2>Marcar Asistencia</h2> --}}
     <h2>Asistencia a Clase de Conducción</h2>
 @endsection
 
@@ -57,19 +56,9 @@
 @endsection
 
 @section('css')
-    <!-- Aquí puedes agregar estilos adicionales si lo deseas -->
 @endsection
 
-@section('js')
-    @if (session('info') && session('icono') && session('title'))
-        <script>
-            Swal.fire({
-                title: "{{ session('title') }}",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
-        </script>
-    @endif
+@section('js') 
     {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
 
