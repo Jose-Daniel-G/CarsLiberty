@@ -197,6 +197,7 @@ npm run build
 #### DOCKER
 docker-compose exec laravel_app php artisan migrate --seed 
 docker-compose exec laravel_app composer install
+docker-compose exec laravel_app composer require fakerphp/faker --dev
 docker-compose up -d --build
 
 docker-compose exec laravel_app bash
