@@ -187,3 +187,28 @@ php artisan queue:failed
 php artisan queue:retry {id}
 
 ```
+#### PRODUCTION 
+- Before to upload, edit the .env data and after uploading into server
+```
+composer install --optimize-autoloader --no-dev
+npm run build
+
+```
+#### DOCKER
+docker-compose exec laravel_app php artisan migrate --seed 
+docker-compose exec laravel_app composer install
+docker-compose up -d --build
+
+docker-compose exec laravel_app bash
+php artisan serve --host=127.0.0.1 --port=8000
+
+
+bash
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+cmd
+docker-compose exec laravel_app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+docker-compose exec laravel_app chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+docker build -t miapp-php .
+docker build -t miapp-php -f Dockerfile.php .
