@@ -110,10 +110,10 @@ composer require jeroennoten/laravel-adminlte
 php artisan adminlte:install
 php artisan vendor:publish --provider="JeroenNoten\LaravelAdminLte\AdminLteServiceProvider" --tag=views
 php artisan adminlte:install --only=main_views
-php artisan adminlte:plugins
 php artisan adminlte:plugins install --plugin=sweetalert2
 php artisan adminlte:plugins install --plugin=fullcalendar
 php artisan adminlte:plugins install --plugin=datatables
+php artisan adminlte:plugins
 npm install jquery-ui
 npm install jquery
 npm install toastr

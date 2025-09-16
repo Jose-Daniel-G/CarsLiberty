@@ -55,27 +55,13 @@
 
 @section('adminlte_js')
     @stack('js') @yield('js')
-    {{-- @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
-        <script></script>
-        @endif --}}
-        {{-- JDGO SWEETALERT TOASTR --}}
-    @if (session('swal') && session('info') && session('icono'))
+    @if (session('swal') && session('info'))  <!-- SWEET ALERT MESSAGE -->
         <script>
-            Swal.fire({
-                title: "{{ session('title') }}",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
+            Swal.fire({title: "{{ session('title') }}",text: "{{ session('info') }}",icon: "{{ session('icono') }}"});
         </script>
     @endif
-    @if (session('info'))
-        <script>
-            toastr.success('{{ session('info') }}');
-        </script>
-    @elseif (session('danger'))
-            <script>
-            toastr.error('{{ session('danger') }}');
-        </script>
-    @endif
-
+    @if (session('info'))  <!-- TOAST ALERT MESSAGE -->
+        <script>toastr.success('{{ session('info') }}');</script> 
+    @endif 
+    {{-- @if (($message = Session::get('message')) && ($icon = Session::get('icon')))  <script></script> @endif --}}
 @stop

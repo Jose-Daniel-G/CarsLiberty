@@ -14,6 +14,7 @@ class PicoyPlacaController extends Controller
     public function index()
     {
         $picoyplaca = PicoyPlaca::all()->groupBy('dia');
+        // dd($picoyplaca);
         return view('admin.picoyplaca.index', compact('picoyplaca'));
     }
 

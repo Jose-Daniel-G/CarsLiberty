@@ -58,7 +58,7 @@
 @section('css')
 @endsection
 
-@section('js') 
+@section('js')  
     {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
 

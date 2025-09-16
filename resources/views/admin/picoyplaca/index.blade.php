@@ -63,7 +63,7 @@
             new DataTable('#pico-placa', {
                 responsive: true,
                 autoWidth: false,
-                scrollX: true,
+                scrollX: true,ordering: false // 👈 agrega esto
             });
     </script>
 @stop

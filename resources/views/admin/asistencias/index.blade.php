@@ -17,7 +17,7 @@
                     <form id="asistenciaForm" action="{{ route('admin.asistencias.store') }}" method="POST">
                         @csrf
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table id="asistencias" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Cliente</th>
@@ -33,13 +33,13 @@
                                             <td>{{ $event->title }}</td>
                                             <td>{{ $event->start }}</td>
                                             <td>
-                                                <input type="hidden" name="eventos[{{ $event->id }}][cliente_id]" 
-                                                       value="{{ $event->cliente->id }}">
-                                                       <input type="checkbox" name="eventos[{{ $event->id }}][asistio]" 
-                                                       value="1" 
-                                                       {{ !empty($asistencias[$event->id . '-' . $event->cliente->id]) && 
-                                                          $asistencias[$event->id . '-' . $event->cliente->id]->asistio ? 'checked' : '' }} 
-                                                       onchange="actualizarAsistencia({{ $event->id }}, {{ $event->cliente->id }}, this.checked)">
+                                        <input type="hidden" name="eventos[{{ $event->id }}][cliente_id]" 
+                                                value="{{ $event->cliente->id }}">
+                                                <input type="checkbox" name="eventos[{{ $event->id }}][asistio]" 
+                                                value="1" 
+                                                {{ !empty($asistencias[$event->id . '-' . $event->cliente->id]) && 
+                                                    $asistencias[$event->id . '-' . $event->cliente->id]->asistio ? 'checked' : '' }} 
+                                                onchange="actualizarAsistencia({{ $event->id }}, {{ $event->cliente->id }}, this.checked)">
                                             </td>
                                         </tr>
                                     @endforeach
@@ -54,21 +54,22 @@
 @endsection
 
 @section('js')
+    <script> 
+            new DataTable('#asistencias', {
+                responsive: true,
+                autoWidth: false,scrollX:true,
+                scrollX: true,
+            });
+    </script>
     <script>
         function actualizarAsistencia(eventoId, clienteId, asistio) {
-            // Crear un objeto con los datos a enviar
-            const data = {
+
+            const data = {                                              // Crear un objeto con los datos a enviar
                 _token: '{{ csrf_token() }}',
-                eventos: {
-                    [eventoId]: {
-                        cliente_id: clienteId,
-                        asistio: asistio ? 1 : 0
-                    }
-                }
+                eventos: {[eventoId]: { cliente_id: clienteId, asistio: asistio ? 1 : 0}}
             };
 
-            // Realizar la solicitud POST usando Fetch API
-            fetch("{{ route('admin.asistencias.store') }}", {
+            fetch("{{ route('admin.asistencias.store') }}", {            // Realizar la solicitud POST usando Fetch API
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
