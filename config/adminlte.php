@@ -463,23 +463,23 @@ return [
             ],
 
         ],
-            [
-                'text' => 'News-post',
-                'icon' => 'fa-regular fa-circle-question',
-                'can'  => 'admin.config.index',
-                'submenu' => [
-                    [
-                        'text'  => 'Categorias',
-                        'route' => 'categories.index',
-                        'icon'  => 'fa-solid fa-layer-group',
-                    ],
-                    [
-                        'text'  => 'Posts',
-                        'route' => 'posts.index',
-                        'icon'  => 'nav-icon fas fa-copy',
-                    ],
+        [
+            'text' => 'News-post',
+            'icon' => 'fa-regular fa-circle-question',
+            'can'  => 'admin.config.index',
+            'submenu' => [
+                [
+                    'text'  => 'Categorias',
+                    'route' => 'categories.index',
+                    'icon'  => 'fa-solid fa-layer-group',
                 ],
-            ]
+                [
+                    'text'  => 'Posts',
+                    'route' => 'posts.index',
+                    'icon'  => 'nav-icon fas fa-copy',
+                ],
+            ],
+        ]
         // ['text'=> 'Agenda','route' => 'admin.users.index','icon' => 'fas fa-envelope',],
         // ['text' => 'information','icon_color' => 'cyan','url' => '#', ],
     ],
@@ -535,65 +535,56 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/2.1.5/js/dataTables.js',
+                    'location' => '//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/2.1.5/js/dataTables.bootstrap4.js',
+                    'location' => '//cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.js',
+                    'location' => '//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.3.0/js/dataTables.buttons.min.js',
+                    'location' => '//cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.3.0/js/buttons.flash.min.js',
+                    'location' => '//cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js',
+                    'location' => '//cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.3.0/js/buttons.html5.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.3.0/js/buttons.print.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.3.0/js/buttons.colVis.min.js',
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/2.1.5/css/jquery.dataTables.min.css',
+                    'location' => '//cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.3.0/css/buttons.dataTables.min.css',
+                    'location' => '//cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css',
+                    'location' => '//cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css',
                 ],
             ],
         ],
+
 
         'Select2' => [
             'active' => true,

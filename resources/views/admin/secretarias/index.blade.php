@@ -105,7 +105,7 @@
     {{-- DATA TABLE --}}
     <script>
         new DataTable('#secretarias', {
-            responsive: true,
+            responsive: true,scrollX: true,
             autoWidth: false, //no le vi la funcionalidad
             dom: 'Bfrtip', // Añade el contenedor de botones
             buttons: [{

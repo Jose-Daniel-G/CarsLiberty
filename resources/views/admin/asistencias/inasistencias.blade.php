@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped table-bordered table-sm table-hover">
+                    <table id="inacistencia" class="table table-striped table-bordered table-sm table-hover">
                         <thead>
                             <tr>
                                 <th>Nombre del Cliente</th>
@@ -47,8 +47,7 @@
                                     <td>{{ $cliente->asistio ? '' : $cliente->penalidad }}</td>
                                     <td>
                                         @if (!$cliente->asistio)
-                                            <i
-                                                class="{{ $cliente->liquidado ? 'text-success bi bi-check-circle-fill' : 'text-danger bi bi-x-circle-fill' }}"></i>
+                                            <i class="{{ $cliente->liquidado ? 'text-success bi bi-check-circle-fill' : 'text-danger bi bi-x-circle-fill' }}"></i>
                                         @endif
                                     </td>
                                     <td>
@@ -83,6 +82,12 @@
 @stop
 
 @section('js')
-
+    <script> 
+            new DataTable('#inacistencia', {
+                responsive: true,
+                autoWidth: false,scrollX:true,
+                scrollX: true,
+            });
+    </script>
 @stop
 

@@ -74,7 +74,8 @@ class HomeController extends Controller
         } else {
             $cliente = Cliente::where('user_id', Auth::id())->first();
             \Log::info('cliente', [$cliente]);
-            $cursos = $cliente->cursos; // Cursos del cliente
+            $cursos = $cliente?->cursos ?? collect();
+
 
             $profesorSelect = DB::table('profesors')
                 ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
