@@ -1,22 +1,10 @@
-##### MISSING 
-- NEWS: delete, edit
-- COMMENTS: create, edit, delete
-- USERS: create, edit, delete
-- ROLES: Create: admin, writer, reader
-
-##### NEXT STEP: COFFEE GARDEN ALBUM
-users, posts, categories 
 # Software para una Academia Automovilística
-
 Este proyecto es un software para una academia automovilística, diseñado para llevar un registro detallado de las clases de cada alumno. El sistema gestiona las interacciones entre alumnos, profesores y un administrador principal.
 
 ---
-
-### **FIRST OF ALL: CREATE A DATABASE MANUALLY CALLED `cars_liberty`**
-
+##### **FIRST OF ALL: CREATE A DATABASE MANUALLY CALLED `cars_liberty`**
 ---
-
-### **Funcionalidades del Sistema**
+#### **Funcionalidades del Sistema**
 
 - **Inscripción y Programación de Clases**:
   - A los alumnos que se inscriben a un curso, solo se les muestran los profesores que están **disponibles**.
@@ -48,16 +36,15 @@ Este proyecto es un software para una academia automovilística, diseñado para 
 | - horas_requeridas | - pico_y_placa | | - paswword |
 | - estado | - profesor_id  | |- rol_id | 
 
-##  USE THIS TEMPLATE TO CREATE GREAT APPLICATIONS 
-#### CREATE LOCAL SERVER CON XAMMP
+####  USE THIS TEMPLATE TO CREATE GREAT APPLICATIONS 
+###### CREATE LOCAL SERVER CON XAMMP
 como administrador habre este documento
 -   C:\Windows\System32\drivers\etc\hosts
-    `adicionar estas lineas`
+##### **`Adicionar estas lineas`**
 -   127.0.0.1 laravel9.test
 luego dirigirse a esta ruta y editar el siguiente archivo
-
--   C:\xampp\apache\conf\extra\httpd-vhosts.conf
-    adicionar estas lineas
+- adicionar estas lineas  C:\xampp\apache\conf\extra\httpd-vhosts.conf
+    
     ````
     <VirtualHost *:80>
         ServerName localhost
@@ -78,33 +65,7 @@ luego dirigirse a esta ruta y editar el siguiente archivo
 ***LIBRERIA SLUG***
 - https://leocaseiro.com.br/jquery-plugin-string-to-slug/#
 
-###### FILES ROUTE
--php artisan storage:link 
-
-###### CLEAN GRABAGE
-```
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-php artisan cache:clear 
-composer clear-cache 
-```
-
-###### INSTALL LANGUAGE
-```
-composer require laravel-lang/common
-php artisan lang:add es
-php artisan lang:update
-```
-###### RECONSTUIR / REBUILD
-```
- php artisan optimize
- composer dump-autoload
- composer install --ignore-platform-reqs
- git rm --cached DB_HEBRON.jpg
-
-```
-######[ INSTALL ADMINLTE ]
+###### [ INSTALL ADMINLTE ]
 ---
 ```
 composer require jeroennoten/laravel-adminlte
@@ -120,7 +81,38 @@ npm install jquery
 npm install toastr
 
 ```
-##### EN EL ARCHIO APP.JS PONER
+###### FILES ROUTE
+- php artisan storage:link 
+
+###### COUNTRIES / CITYES
+```
+composer require nnjeim/world
+php artisan world:install
+php artisan db:seed --class=WorldSeeder
+```
+###### INSTALL LANGUAGE
+```
+composer require laravel-lang/common
+php artisan lang:add es
+php artisan lang:update
+```
+###### RECONSTUIR / REBUILD
+```
+ php artisan optimize
+ composer dump-autoload
+ composer install --ignore-platform-reqs
+ git rm --cached DB_HEBRON.jpg
+
+```
+###### CLEAN GRABAGE
+```
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear 
+composer clear-cache 
+```
+##### EN EL ARCHIVO APP.JS PONER
 
 -   import Swal from 'sweetalert2
 -   import 'jquery-ui/ui/widgets/datepicker'; // El widget de datepicker
@@ -131,23 +123,7 @@ npm install toastr
 **Aumetar peso de carga de archivo**
 - upload_max_filesize = 40M
 
-###### NOT IMPLEMENTED ########################
-###### Notifications
-php artisan notification:table
-php artisan make:notification PostNotification<!-- php artisan make:notification InvoicePaid  --> 
-php artisan make:event PostEvent
-php artisan make:listener PostListener
-#### optional it makes faster to send notifications
-php artisan queue:table
-php artisan queue:work
 
-php artisan migrate --step
-php artisan migrate:rollback --step
-
-###### DESEAS TENER PAISES / CIUDADES
-composer require nnjeim/world
-php artisan world:install
-php artisan db:seed --class=WorldSeeder
 
 ### DATA TABLE BY AJAX - when save avoid reload (Yajra DataTable)
 ```
@@ -187,6 +163,27 @@ php artisan queue:failed
 php artisan queue:retry {id}
 
 ```
+###### NOTIFICATIONS IS NOT IMPLEMENTED ########################
+First, create the migrations for the notifications and queues tables.
+```
+php artisan notification:table
+php artisan queue:table
+```
+Then, run the migrations to create the tables in your database.
+```
+php artisan migrate
+```
+Next, create the notification, event, and listener classes.
+```
+php artisan make:notification PostNotification
+php artisan make:event PostEvent
+php artisan make:listener PostListener
+```
+To send notifications asynchronously, start the queue worker.
+This makes your app faster and more responsive.
+```
+php artisan queue:work
+```
 #### PRODUCTION 
 - Before to upload, edit the .env data and after uploading into server
 ```
@@ -204,7 +201,6 @@ docker-compose up -d --build
 docker-compose exec laravel_app bash
 php artisan serve --host=127.0.0.1 --port=8000
 
-
 bash
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
@@ -219,4 +215,13 @@ docker build -t miapp-php -f Dockerfile.php .
 ![SrpingfieldNews](images/springfield_admilte.png)
 ![Springfield](images/springfield_admilte_modal.png)
 ![Corsa Racer](images/corsa_racer.png)
+---
+##### MISSING 
+- NEWS: delete, edit
+- COMMENTS: create, edit, delete
+- USERS: create, edit, delete
+- ROLES: Create: admin, writer, reader
+
+##### NEXT STEP: COFFEE GARDEN ALBUM
+users, posts, categories 
 
