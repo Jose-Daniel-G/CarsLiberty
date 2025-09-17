@@ -302,334 +302,178 @@
 @stop
 
 @section('js')
-    {{-- Axios JS --}}
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 
-    <script>
-        // Pasar si el usuario tiene el rol de "admin" como una variable de JavaScript
-        let isAdmin = @json(Auth::check() && Auth::user()->hasRole('superAdmin'));
-        // alert(isAdmin); // Muestra true o false dependiendo del rol
-        console.log("isAdmin value: ", isAdmin);
+<script>
+document.addEventListener('DOMContentLoaded', function() {
 
-        document.addEventListener('DOMContentLoaded', function() {
-            //CANTIDAD DE HORAS
-            let HoraFinInput = document.getElementById('hora_fin');
-            if (!isAdmin) {
-                if (HoraFinInput) {
-                    HoraFinInput.addEventListener('change', function() {
-                        let selectedTime = this.value;
-                        this.value = selectedTime;
+    // ---------------------------------------
+    // Variables globales
+    // ---------------------------------------
+    let isAdmin = @json(Auth::check() && Auth::user()->hasRole('superAdmin'));
+    const horaFinInput = document.getElementById('hora_fin');
+    const horaInicioInput = document.getElementById('hora_inicio');
+    const fechaReservaInput = document.getElementById('fecha_reserva');
 
-                        if (parseInt(selectedTime) > 4 || parseInt(selectedTime) < 2) {
-                            this.value = null;
-                            Swal.fire({
-                                text: "Solo puede agendar hasta máximo 4 horas y minimo 2",
-                                icon: "error"
-                            });
-                        }
-                    });
-                } else {
-                    console.error("El elemento HoraFinInput no se encontró.");
-                }
-            }
-
-            //FECHA
-            //-------------------------------------------------------------
-            // VALIDAR SI LA FECHA YA NO HA PASADO
-            const fechaReservaInput = document.getElementById('fecha_reserva');
-            // Obtener la fecha actual en la zona horaria del usuario
-            function getLocalDate() {
-                let today = new Date();
-                let year = today.getFullYear();
-                let month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                let day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
-                return `${year}-${month}-${day}`;
-            }
-
-            // Escuchar el evento de cambio en el campo de fecha de reserva
-            fechaReservaInput.addEventListener('change', function() {
-                let selectedDate = this.value; // Obtener fecha seleccionada
-                let today = getLocalDate(); // Obtener la fecha local correcta
-
-                // Verificar si la fecha seleccionada es anterior a la fecha actual
-                if (selectedDate < today) {
-                    this.value = null;
-                    Swal.fire({
-                        title: "No es posible",
-                        text: "No se puede seleccionar una fecha pasada",
-                        icon: "warning"
-                    });
-                }
-            });
-            //----------------------------------------------------------------
-            // VALIDAR SI LA HORA YA NO HA PASADO
-            const HoraIncioInput = document.getElementById('hora_inicio');
-
-            HoraIncioInput.addEventListener('change', function() {
-                let selectedTime = this.value; // Obtener la hora seleccionada (formato HH:MM)
-                let now = new Date(); // Obtener la fecha y hora actual
-                if (selectedTime) {
-                    selectedTime = selectedTime.split(':'); //Dividir la cadena en horas y minutos
-                    selectedTime = selectedTime[0] + ':00'; //conservar la hora, ignorar los minutos
-                    this.value = selectedTime; // Establecer la hora modificada en el campo de entrada
-                    // Dividir la hora seleccionada en horas y minutos
-                    let [selectedHour, selectedMinutes] = selectedTime.split(':').map(Number);
-
-                    // Verificar si la hora seleccionada está fuera del rango permitido (06:00 - 20:00)
-                    if (selectedHour < 6 || selectedHour > 20) {
-                        this.value = ''; // Limpiar el campo de entrada
-                        Swal.fire({
-                            title: "No es posible",
-                            text: "Por favor seleccione una hora entre las 06:00 am y las 8:00 pm.",
-                            icon: "warning"
-                        });
-                        return; // Terminar la ejecución si está fuera de rango
-                    }
-
-                    // Obtener la fecha seleccionada del input de fecha
-                    let selectedDate = fechaReservaInput.value;
-                    let today = now.toISOString().slice(0,
-                        10); // Obtener la fecha actual en formato YYYY-MM-DD
-
-                    // Verificar si la fecha seleccionada es hoy
-                    if (selectedDate === today) {
-                        // Obtener la hora y minutos actuales
-                        let currentHour = now.getHours();
-                        let currentMinutes = now.getMinutes();
-
-                        // Verificar si la hora seleccionada ya ha pasado
-                        if (
-                            selectedHour < currentHour ||
-                            // Si la hora seleccionada es menor que la hora actual
-                            (selectedHour === currentHour && selectedMinutes <
-                                currentMinutes
-                            ) // O si es la misma hora pero los minutos seleccionados son menores
-                        ) {
-                            this.value = ''; // Limpiar el campo de entrada
-                            Swal.fire({
-                                text: "No puede seleccionar una hora que ya ha pasado.",
-                                icon: "error"
-                            });
-                        }
-                    }
-                }
-            });
-            //CALENDAR
-            var calendarEl = document.getElementById('calendar');
-            // Crea una instancia del calendario una sola vez
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                initialView: 'dayGridMonth',
-                locale: 'es',
-                headerToolbar: {
-                    // left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,listWeek'
-                },
-                events: [], // Inicialmente vacío para evitar carga de eventos al inicio
-                eventClick: function(info) { //MODAL EVENT
-                    var evento = info.event;
-                    var startTime = evento.start;
-                    var endTime = evento.end;
-
-                    // Mostrar la información en el modal
-                    var profesorNombres = evento.extendedProps.profesor ? evento.extendedProps.profesor
-                        .nombres : 'No disponible';
-                    var profesorApellidos = evento.extendedProps.profesor ? evento.extendedProps
-                        .profesor.apellidos : 'No disponible';
-                    var clienteNombres = evento.extendedProps.cliente ? evento.extendedProps.cliente
-                        .nombres : 'No disponible';
-                    var clienteApellidos = evento.extendedProps.cliente ? evento.extendedProps.cliente
-                        .apellidos : 'No disponible';
-
-                    document.getElementById('nombres_cliente').textContent =
-                        `${clienteNombres} ${clienteApellidos}`;
-                    document.getElementById('nombres_teacher').textContent =
-                        `${profesorNombres} ${profesorApellidos}`;
-                    document.getElementById('fecha_reserva1').textContent = startTime.toISOString()
-                        .split('T')[0]; // Fecha
-                    document.getElementById('hora_inicio1').textContent = startTime
-                .toLocaleTimeString(); // Hora de inicio
-                    document.getElementById('hora_fin1').textContent = endTime
-                .toLocaleTimeString(); // Hora de FIN
-
-                    // Mostrar el modal
-                    $("#mdalSelected").modal("show");
-                }
-            });
-
-            // Renderizar el calendario cuando se activa la pestaña correspondiente
-            $('a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
-                var target = $(e.target).attr("href"); // Obtener la pestaña activa
-                if (target === '#custom-tabs-three-profile') {
-                    calendar
-                        .render(); // Renderizar el calendario solo si la pestaña activa es la del calendario
-                }
-            });
-
-            // Forzar el renderizado al cargar la página si ya está activa la pestaña del calendario
-            if ($('#custom-tabs-three-profile').hasClass('active')) {
-                calendar.render();
-            }
-            var url = "{{ route('admin.horarios.show_reserva_profesores') }}";
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data);
-                    calendar.addEventSource(data); // Añade los eventos al calendario
-                },
-                error: function() {
-                    alert('Error al obtener datos del profesor');
-                }
-            });
-        });
-
-
-        $('#profesor_select').on('change', function() { // carga contenido de tabla en  curso_info
-            var curso_id = $('#profesor_select').val();
-            var url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}";
-            url = url.replace(':id', curso_id);
-
-            if (curso_id) {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(data) {
-                        // console.log(data);
-                        $('#curso_info').html(data);
-                    },
-                    error: function() {
-                        alert('Error al obtener datos del curso');
-                    }
-                });
-            } else {
-                $('#curso_info').html('');
+    // ---------------------------------------
+    // Validación de cantidad de horas
+    // ---------------------------------------
+    if (!isAdmin && horaFinInput) {
+        horaFinInput.addEventListener('change', function() {
+            const selected = parseInt(this.value);
+            if (selected < 2 || selected > 4) {
+                this.value = null;
+                Swal.fire({ text: "Solo puede agendar hasta máximo 4 horas y mínimo 2", icon: "error" });
             }
         });
-        // carga contenido de tabla en profesor_info
-        document.addEventListener('DOMContentLoaded', function() {
+    }
 
+    // ---------------------------------------
+    // Función auxiliar: fecha local en YYYY-MM-DD
+    // ---------------------------------------
+    function getLocalDate() {
+        const today = new Date();
+        return `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    }
+
+    // ---------------------------------------
+    // Validar fecha pasada
+    // ---------------------------------------
+    if(fechaReservaInput){
+        fechaReservaInput.addEventListener('change', function() {
+            if(this.value < getLocalDate()){
+                this.value = null;
+                Swal.fire({ title: "No es posible", text: "No se puede seleccionar una fecha pasada", icon: "warning" });
+            }
         });
-    </script>
+    }
 
-    <script>
-        new DataTable('#reservas', {
-            responsive: true,
-            autoWidth: false,
-            dom: 'Bfrtip', // Añade el contenedor de botones
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
-            "language": {
-                "decimal": "",
-                "emptyTable": "No hay datos disponibles en la tabla",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ reservas",
-                "infoEmpty": "Mostrando 0 a 0 de 0 reservas",
-                "infoFiltered": "(filtrado de _MAX_ reservas totales)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Mostrar _MENU_ reservas",
-                "loadingRecords": "Cargando...",
-                "processing": "",
-                "search": "Buscar:",
-                "zeroRecords": "No se encontraron registros coincidentes",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Último",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                },
-                "aria": {
-                    "orderable": "Ordenar por esta columna",
-                    "orderableReverse": "Invertir el orden de esta columna"
+    // ---------------------------------------
+    // Validar hora
+    // ---------------------------------------
+    if(horaInicioInput){
+        horaInicioInput.addEventListener('change', function(){
+            if(!this.value) return;
+            let now = new Date();
+            let [hour, minute] = this.value.split(':').map(Number);
+            if(hour < 6 || hour > 20){
+                this.value = '';
+                Swal.fire({ title: "No es posible", text: "Seleccione una hora entre 06:00 y 20:00", icon:"warning" });
+                return;
+            }
+            const selectedDate = fechaReservaInput.value;
+            const today = getLocalDate();
+            if(selectedDate === today){
+                const currentHour = now.getHours();
+                const currentMinutes = now.getMinutes();
+                if(hour < currentHour || (hour === currentHour && minute < currentMinutes)){
+                    this.value = '';
+                    Swal.fire({ text:"No puede seleccionar una hora que ya ha pasado.", icon:"error" });
                 }
             }
-
+            this.value = `${hour}:00`; // Ajustar minutos a 00
         });
-    </script>
-    <script>
-        $(document).ready(function() {
+    }
 
-            $('#cursoid').on('change',
-        function() { // Establece el evento para llamar a la función cargarProfesores al cambiar el curso
-                var cursoid = $(this).val(); // Obtén el valor seleccionado
-                if (!cursoid) return; // Salir si no hay curso seleccionado
-                var url = "{{ route('obtenerProfesores', ':id') }}"; // Función para cargar profesores
-                url = url.replace(':id', cursoid);
+    // ---------------------------------------
+    // FullCalendar
+    // ---------------------------------------
+    const calendarEl = document.getElementById('calendar');
+    if(calendarEl){
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            headerToolbar: {
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            events: [], // Se cargan vía Ajax luego
+            eventClick: function(info){
+                const evento = info.event;
+                const start = evento.start;
+                const end = evento.end;
+                const prof = evento.extendedProps.profesor || {};
+                const cliente = evento.extendedProps.cliente || {};
 
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(data) {
+                document.getElementById('nombres_cliente').textContent = `${cliente.nombres || 'No disponible'} ${cliente.apellidos || ''}`;
+                document.getElementById('nombres_teacher').textContent = `${prof.nombres || 'No disponible'} ${prof.apellidos || ''}`;
+                document.getElementById('fecha_reserva1').textContent = start.toISOString().split('T')[0];
+                document.getElementById('hora_inicio1').textContent = start.toLocaleTimeString();
+                document.getElementById('hora_fin1').textContent = end.toLocaleTimeString();
 
-                        if (data && Array.isArray(
-                            data)) { // Verifica si hay profesores y si es un array
-                            $('#profesorid').empty()
-                            .append( // Limpia el select de profesores antes de llenarlo
-                                '<option value="" selected disabled>Seleccione un Profesor</option>'
-                            );
-                            data.forEach(function(profesor) {
-                                $('#profesorid').append(
-                                    `<option value="${profesor.id}">${profesor.nombres} ${profesor.apellidos}</option>`
-                                );
-                            });
-                        } else {
-                            alert('No se encontraron profesores.');
-                        }
-                    },
-                    error: function(xhr) {
-                        alert(
-                        'Error al cargar los profesores. Intenta nuevamente.'); // console.error('Error al cargar los profesores:', xhr.responseText);
-                    }
-                });
-            });
-            $('#cliente_id').on('change', function() {
-                var cliente_id = $(this).val(); // Obtén el valor seleccionado
-                if (!cliente_id) return; // Salir si no hay curso seleccionado
-                var url = "{{ route('obtenerCursos', ':id') }}";
-                url = url.replace(':id', cliente_id);
-
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(data) {
-
-                        if (data && Array.isArray(
-                            data)) { // Verifica si hay cursos y si es un array
-                            $('#cursoid').empty()
-                            .append( // Limpia el select de cursos antes de llenarlo
-                                '<option value="" selected disabled>Seleccione un Curso</option>'
-                            );
-
-                            data.forEach(function(curso) {
-                                $('#cursoid').append(
-                                    `<option value="${curso.id}">${curso.nombre}</option>`
-                                    );
-                            });
-                        } else {
-                            alert('No se encontraron cursos.');
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('Error al cargar los cursos:', xhr.responseText);
-                        alert('Error al cargar los cursos. Intenta nuevamente.');
-                    }
-                });
-            });
+                $("#mdalSelected").modal("show");
+            }
         });
-    </script>
-    {{-- 
-    <script>
-        @if (session('error'))
-            toastr.error('{{ session('error') }}');
-        @endif
 
-        @if (session('info'))
-            toastr.info('{{ session('info') }}');
-        @endif
+        // Renderizar al cargar
+        calendar.render();
 
-        @if (session('warning'))
-            toastr.warning('{{ session('warning') }}');
-        @endif
-    </script> --}}
+        // Cargar eventos desde Laravel
+        $.ajax({
+            url: "{{ route('admin.horarios.show_reserva_profesores') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function(data){ calendar.addEventSource(data); },
+            error: function(){ alert('Error al obtener datos del profesor'); }
+        });
+    }
+
+    // ---------------------------------------
+    // Cargar contenido dinámico en selects
+    // ---------------------------------------
+    $('#profesor_select').on('change', function(){
+        const curso_id = $(this).val();
+        const url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}".replace(':id', curso_id);
+        if(!curso_id) { $('#curso_info').html(''); return; }
+        $.get(url, function(data){ $('#curso_info').html(data); }).fail(()=> alert('Error al obtener datos del curso'));
+    });
+
+    $('#cursoid').on('change', function(){
+        const cursoid = $(this).val();
+        if(!cursoid) return;
+        const url = "{{ route('obtenerProfesores', ':id') }}".replace(':id', cursoid);
+        $.get(url, function(data){
+            if(Array.isArray(data)){
+                $('#profesorid').empty().append('<option value="" selected disabled>Seleccione un Profesor</option>');
+                data.forEach(p=> $('#profesorid').append(`<option value="${p.id}">${p.nombres} ${p.apellidos}</option>`));
+            } else { alert('No se encontraron profesores'); }
+        }).fail(()=> alert('Error al cargar los profesores'));
+    });
+
+    $('#cliente_id').on('change', function(){
+        const cliente_id = $(this).val();
+        if(!cliente_id) return;
+        const url = "{{ route('obtenerCursos', ':id') }}".replace(':id', cliente_id);
+        $.get(url, function(data){
+            if(Array.isArray(data)){
+                $('#cursoid').empty().append('<option value="" selected disabled>Seleccione un Curso</option>');
+                data.forEach(c=> $('#cursoid').append(`<option value="${c.id}">${c.nombre}</option>`));
+            } else { alert('No se encontraron cursos'); }
+        }).fail(()=> alert('Error al cargar los cursos'));
+    });
+
+    // ---------------------------------------
+    // DataTables
+    // ---------------------------------------
+    new DataTable('#reservas',{
+        responsive: true,
+        autoWidth: false,
+        dom: 'Bfrtip',
+        buttons: ['copy','csv','excel','pdf','print','colvis'],
+        language: {
+            emptyTable: "No hay datos disponibles en la tabla",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ reservas",
+            infoEmpty: "Mostrando 0 a 0 de 0 reservas",
+            infoFiltered: "(filtrado de _MAX_ reservas totales)",
+            lengthMenu: "Mostrar _MENU_ reservas",
+            loadingRecords: "Cargando...",
+            search: "Buscar:",
+            zeroRecords: "No se encontraron registros",
+            paginate: {first:"Primero",last:"Último",next:"Siguiente",previous:"Anterior"}
+        }
+    });
+
+});
+</script>
 @stop
+

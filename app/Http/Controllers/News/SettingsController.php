@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\News;
+use App\Http\Controllers\Controller;
 
 use App\Models\File;
 use App\Models\Image;

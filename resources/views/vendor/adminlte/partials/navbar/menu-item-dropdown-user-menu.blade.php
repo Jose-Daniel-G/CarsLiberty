@@ -19,7 +19,7 @@
     {{-- User menu toggler --}}
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
         @if(config('adminlte.usermenu_image'))
-            <img src="{{  asset('storage/' . Auth::user()->profile_photo_path) }}"
+            <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" onerror="this.onerror=null; this.src='{{ Auth::user()->adminlte_image() }}';"
                  class="user-image img-circle elevation-2"
                  alt="{{ Auth::user()->name }}">
         @endif
@@ -36,7 +36,7 @@
             <li class="user-header {{ config('adminlte.usermenu_header_class', 'bg-primary') }}
                 @if(!config('adminlte.usermenu_image')) h-auto @endif">
                 @if(config('adminlte.usermenu_image'))
-                    <img src="{{ asset('storage/'.Auth::user()->profile_photo_path) }}"
+                    <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" onerror="this.onerror=null; this.src='{{ Auth::user()->adminlte_image() }}';"
                          class="img-circle elevation-2"
                          alt="{{ Auth::user()->name }}">
                 @endif
