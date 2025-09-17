@@ -123,8 +123,6 @@ composer clear-cache
 **Aumetar peso de carga de archivo**
 - upload_max_filesize = 40M
 
-
-
 ### DATA TABLE BY AJAX - when save avoid reload (Yajra DataTable)
 ```
  composer require yajra/laravel-datatables-oracle

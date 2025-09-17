@@ -843,7 +843,7 @@ ul.social li a.googleplus:hover {
 	padding: 50px 0 75px;
 }
 
-.contact_form input[type='text'] {
+.contact_form .form-input {
 	width: 100%;
 	border-radius: 0;
 	line-height: 22px;

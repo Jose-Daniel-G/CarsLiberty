@@ -24,8 +24,15 @@ Route::patch('/profesor/{id}/toggle-status', [ProfesorController::class, 'toggle
 Route::patch('/curso/{id}/toggle-status', [CursoController::class, 'toggleStatus'])->name('admin.cursos.toggleStatus');
 
 //RUTAS ADMIN
+
+//RUTAS HOME
 Route::get('/admin', [HomeController::class, 'index'])->name('admin.index')->middleware('auth');
-Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('admin.show_reservas')->middleware('auth', 'can:admin.show_reservas');
+
+//esta ruta es para los profesore ver quien tiene una reserva con el
+Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('admin.show_reservas');
+
+Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores']) //Esta ruta es para los estudiantes 
+                                                        ->name('admin.horarios.show_reserva_profesores'); //ver reservas tiene
 
 //RUTAS CONFIGURACIONES
 Route::resource('/config', ConfigController::class)->names('admin.config')->middleware('auth', 'can:admin.config');

@@ -13,19 +13,8 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\PostNotification;
 
 // Auth::routes(['register'=>false]); // Route::get('/', function () {return view('welcome');}); // Route::get('/', function () {return view('auth.login');});
-Route::post('/message', function (Request $request) {
-    $valid = $request->validate([
-        'title' => 'required',
-        'email' => 'required',
-        'phone' => 'required',
-        'message' => 'required',
-    ]);
-    // dd($request->all());
 
-    Notification::route('mail', $request->email)->notify(
-        new PostNotification($request->title, $request->email, $request->phone, $request->message));
-    return response()->json(['info' => 'Notification sent']);
-})->name('message');
+Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
 
 /** LANDPAGE  **/Route::get('/landpage', function () {return Auth::check() ? app(HomeController::class)->index() : view('template.index'); });
 /** LOGIN     **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('auth.login'); });
@@ -33,7 +22,6 @@ Route::post('/message', function (Request $request) {
 /** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
 
 //RUTAS HORARIOS ADMIN
-Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores'])->name('admin.horarios.show_reserva_profesores');
 Route::get('/admin/show/{id}', [HomeController::class, 'show'])->name('admin.reservas.show');
 Route::resource('/admin/horarios', HorarioController::class)->names('admin.horarios');
 Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('admin.horarios.show_datos_cursos');
