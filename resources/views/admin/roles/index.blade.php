@@ -32,7 +32,7 @@
                                 <th>Nombre</th>
                                 <th>Permisos</th>
                                 <th>Creación</th>
-                                <th colspan="2" class="text-center">Acción</th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,27 +42,25 @@
                                     <td>{{ $role->name }}</td>
                                     <td>{{ $role->permissions->pluck('name')->implode(', ') }}</td>
                                     <td>{{ $role->created_at->format('d M, Y') }}</td>
-                                    <td class="text-center">
+                                    <td class="d-flex justify-content-center">
                                         @can('roles.edit')
                                             {{-- button EDIT --}}
                                             <a href="#" class="btn btn-warning btn-sm mr-1" data-id="{{ $role->id }}"
                                                 data-toggle="modal" data-target="#editModal" title="Editar"> <i
                                                     class="fas fa-edit"></i></a>
                                         @endcan
-                                    </td>
-                                    <td class="text-center">
 
                                         {{-- @can('roles.delete') --}}
-                                    <form id="delete-form-{{ $role->id }}"
-                                        action="{{ route('admin.roles.destroy', $role->id) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
-                                            onclick="confirmDelete({{ $role->id }})">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                        <form id="delete-form-{{ $role->id }}"
+                                            action="{{ route('admin.roles.destroy', $role->id) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
+                                                onclick="confirmDelete({{ $role->id }})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                         {{-- @endcan --}}
                                     </td>
                                 </tr>
@@ -98,12 +96,15 @@
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
-                if (result.isConfirmed) { document.getElementById('delete-form-' + id).submit();  }
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
             });
         }
         new DataTable('#roles', {
             responsive: true,
-            autoWidth: true,
+            scrollX: true,
+            autoWidth: false,
             dom: 'Bfrtip', // Añade el contenedor de botones
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
             "language": {
@@ -119,7 +120,12 @@
                 "processing": "",
                 "search": "Buscar:",
                 "zeroRecords": "No se encontraron registros coincidentes",
-                "paginate": {"first": "Primero","last": "Último","next": "Siguiente","previous": "Anterior"},
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
                 "aria": {
                     "orderable": "Ordenar por esta columna",
                     "orderableReverse": "Invertir el orden de esta columna"
@@ -139,7 +145,8 @@
                 url: url,
                 method: 'GET',
                 success: function(data) {
-                    var formAction = "{{ route('admin.roles.update', ':id') }}".replace(':id', data.role.id);
+                    var formAction = "{{ route('admin.roles.update', ':id') }}".replace(':id', data.role
+                        .id);
                     modal.find('#editForm').attr('action', formAction);
                     modal.find('#edit-name').val(data.role.name);
 

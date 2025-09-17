@@ -235,7 +235,7 @@
                             </div>
 
                             <!-- Incluir Modal INFO-->
-                            @include('admin.events.show')
+                            @include('admin.events-modal.show')
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -245,7 +245,7 @@
                         </div>
                     </div>
                 @endcan
-                @include('admin.events.event')
+                @include('admin.events-modal.event')
             </div>
         </div>
     </div>
@@ -404,6 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $("#mdalSelected").modal("show");
             }
         });
+<<<<<<< HEAD
 
         // Renderizar al cargar
         calendar.render();
@@ -475,5 +476,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 </script>
+=======
+    </script> 
+>>>>>>> 825884aead8aebfe7ed8d15112d33a671c1f660c
 @stop
 

@@ -195,7 +195,6 @@ npm run build
 
 ```
 #### DOCKER
-```
 docker-compose exec laravel_app php artisan migrate --seed 
 docker-compose exec laravel_app composer install
 docker-compose exec laravel_app composer require fakerphp/faker --dev
@@ -219,3 +218,4 @@ docker build -t miapp-php -f Dockerfile.php .
 ![SrpingfieldNews](images/springfield_admilte.png)
 ![Springfield](images/springfield_admilte_modal.png)
 ![Corsa Racer](images/corsa_racer.png)
+

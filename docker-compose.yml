@@ -1,0 +1,66 @@
+# version: '3.8'
+
+services:
+  # Servicio MySQL
+  mysql:
+    image: mysql:8.1.0
+    container_name: liberty-container
+    environment:
+      MYSQL_DATABASE: cars_liberty
+      MYSQL_PASSWORD: admin123
+      MYSQL_ROOT_PASSWORD: admin123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cars_net
+
+  # Servicio phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_cars
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: admin123
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - cars_net
+
+  # Servicio Laravel App (PHP + Composer)
+  laravel_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - cars_net
+
+  # Servicio Nginx
+  nginx_car:
+    image: nginx:latest
+    container_name: nginx_car
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - laravel_app
+    networks:
+      - cars_net
+
+volumes:
+  mysql_data:
+
+networks:
+  cars_net:
+    driver: bridge

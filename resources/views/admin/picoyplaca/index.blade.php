@@ -11,7 +11,7 @@
 
 @section('content')
     <div class="container mt-4">
-        <h1 class="mb-4">Horarios de Pico y Placa</h1> 
+        <h1 class="mb-4">Horarios de Pico y Placa</h1>
 
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
@@ -20,7 +20,7 @@
         <form action="{{ route('picoyplaca.update') }}" method="POST">
             @csrf
             @method('PUT')
-            <table class="table table-striped table-bordered table-hover table-sm">
+            <table id="pico-placa" class="table table-striped table-bordered table-hover table-sm">
                 <thead>
                     <tr>
                         <th>Día</th>
@@ -52,12 +52,18 @@
                 </tbody>
             </table>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>
         </form>
 
     </div>
-
 @stop
- 
+@section('js')
+    <script> 
+            new DataTable('#pico-placa', {
+                responsive: true,
+                autoWidth: false,
+                scrollX: true,ordering: false // 👈 agrega esto
+            });
+    </script>
+@stop

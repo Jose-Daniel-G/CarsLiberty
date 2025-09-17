@@ -58,7 +58,7 @@
             $('#clientes').DataTable({
                 processing: true,
                 serverSide: true,
-                responsive: true,
+                responsive: true,scrollX: true,
                 autoWidth: false,
                 ajax: '{{ route("admin.clientes.index") }}',
                 columns: [{ data: 'id', name: 'id' },
