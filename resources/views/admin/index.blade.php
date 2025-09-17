@@ -404,7 +404,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 $("#mdalSelected").modal("show");
             }
         });
-<<<<<<< HEAD
 
         // Renderizar al cargar
         calendar.render();
@@ -476,8 +475,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 </script>
-=======
-    </script> 
->>>>>>> 825884aead8aebfe7ed8d15112d33a671c1f660c
+
 @stop
 

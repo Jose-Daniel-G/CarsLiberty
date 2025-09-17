@@ -41,18 +41,12 @@
                             @foreach ($events as $evento)
                                 <tr>
                                     <td scope="row">{{ $contador++ }}</td>
-                                    <td scope="row">{{ $evento->profesor->nombres . ' ' . $evento->profesor->apellidos }}
-                                    </td>
-                                    <td scope="row">{{ $evento->cliente->nombres . ' ' . $evento->cliente->apellidos }}
-                                    </td>
-
+                                    <td scope="row">{{ $evento->profesor->nombres . ' ' . $evento->profesor->apellidos }}</td>
+                                    <td scope="row">{{ $evento->cliente->nombres . ' ' . $evento->cliente->apellidos }}</td>
                                     <td scope="row" class="text-center">{{ $evento->curso->nombre }}</td>
-                                    <td scope="row" class="text-center">
-                                        {{ \Carbon\Carbon::parse($evento->start)->format('Y-m-d') }}</td>
-                                    <td scope="row" class="text-center">
-                                        {{ \Carbon\Carbon::parse($evento->start)->format('H:i') }}</td>
-                                    <td scope="row" class="text-center">
-                                        {{ \Carbon\Carbon::parse($evento->end)->format('H:i') }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($evento->start)->format('Y-m-d') }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($evento->start)->format('H:i') }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($evento->end)->format('H:i') }}</td>
                                     {{-- <td scope="row" class="text-center">{{ $evento->created_at }}</td> --}}
                                     {{-- <td scope="row" class="text-center">{{ $evento->id }}</td> --}}
                                     @can('admin.events.destroy')
@@ -75,7 +69,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <a class="btn btn-secondary" href="/admin">Regresar</a>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Regresar</a>
                 </div>
             </div>
         </div>
