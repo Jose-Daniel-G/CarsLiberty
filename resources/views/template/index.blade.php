@@ -110,7 +110,7 @@
 	<!-- //Map-iFrame -->
 
 	<!-- Contact -->
-	{{-- @include('template.contact') --}}
+	@include('template.contact')
 	<!-- //Contact -->
 
 	<!-- Footer -->

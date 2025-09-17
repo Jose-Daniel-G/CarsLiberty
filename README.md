@@ -176,6 +176,9 @@ php artisan migrate
 Next, create the notification, event, and listener classes.
 ```
 php artisan make:notification PostNotification
+php artisan vendor:publish --tag=laravel-notifications
+php artisan vendor:publish --tag=laravel-mail
+
 php artisan make:event PostEvent
 php artisan make:listener PostListener
 ```

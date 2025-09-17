@@ -6,11 +6,26 @@ use App\Http\Controllers\News\PostController;
 use App\Http\Controllers\Admin\HomeController;
 
 use App\Http\Controllers\Admin\HorarioController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PostNotification;
 
 // Auth::routes(['register'=>false]); // Route::get('/', function () {return view('welcome');}); // Route::get('/', function () {return view('auth.login');});
+Route::post('/message', function (Request $request) {
+    $valid = $request->validate([
+        'title' => 'required',
+        'email' => 'required',
+        'phone' => 'required',
+        'message' => 'required',
+    ]);
+    // dd($request->all());
+
+    Notification::route('mail', $request->email)->notify(
+        new PostNotification($request->title, $request->email, $request->phone, $request->message));
+    return response()->json(['info' => 'Notification sent']);
+})->name('message');
 
 /** LANDPAGE  **/Route::get('/landpage', function () {return Auth::check() ? app(HomeController::class)->index() : view('template.index'); });
 /** LOGIN     **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('auth.login'); });
