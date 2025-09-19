@@ -22,6 +22,6 @@ class PostsIndex extends Component
             ->where('name', 'LIKE', '%' . $this->search . '%')
             ->latest('id')
             ->paginate();
-        return view('livewire.admin.posts-index', compact('posts'));
+        return view('livewire.posts-index', compact('posts'));
     }
 }

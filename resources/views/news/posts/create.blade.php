@@ -4,9 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createModalLabel">Nueva Noticia</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
 
@@ -16,11 +14,9 @@
                     <div class="row">
                         <div class="col-lg-5 col-xlg-5 col-md-5">
                             <label for="foto">
-                                <img class="card-img border" id="img_preview"
-                                    src="{{ asset('images/portada_noticia.png') }}" alt="Card image">
+                                <img class="card-img border" id="img_preview" src="{{ asset('images/portada_noticia.png') }}" alt="Card image">
                             </label>
-                            <input id="foto" name="foto" type="file" accept="image/*"
-                                style="display: none;" />
+                            <input id="foto" name="foto" type="file" accept="image/*" style="display: none;" />
                             @error('foto')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -33,19 +29,16 @@
                         </div>
                         <div class="col-lg-7 col-xlg-7 col-md-7">
                             <div class="form-group">
-                                <label class="control-label" for="titulo">Notice<span
-                                        class="required">*</span></label>
-                                <input class="form-control" id="txtTitulo" name="txtTitulo" type="text"
-                                    placeholder="Titulo" required>
+                                <label class="control-label" for="title">Notice<span class="required">*</span></label>
+                                <input class="form-control" id="title" name="title" type="text" placeholder="Titulo" required>
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Descripción <span class="required">*</span></label>
-                                <textarea class="form-control" id="txtDescripcion" name="txtDescripcion" rows="2"
-                                    placeholder="Descripción de la Noticia" required></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="2" placeholder="Descripción de la Noticia" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="category_id">Category<span class="required">*</span></label>
-                                <select name="category_id" class="form-control selectpicker" id="categoria"
+                                <label for="category">Category<span class="required">*</span></label>
+                                <select name="category" class="form-control selectpicker" id="categoria"
                                     name="categoria">
                                     <option value="">Seleccione ...</option>
                                     @foreach ($categories as $category)
@@ -60,7 +53,7 @@
                                     <i class="fa fa-fw fa-lg fa-check-circle"></i>
                                     <span id="btnText" title="Crear Noticia">Guardar</span></button>
                             </div>
-                            @error('category_id')
+                            @error('category')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>

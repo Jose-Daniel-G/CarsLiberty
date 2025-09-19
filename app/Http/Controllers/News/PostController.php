@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\News;
 
+use App\Events\PostEvent;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -47,15 +48,17 @@ class PostController extends Controller
     public function create() {}
 
     public function store(Request $request)
-    { // se ha cambiado el tamano max:2048 a 40960 
-        $request->validate(['foto' => 'required|image|max:40960', 'category_id' => 'required']);
+    {   // se ha cambiado el tamano max:2048 a 40960 
+        $request->validate(['title' => 'required', 'description' => 'required', 'foto' => 'required|image|max:40960', 'category' => 'required']);
+
+        // $data['user_id'] = Auth::id(); $post = Post::create($data); 
 
         $post = new Post();
-        $post->title = $request->txtTitulo;
-        $post->slug = Str::slug($request->txtTitulo);
-        $post->body = $request->txtDescripcion;
-        $post->user_id = Auth::user()->id;
-        $post->category_id = $request->category_id;
+        $post->title = $request->title;
+        $post->body = $request->description;
+        $post->user_id = Auth::user()->id;        
+        $post->slug = Str::slug($request->title);
+        $post->category_id = $request->category; 
 
         $post->save();
 
@@ -70,8 +73,10 @@ class PostController extends Controller
             Image::create(['url' => $url, 'imageable_id' => $imagen_id, 'imageable_type' => Post::class]); // $post->image()->create(['url' => $url]);
         } 
 
-        return redirect()->back()->with('success', 'New Created succesfully');
+        event(new PostEvent($post));
+        return redirect()->back()->with(['success'=>'Post created successfully']);
     }
+    
     public function destroy($id)
     {
         $post = Post::find($id);

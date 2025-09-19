@@ -23,10 +23,10 @@
                         <tr>
                             <td>{{ $post->id }}</td>
                             <td>{{ $post->name }}</td>
-                            <td width="10px"><a href="{{ route('admin.posts.edit', $post) }}"
+                            <td width="10px"><a href="{{ route('posts.edit', $post) }}"
                                     class="btn btn-primary btn-sm">  <i class="fas fa-edit"></i></a></td>
                             <td width="10px">
-                                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST">
+                                <form action="{{ route('posts.destroy', $post) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" name="delete"

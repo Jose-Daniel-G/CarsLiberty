@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -10,16 +12,14 @@ use Illuminate\Notifications\Notification;
 class PostNotification extends Notification
 {
     use Queueable;
-    protected $title;
-    protected $email;
-    protected $phone;
-    protected $message;
+    protected $post;
     /**
      * Create a new notification instance.
      */
-    public function __construct($title,$email,$phone,$message)
+    public function __construct(Post $post)
     {
-        $this->title = $title;$this->email = $email;$this->phone = $phone;$this->message = $message;    }
+        $this->post = $post;
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -28,7 +28,7 @@ class PostNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -37,13 +37,9 @@ class PostNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Title: '.$this->title)
-            ->line('Email: '.$this->email)
-            ->line('Phone: '.$this->phone)
-            ->line('Message: '.$this->message)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -54,7 +50,10 @@ class PostNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'post' => $this->post->id,
+            'title' => $this->post->title,
+            'description' => $this->post->body,
+            'time' => Carbon::now()->diffForHumans(),
         ];
     }
 }

@@ -16,11 +16,8 @@ return new class extends Migration
         Schema::create('post_tag', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('post_id');
-            $table->unsignedBigInteger('tag_id');
-
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+        $table->foreignId('post_id')->constrained()->onDelete('cascade');
+        $table->foreignId('tag_id')->constrained()->onDelete('cascade');
             
             $table->timestamps();
         });

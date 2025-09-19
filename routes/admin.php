@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserProfileController;
-use App\Http\Controllers\Admin\VehiculoController;
+use App\Http\Controllers\VehiculoController;
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ClienteController;
