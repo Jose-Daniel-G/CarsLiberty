@@ -13,7 +13,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\ProfesorController;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\PicoyplacaController;
 
 // Route::get("/", [HomeController::class, "index"])->name("admin.home")->middleware('can:admin.home');
@@ -63,7 +63,7 @@ Route::get('/cursos/completados', [CursoController::class, 'completados'])->name
 Route::resource('/cursos', CursoController::class)->names('admin.cursos')->middleware('auth', 'can:admin.cursos');
 
 //RUTAS PARA LOS EVENTOS / CLASES
-Route::resource('/eventos', EventController::class)->names('admin.events');
+Route::resource('/agendas', AgendaController::class)->names('admin.agendas');
 
 //RUTAS para desplegar select
 Route::get('/admin/profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
@@ -115,8 +115,8 @@ Route::middleware('auth')->group(function () {
 
 // //RUTAS para las reservas
 // /*NO INCLUDO */
-// Route::get('/reservas/reportes', [EventController::class, 'reportes'])->name('admin.reservas.reportes')->middleware('auth', 'can:admin.reservas.reportes');
+// Route::get('/reservas/reportes', [AgendaController::class, 'reportes'])->name('admin.reservas.reportes')->middleware('auth', 'can:admin.reservas.reportes');
 // /*NO INCLUDO */
-// Route::get('/reservas/pdf/{id}', [EventController::class, 'pdf'])->name('admin.reservas.pdf')->middleware('auth', 'can:admin.reservas.pdf');
+// Route::get('/reservas/pdf/{id}', [AgendaController::class, 'pdf'])->name('admin.reservas.pdf')->middleware('auth', 'can:admin.reservas.pdf');
 // /*NO INCLUDO */
-// Route::get('/reservas/pdf_fechas', [EventController::class, 'pdf_fechas'])->name('admin.reservas.pdf_fechas')->middleware('auth', 'can:admin.event.pdf_fechas');
+// Route::get('/reservas/pdf_fechas', [AgendaController::class, 'pdf_fechas'])->name('admin.reservas.pdf_fechas')->middleware('auth', 'can:admin.event.pdf_fechas');

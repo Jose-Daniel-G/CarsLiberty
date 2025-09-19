@@ -8,7 +8,7 @@ use App\Helpers\DateHelper;
 use App\Models\Curso;
 use App\Models\Profesor;
 use App\Models\Horario;
-use App\Models\Event as CalendarEvent;
+use App\Models\Agenda as CalendarAgenda;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -51,23 +51,23 @@ class HorarioController extends Controller
             $horarios = Horario::whereHas('profesores', function ($query) use ($id) {
                 $query->where('profesor_id', $id);
             })->with(['cursos', 'profesores'])->get();
-            // Obtener eventos agendados para este profesor
-            $horarios_asignados = DB::table('events')
+            // Obtener Agenda agendados para este profesor
+            $horarios_asignados = DB::table('agendas')
                 ->select([
-                    'events.id AS evento_id',
-                    'events.profesor_id',
-                    'events.curso_id',
-                    'events.start AS hora_inicio',
-                    'events.end AS hora_fin',
-                    DB::raw('DAYNAME(events.start) AS dia'),
+                    'agendas.id AS agenda_id',
+                    'agendas.profesor_id',
+                    'agendas.curso_id',
+                    'agendas.start AS hora_inicio',
+                    'agendas.end AS hora_fin',
+                    DB::raw('DAYNAME(agendas.start) AS dia'),
                     'users.id AS user_id',
                     'users.name AS user_nombre',
                     'cursos.nombre AS curso_nombre'
                 ])
-                ->join('cursos', 'events.curso_id', '=', 'cursos.id')
-                ->join('clientes', 'events.cliente_id', '=', 'clientes.id')
+                ->join('cursos', 'agendas.curso_id', '=', 'cursos.id')
+                ->join('clientes', 'agendas.cliente_id', '=', 'clientes.id')
                 ->join('users', 'clientes.user_id', '=', 'users.id')
-                ->where('events.profesor_id', $id)
+                ->where('agendas.profesor_id', $id)
                 ->get();
             // dd(['titulo' => 'Datos de horarios asignados', 'horarios asignados' => $horarios_asignados->toArray()]);
 

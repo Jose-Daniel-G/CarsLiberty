@@ -77,13 +77,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.horarios.show'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.horarios.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
         // rutas para EVENTOS
-        Permission::create(['name' => 'admin.events.index'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
-        Permission::create(['name' => 'admin.events.create'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
-        Permission::create(['name' => 'admin.events.store'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
-        Permission::create(['name' => 'admin.events.show'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
-        Permission::create(['name' => 'admin.events.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
-        Permission::create(['name' => 'admin.events.update'])->syncRoles([$superAdmin, $admin, $secretaria]);
-        Permission::create(['name' => 'admin.events.destroy'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.agendas.index'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.agendas.create'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.agendas.store'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.agendas.show'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
+        Permission::create(['name' => 'admin.agendas.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.agendas.update'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.agendas.destroy'])->syncRoles([$superAdmin, $admin, $secretaria]);
         // //rutas para el admin VEHICULOS
         Permission::create(['name' => 'admin.vehiculos.index'])->syncRoles([$superAdmin]);
         Permission::create(['name' => 'admin.vehiculos.create'])->syncRoles([$superAdmin]);

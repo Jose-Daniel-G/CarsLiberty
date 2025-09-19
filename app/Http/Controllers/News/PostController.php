@@ -17,14 +17,14 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-    public function template()
-    {
-        $posts = Post::select('*')->join('images', 'posts.id', '=', 'images.imageable_id')
-            ->where('imageable_type', '=', Post::class)
-            ->orderBy('posts.id', 'desc')->get(); // comienza desde el ultimo post
+    // public function template()
+    // {
+    //     $posts = Post::select('*')->join('images', 'posts.id', '=', 'images.imageable_id')
+    //         ->where('imageable_type', '=', Post::class)
+    //         ->orderBy('posts.id', 'desc')->get(); // comienza desde el ultimo post
 
-        return view('welcome', compact('posts'));
-    }
+    //     return view('welcome', compact('posts'));
+    // }
     public function index()
     {
         $categories = Category::all();

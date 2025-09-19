@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();  // Clave primaria
 
             $table->unsignedBigInteger('cliente_id');  // Columna para la clave foránea de 'clientes'
-            $table->unsignedBigInteger('evento_id');  // Columna para la clave foránea de 'eventos'
+            $table->unsignedBigInteger('agenda_id');  // Columna para la clave foránea de 'eventos'
 
             $table->boolean('asistio')->default(true);  // Indicar asistencia
             $table->integer('penalidad')->default(0);  // Penalidad por inasistencia
@@ -24,7 +24,7 @@ return new class extends Migration
 
             // Definir las claves foráneas
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
-            $table->foreign('evento_id')->references('id')->on('events')->onDelete('cascade');
+            $table->foreign('agenda_id')->references('id')->on('agendas')->onDelete('cascade');
 
         });
     }

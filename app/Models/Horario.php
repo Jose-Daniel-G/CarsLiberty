@@ -19,9 +19,9 @@ class Horario extends Model
     {
         return $this->belongsToMany(Curso::class, 'horario_profesor_curso', 'horario_id', 'curso_id');
     }
-    public function events()
+    public function agendas()
     {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Agenda::class);
     }
     // En el modelo Horario
     public function usuario()

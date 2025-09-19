@@ -28,3 +28,49 @@ http://localhost:8001/admin/picoyplaca
 FROM cursos c
 INNER JOIN cliente_curso cc ON c.id = cc.curso_id
 WHERE cc.cliente_id = 4 LIMIT 100
+
+tipos_vehiculos
+
+users
+
+categories
+
+posts
+
+tags
+
+post_tag
+
+picoyplaca
+
+vehiculos
+
+sessions
+
+images
+
+permission
+
+secretarias
+
+clientes
+
+cursos
+
+profesores
+
+horarios
+
+agendas
+
+configs
+
+cliente_curso
+
+asistencias
+
+historico_cursos
+
+horario_profesor_curso
+
+- password_reset_tokens - failed_jobs - personal_access_tokens

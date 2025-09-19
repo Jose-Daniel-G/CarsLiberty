@@ -2,13 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Curso;
-use App\Models\Profesor;
-use App\Models\Horario;
-use App\Models\Cliente;
-use App\Models\Secretaria;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Curso; 
 use Illuminate\Database\Seeder;
 
 class CursoSeeder extends Seeder

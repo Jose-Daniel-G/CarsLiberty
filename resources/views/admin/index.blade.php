@@ -235,7 +235,7 @@
                             </div>
 
                             <!-- Incluir Modal INFO-->
-                            @include('admin.events-modal.show')
+                            @include('admin.agenda-modal.show')
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -245,7 +245,7 @@
                         </div>
                     </div>
                 @endcan
-                @include('admin.events-modal.event')
+                @include('admin.agenda-modal.agenda')
             </div>
         </div>
     </div>
@@ -351,29 +351,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // ---------------------------------------
     // Validar hora
     // ---------------------------------------
-    if(horaInicioInput){
-        horaInicioInput.addEventListener('change', function(){
-            if(!this.value) return;
-            let now = new Date();
-            let [hour, minute] = this.value.split(':').map(Number);
-            if(hour < 6 || hour > 20){
-                this.value = '';
-                Swal.fire({ title: "No es posible", text: "Seleccione una hora entre 06:00 y 20:00", icon:"warning" });
-                return;
-            }
-            const selectedDate = fechaReservaInput.value;
-            const today = getLocalDate();
-            if(selectedDate === today){
-                const currentHour = now.getHours();
-                const currentMinutes = now.getMinutes();
-                if(hour < currentHour || (hour === currentHour && minute < currentMinutes)){
-                    this.value = '';
-                    Swal.fire({ text:"No puede seleccionar una hora que ya ha pasado.", icon:"error" });
+        const HoraIncioInput = document.getElementById('hora_inicio');
+
+        if (HoraIncioInput) {
+            HoraIncioInput.addEventListener('change', function() {
+                let selectedTime = this.value;
+                let now = new Date();
+
+                if (selectedTime) {
+                    // Forzar formato HH:00
+                    let [hour] = selectedTime.split(':');
+                    selectedTime = `${hour.padStart(2, '0')}:00`;
+                    this.value = selectedTime;
+
+                    let [selectedHour, selectedMinutes] = selectedTime.split(':').map(Number);
+
+                    // Rango permitido (06:00 - 20:00)
+                    if (selectedHour < 6 || selectedHour > 20) {
+                        Swal.fire({
+                            title: "No es posible",
+                            text: "Seleccione una hora entre las 06:00 am y las 8:00 pm.",
+                            icon: "warning"
+                        });
+                        return;
+                    }
+
+                    // Verificar si es la fecha de hoy
+                    let selectedDate = fechaReservaInput ? fechaReservaInput.value : null;
+                    let today = now.toISOString().slice(0, 10);
+
+                    if (selectedDate === today) {
+                        let currentHour = now.getHours();
+                        let currentMinutes = now.getMinutes();
+
+                        if (
+                            selectedHour < currentHour ||
+                            (selectedHour === currentHour && selectedMinutes < currentMinutes)
+                        ) {
+                            Swal.fire({
+                                text: "No puede seleccionar una hora que ya ha pasado.",
+                                icon: "error"
+                            });
+                        }
+                    }
                 }
-            }
-            this.value = `${hour}:00`; // Ajustar minutos a 00
-        });
-    }
+            });
+        }
+
 
     // ---------------------------------------
     // FullCalendar
@@ -389,11 +413,11 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             events: [], // Se cargan vía Ajax luego
             eventClick: function(info){
-                const evento = info.event;
-                const start = evento.start;
-                const end = evento.end;
-                const prof = evento.extendedProps.profesor || {};
-                const cliente = evento.extendedProps.cliente || {};
+                const agenda = info.event;
+                const start = agenda.start;
+                const end = agenda.end;
+                const prof = agenda.extendedProps.profesor || {};
+                const cliente = agenda.extendedProps.cliente || {};
 
                 document.getElementById('nombres_cliente').textContent = `${cliente.nombres || 'No disponible'} ${cliente.apellidos || ''}`;
                 document.getElementById('nombres_teacher').textContent = `${prof.nombres || 'No disponible'} ${prof.apellidos || ''}`;

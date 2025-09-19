@@ -97,10 +97,10 @@ class ProfesorController extends Controller
     }
 
     public function destroy(Profesor $profesor)
-    {   // Verificar si el profesor tiene eventos asociados
-        if ($profesor->events()->exists()) {
+    {   // Verificar si el profesor tiene agendas asociados
+        if ($profesor->agendas()->exists()) {
             return redirect()->route('admin.profesores.index')->with('title', 'Error al eliminar profesor')
-                ->with(['info', 'No se puede eliminar el profesor porque tiene eventos asociados.','icono', 'error']);
+                ->with(['info', 'No se puede eliminar el profesor porque tiene agendas asociados.','icono', 'error']);
         }
 
         if ($profesor->user) {$profesor->user->delete();}$profesor->delete(); //// Eliminar el profesor y usuario asociado

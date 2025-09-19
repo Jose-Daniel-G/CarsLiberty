@@ -36,7 +36,10 @@
 
                             <div class="form-group text-center">
                                 <!-- Foto de Perfil Actual -->
-                            <img id="current-photo" src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" onerror="this.onerror=null; this.src='{{ $user->adminlte_image() }}';" alt="{{ $user->name }}" class="profile-user-img img-fluid img-circle" style="width: 100px; height: 100px; object-fit: cover;" />
+                                <img id="current-photo" src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}"
+                                    onerror="this.onerror=null; this.src='{{ $user->adminlte_image() }}';"
+                                    alt="{{ $user->name }}" class="profile-user-img img-fluid img-circle"
+                                    style="width: 100px; height: 100px; object-fit: cover;" />
 
 
                             </div>
@@ -225,30 +228,31 @@
                 </div>
                 <!-- /.card -->
             </div>
-        @stop
-        @section('js')
-            <script>
-                // Obtén los elementos
-                const picture = document.getElementById('current-photo');
-                const fileInput = document.getElementById('file');
+        </div>
+    @stop
+    @section('js')
+        <script>
+            // Obtén los elementos
+            const picture = document.getElementById('current-photo');
+            const fileInput = document.getElementById('file');
 
-                // Al hacer clic en la imagen, simula un clic en el input file
-                picture.addEventListener('click', () => {
-                    fileInput.click();
-                });
-                // Cambiar la imagen mostrada cuando se selecciona un archivo
-                fileInput.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
+            // Al hacer clic en la imagen, simula un clic en el input file
+            picture.addEventListener('click', () => {
+                fileInput.click();
+            });
+            // Cambiar la imagen mostrada cuando se selecciona un archivo
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
 
-                    reader.onload = (event) => {
-                        // Actualiza la imagen con la nueva seleccionada
-                        picture.src = event.target.result;
-                    };
+                reader.onload = (event) => {
+                    // Actualiza la imagen con la nueva seleccionada
+                    picture.src = event.target.result;
+                };
 
-                    if (file) {
-                        reader.readAsDataURL(file);
-                    }
-                });
-            </script>
-        @stop
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            });
+        </script>
+    @stop

@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.events.store') }}" method="POST">
+                <form action="{{ route('admin.agendas.store') }}" method="POST">
                     @csrf
                     <div class="row">
                         @can('admin.listUsers')
@@ -61,8 +61,7 @@
                         </div>
                     </div>
                     @php
-                        use App\Helpers\DateHelper;
-                        $dateRange = DateHelper::getCurrentMonthRange(); 
+                        use App\Helpers\DateHelper; $dateRange = DateHelper::getCurrentMonthRange(); 
                     @endphp
 
                     <div class="row">

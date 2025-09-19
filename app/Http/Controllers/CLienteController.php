@@ -65,7 +65,7 @@ class ClienteController extends Controller
                     $cliente->cursos()->attach($cursoId, ['horas_realizadas' => 0]);
                 }
             }
-            if (!isset($cliente)) { // $evento->delete();      
+            if (!isset($cliente)) { // $agenda->delete();      
                 DB::rollBack();                                                   // Revertir todo si algo falla
                 DB::table('users')->where('id', $usuarioId)->delete(); // Definir $ultimoId tomando el máximo ID de la tabla
             }

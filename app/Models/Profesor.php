@@ -12,7 +12,7 @@ class Profesor extends Model
 
     protected $fillable = ['nombres', 'apellidos', 'telefono', 'user_id',];
 
-    public function events(){     return $this->hasMany(Event::class);}  // Uno a muchos
+    public function agendas(){     return $this->hasMany(Agenda::class);}  // Uno a muchos
     public function user(){       return $this->belongsTo(User::class);} // Muchos a uno
     public function vehiculos(){ return $this->hasMany(Vehiculo::class);}// Uno a muchos
 

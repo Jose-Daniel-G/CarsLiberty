@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Curso;
 use App\Models\Profesor;
-use App\Models\Event as CalendarEvent;  // Usa un alias para el modelo Event
+use App\Models\Agenda as CalendarAgenda;  // Usa un alias para el modelo Agenda
 use App\Models\Horario;
 use App\Models\Cliente;
 use App\Models\Secretaria;
@@ -35,12 +35,12 @@ class HomeController extends Controller
         $total_cursos = Curso::count();
         $total_profesores = Profesor::count();
         $total_horarios = Horario::count();
-        $total_eventos = CalendarEvent::count();
+        $total_agendas = CalendarAgenda::count();
         $total_configuraciones = Config::count();
         // $total_completados = Config::count();
 
         $profesores = Profesor::all();
-        $events = CalendarEvent::all(); // dd(Auth::user()->getRoleNames());
+        $agendas = CalendarAgenda::all(); // dd(Auth::user()->getRoleNames());
 
         if (Auth::user()->hasRole('espectador')) {
             $posts = Post::with(['category', 'image'])
@@ -74,7 +74,7 @@ class HomeController extends Controller
 
             $role = 'admin'; // Asegúrate de tener un campo 'role'
 
-            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'events', 'total_configuraciones', 'role'));
+            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'agendas', 'total_configuraciones', 'role'));
         } else {
             $cliente = Cliente::where('user_id', Auth::id())->first();
             \Log::info('cliente', [$cliente]);
@@ -99,17 +99,17 @@ class HomeController extends Controller
                 ->limit(100)
                 ->get();
 
-            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_eventos', 'cursos', 'profesorSelect', 'events', 'total_configuraciones'));
+            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesorSelect', 'agendas', 'total_configuraciones'));
         }
     }
     public function show($id) //show_reservas
     {
         if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
-            $events = CalendarEvent::with('cliente')->get(); // $events = CalendarEvent::all();
+            $agendas = CalendarAgenda::with('cliente')->get(); // $agendas = CalendarAgenda::all();
         } else {
-            $events = CalendarEvent::where('cliente_id',  Auth::user()->cliente->id)->get();
+            $agendas = CalendarAgenda::where('cliente_id',  Auth::user()->cliente->id)->get();
         }
-        return view('admin.reservas.show', compact('events'));
+        return view('admin.reservas.show', compact('agendas'));
     }
 
     public function show_reserva_profesores() //calendar
@@ -117,20 +117,20 @@ class HomeController extends Controller
         try {
             // Verifica si el usuario autenticado es un administrador
             if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
-                // Obtener todos los eventos del profesor específico
-                $events = CalendarEvent::with(['profesor', 'cliente'])->get();
-                return response()->json($events);
+                // Obtener todos los agendas del profesor específico
+                $agendas = CalendarAgenda::with(['profesor', 'cliente'])->get();
+                return response()->json($agendas);
             } else {
 
-                $events = CalendarEvent::with(['profesor', 'cliente'])
-                    ->join('users as profesores', 'profesores.id', '=', 'events.profesor_id')
-                    ->join('clientes', 'clientes.id', '=', 'events.cliente_id')
+                $agendas = CalendarAgenda::with(['profesor', 'cliente'])
+                    ->join('users as profesores', 'profesores.id', '=', 'agendas.profesor_id')
+                    ->join('clientes', 'clientes.id', '=', 'agendas.cliente_id')
                     ->join('users as clientes_users', 'clientes.user_id', '=', 'clientes_users.id')
                     ->where('clientes.user_id', Auth::id())
-                    ->select('events.*')
+                    ->select('agendas.*')
                     ->get();
 
-                return response()->json($events);
+                return response()->json($agendas);
             }
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error: ' . $exception->getMessage()]);

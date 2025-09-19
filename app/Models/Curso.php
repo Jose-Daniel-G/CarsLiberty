@@ -10,9 +10,9 @@ class Curso extends Model
     use HasFactory;
     protected $fillable = ['nombre', 'descripcion', 'horas_requeridas', 'estado'];
 
-    public function events()                // Uno a muchos
+    public function agenda()                // Uno a muchos
     {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Agenda::class);
     }
     public function horarioProfesorCurso() // Uno a muchos
     {

@@ -9,7 +9,7 @@ use App\Models\Cliente;
 use App\Models\Config;
 use App\Models\Curso;
 use App\Models\Profesor;
-use App\Models\Event as CalendarEvent;
+use App\Models\Agenda as CalendarAgenda;
 use App\Models\Horario;
 use App\Models\HorarioProfesorCurso;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -18,13 +18,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class EventController extends Controller
+class AgendaController extends Controller
 {
     public function __construct()
     {  // Solo los que tengan el permiso pueden acceder a estas acciones
-        $this->middleware('can:admin.events.create')->only('create', 'store');
-        $this->middleware('can:admin.events.edit')->only('edit', 'update');
-        $this->middleware('can:admin.events.destroy')->only('destroy');
+        $this->middleware('can:admin.agendas.create')->only('create', 'store');
+        $this->middleware('can:admin.agendas.edit')->only('edit', 'update');
+        $this->middleware('can:admin.agendas.destroy')->only('destroy');
     }
     // public function index() {} public function create() {}
 
@@ -47,15 +47,15 @@ class EventController extends Controller
         // Obtener el cliente para verificar asistencia
         $cliente_id = Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') ? $request->cliente_id : Auth::user()->cliente->id;
 
-        if (Auth::user()->hasRole('cliente')) {                 // Verificar si el cliente tiene un evento anterior y si asistió
-            $asistencia = Asistencia::join('events', 'asistencias.evento_id', '=', 'events.id')
-                ->select('events.start', 'asistencias.*')
+        if (Auth::user()->hasRole('cliente')) {                 // Verificar si el cliente tiene un agenda anterior y si asistió
+            $asistencia = Asistencia::join('agendas', 'asistencias.agenda_id', '=', 'agendas.id')
+                ->select('agendas.start', 'asistencias.*')
                 ->where('asistencias.cliente_id', $cliente_id)  // Filtrar por cliente
-                ->orderBy('events.start', 'desc')->first();     // Ordenar por fecha para obtener el evento más reciente
+                ->orderBy('agendas.start', 'desc')->first();     // Ordenar por fecha para obtener el agenda más reciente
 
             if ($asistencia && $asistencia->asistio === 0) {     // Si hay asistencia y no asistió
                 return redirect()->back()->with([
-                    'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último evento.',
+                    'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último agenda.',
                     'icono' => 'error','title' => 'Asistencia pendiente',
                 ]);
             }
@@ -83,35 +83,35 @@ class EventController extends Controller
             ]);
         }
 
-        $eventos_duplicados = CalendarEvent::where('profesor_id', $profesor->id)    // Validar si existen eventos duplicados
+        $agendas_duplicados = CalendarAgenda::where('profesor_id', $profesor->id)    // Validar si existen agendas duplicados
             ->where(function ($query) use ($fecha_hora_inicio, $fecha_hora_fin) {
                 $query->whereBetween('start', [$fecha_hora_inicio, $fecha_hora_fin])
                     ->orWhereBetween('end', [$fecha_hora_inicio, $fecha_hora_fin]);
             })->exists();
 
-        if ($eventos_duplicados) {
+        if ($agendas_duplicados) {
             return redirect()->back()->with(['info' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.', 'icono' => 'error', 'title' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',]);
         }
 
         $curso = Curso::find($cursoid);
-        // Crear una nueva instancia de CalendarEvent
-        $evento = new CalendarEvent();
-        $evento->title = $curso->nombre;
-        $evento->start = $fecha_hora_inicio;
-        $evento->end = $fecha_hora_fin;
-        $evento->color = '#e82216';
-        $evento->profesor_id = $request->profesorid;
-        $evento->curso_id = $cursoid;
+        // Crear una nueva instancia de CalendarAgenda
+        $agenda = new CalendarAgenda();
+        $agenda->title = $curso->nombre;
+        $agenda->start = $fecha_hora_inicio;
+        $agenda->end = $fecha_hora_fin;
+        $agenda->color = '#e82216';
+        $agenda->profesor_id = $request->profesorid;
+        $agenda->curso_id = $cursoid;
 
         if (Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
-                 $evento->cliente_id = $request->cliente_id;
-        } else { $evento->cliente_id = Auth::user()->cliente->id; }
+                 $agenda->cliente_id = $request->cliente_id;
+        } else { $agenda->cliente_id = Auth::user()->cliente->id; }
 
-        $evento->save();
+        $agenda->save();
         
         Asistencia::create([                            // Crear una asistencia por defecto como inasistencia
-            'cliente_id' => $evento->cliente_id,
-            'evento_id' => $evento->id,
+            'cliente_id' => $agenda->cliente_id,
+            'agenda_id' => $agenda->id,
             'asistio' => false,                         // Inasistencia por defecto
             'penalidad' => 20000 * $request->hora_fin,  // Penalidad por inasistencia
             'liquidado' => false,
@@ -126,23 +126,23 @@ class EventController extends Controller
 
     public function show()
     {  try {
-            $events = CalendarEvent::with('profesor', 'cliente')->get(); // Carga la relación 'profesor'
-            return response()->json($events); // Devuelve todos los eventos
+            $agendas = CalendarAgenda::with('profesor', 'cliente')->get(); // Carga la relación 'profesor'
+            return response()->json($agendas); // Devuelve todos los agendas
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener eventos'], 500);
+            return response()->json(['error' => 'Error al obtener agendas'], 500);
         }
     }
 
-    public function update(Request $request, CalendarEvent $event)
+    public function update(Request $request, CalendarAgenda $agenda)
     {
         $validatedData = $request->validate(['profesor_id' => 'required', 'hora_inicio' => 'required', 'fecha_reserva' => 'required|date']);
-        $event->update($validatedData);
-        return response()->json(['message' => 'Evento actualizado correctamente']);
+        $agenda->update($validatedData);
+        return response()->json(['message' => 'agenda actualizado correctamente']);
     }
 
-    public function destroy(CalendarEvent $evento)
+    public function destroy(CalendarAgenda $agenda)
     {
-        $evento->delete();
+        $agenda->delete();
         return redirect()->back()->with(['mensaje' => 'Se eliminó la reserva de manera correcta', 'icono' => 'success',]);
     }
     
@@ -158,9 +158,9 @@ class EventController extends Controller
     // public function pdf()
     // {
     //     $configuracion = Config::latest()->first();
-    //     $eventos = CalendarEvent::all();
+    //     $agendas = CalendarAgenda::all();
 
-    //     $pdf = Pdf::loadView('admin.reservas.pdf', compact('configuracion', 'eventos'));
+    //     $pdf = Pdf::loadView('admin.reservas.pdf', compact('configuracion', 'agendas'));
 
     //     // Incluir la numeración de páginas y el pie de página
     //     $pdf->output();
@@ -183,9 +183,9 @@ class EventController extends Controller
     //     $fecha_inicio = $request->input('fecha_inicio');
     //     $fecha_fin = $request->input('fecha_fin');
 
-    //     $eventos = CalendarEvent::whereBetween('start',[$fecha_inicio, $fecha_fin])->get();
+    //     $agendas = CalendarAgenda::whereBetween('start',[$fecha_inicio, $fecha_fin])->get();
 
-    //     $pdf = \PDF::loadView('admin.reservas.pdf_fechas', compact('configuracion','eventos','fecha_inicio','fecha_fin'));
+    //     $pdf = \PDF::loadView('admin.reservas.pdf_fechas', compact('configuracion','agendas','fecha_inicio','fecha_fin'));
 
     //     // Incluir la numeración de páginas y el pie de página
     //     $pdf->output();

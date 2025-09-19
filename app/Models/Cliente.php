@@ -18,7 +18,7 @@ class Cliente extends Model
     
   
     public function user(){   return $this->belongsTo(User::class); }  // Cliente pertenece a un Usuario
-    public function events(){ return $this->hasMany(Event::class);  }  // Cliente tiene muchos Events
+    public function agenda(){ return $this->hasMany(Agenda::class);  }  // Cliente tiene muchos Agenda
     public function cursos()                                           // Cliente pertenece a muchos Cursos
     {   return $this->belongsToMany(Curso::class, 'cliente_curso')->withPivot('horas_realizadas');}
     

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Event as CalendarEvent;
+use App\Models\Agenda as CalendarAgenda;
 
 class Asistencia extends Model
 {
@@ -15,8 +15,8 @@ class Asistencia extends Model
     {
         return $this->belongsTo(Cliente::class, 'cliente_id'); 
     }
-    public function event()
+    public function agenda()
     {
-        return $this->belongsTo(CalendarEvent::class, 'evento_id');
+        return $this->belongsTo(CalendarAgenda::class, 'agenda_id');
     }
 }

@@ -5,7 +5,7 @@
 {{-- <pre>{{ json_encode($horarios, JSON_PRETTY_PRINT) }}</pre> --}}
 
 <div class="table-responsive">
-    <table id="schedule" class="table table-striped table-bordered table-hover table-sm">
+    <table class="table table-striped table-bordered table-hover table-sm">
         <thead>
             <tr>
                 <th scope="col">Hora</th>
@@ -20,20 +20,13 @@
         <tbody>
             @php
                 $horas = [
-                    '06:00 am - 07:00 am',
-                    '07:00 am - 08:00 am', // 2 hours
-                    '08:00 am - 09:00 am',
-                    '09:00 am - 10:00 am',
-                    '10:00 am - 11:00 am',
-                    '11:00 am - 12:00 pm',
-                    '12:00 pm - 01:00 pm',
-                    '01:00 pm - 02:00 pm',
-                    '02:00 pm - 03:00 pm',
-                    '03:00 pm - 04:00 pm',
-                    '04:00 pm - 05:00 pm',
-                    '05:00 pm - 06:00 pm',
-                    '06:00 pm - 07:00 pm',
-                    '07:00 pm - 08:00 pm',
+                    '06:00 am - 07:00 am','07:00 am - 08:00 am',// 2 hours
+                    '08:00 am - 09:00 am','09:00 am - 10:00 am',
+                    '10:00 am - 11:00 am','11:00 am - 12:00 pm',
+                    '12:00 pm - 01:00 pm','01:00 pm - 02:00 pm',
+                    '02:00 pm - 03:00 pm','03:00 pm - 04:00 pm',
+                    '04:00 pm - 05:00 pm','05:00 pm - 06:00 pm',
+                    '06:00 pm - 07:00 pm','07:00 pm - 08:00 pm',
                 ];
             @endphp
 
@@ -92,10 +85,3 @@
         </tbody>
     </table>
 </div>
-<script>
-    new DataTable('#schedule', {
-        responsive: true,
-        autoWidth: false,
-        scrollX: true,
-    });
-</script>

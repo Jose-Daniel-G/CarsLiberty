@@ -30,7 +30,7 @@
                                 <th>Hora de inicio</th>
                                 <th>Hora de fin</th>
                                 {{-- <th>Fecha y hora de registro</th> --}}
-                                @can('admin.events.destroy')
+                                @can('admin.agendas.destroy')
                                     <th>Acciones</th>
                                 @endcan
 
@@ -38,33 +38,41 @@
                         </thead>
                         <tbody>
                             <?php $contador = 1; ?>
-                            @foreach ($events as $evento)
+                            @foreach ($agendas as $agenda)
                                 <tr>
                                     <td scope="row">{{ $contador++ }}</td>
-                                    <td scope="row">{{ $evento->profesor->nombres . ' ' . $evento->profesor->apellidos }}</td>
-                                    <td scope="row">{{ $evento->cliente->nombres . ' ' . $evento->cliente->apellidos }}</td>
-                                    <td scope="row" class="text-center">{{ $evento->curso->nombre }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($evento->start)->format('Y-m-d') }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($evento->start)->format('H:i') }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($evento->end)->format('H:i') }}</td>
-                                    {{-- <td scope="row" class="text-center">{{ $evento->created_at }}</td> --}}
-                                    {{-- <td scope="row" class="text-center">{{ $evento->id }}</td> --}}
-                                    @can('admin.events.destroy')
+                                    <td scope="row">{{ $agenda->profesor->nombres . ' ' . $agenda->profesor->apellidos }}</td>
+                                    <td scope="row">{{ $agenda->cliente->nombres . ' ' . $agenda->cliente->apellidos }}</td>
+                                    <td scope="row" class="text-center">{{ $agenda->curso->nombre }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($agenda->start)->format('Y-m-d') }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($agenda->start)->format('H:i') }}</td>
+                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($agenda->end)->format('H:i') }}</td>
+                                    {{-- <td scope="row" class="text-center">{{ $agenda->created_at }}</td> --}}
+                                    {{-- <td scope="row" class="text-center">{{ $agenda->id }}</td> --}}
+
+
+                                    @can('admin.agendas.destroy')
                                         <td scope="row">
-                                            {{-- <a href=""  class="btn btn-info btn-sm">Ver</a> --}}
                                             <div class="btn-group" role="group" aria-label="basic example">
-                                                <form id="delete-form-{{ $evento->id }}"
-                                                    action="{{ route('admin.events.destroy', $evento->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger"
-                                                        onclick="confirmDelete({{ $evento->id }})"><i
-                                                            class="fas fa-trash"></i></button>
-                                                </form>
+                                                {{-- button EDIT --}}
+                                                <a href="#" class="btn btn-warning btn-sm mr-1"
+                                                    data-id="{{ $agenda->id }}" data-toggle="modal" data-target="#editModal"
+                                                    title="Editar"> <i class="fas fa-edit"></i></a>
+                                                {{-- <a href=""  class="btn btn-info btn-sm">Ver</a> --}}
+                                                <div class="btn-group" role="group" aria-label="basic example">
+                                                    <form id="delete-form-{{ $agenda->id }}"
+                                                        action="{{ route('admin.agendas.destroy', $agenda->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-danger"
+                                                            onclick="confirmDelete({{ $agenda->id }})"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </td>
                                     @endcan
-
                                 </tr>
                             @endforeach
                         </tbody>
@@ -129,6 +137,5 @@
             }
 
         });
-
     </script>
 @stop

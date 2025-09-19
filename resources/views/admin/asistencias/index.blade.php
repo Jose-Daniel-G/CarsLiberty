@@ -27,19 +27,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($events as $event)
+                                    @foreach ($agendas as $agenda)
                                         <tr>
-                                            <td>{{ $event->cliente->nombres }}</td>
-                                            <td>{{ $event->title }}</td>
-                                            <td>{{ $event->start }}</td>
+                                            <td>{{ $agenda->cliente->nombres }}</td>
+                                            <td>{{ $agenda->title }}</td>
+                                            <td>{{ $agenda->start }}</td>
                                             <td>
-                                        <input type="hidden" name="eventos[{{ $event->id }}][cliente_id]" 
-                                                value="{{ $event->cliente->id }}">
-                                                <input type="checkbox" name="eventos[{{ $event->id }}][asistio]" 
+                                        <input type="hidden" name="agendaos[{{ $agenda->id }}][cliente_id]" 
+                                                value="{{ $agenda->cliente->id }}">
+                                                <input type="checkbox" name="agendaos[{{ $agenda->id }}][asistio]" 
                                                 value="1" 
-                                                {{ !empty($asistencias[$event->id . '-' . $event->cliente->id]) && 
-                                                    $asistencias[$event->id . '-' . $event->cliente->id]->asistio ? 'checked' : '' }} 
-                                                onchange="actualizarAsistencia({{ $event->id }}, {{ $event->cliente->id }}, this.checked)">
+                                                {{ !empty($asistencias[$agenda->id . '-' . $agenda->cliente->id]) && 
+                                                    $asistencias[$agenda->id . '-' . $agenda->cliente->id]->asistio ? 'checked' : '' }} 
+                                                onchange="actualizarAsistencia({{ $agenda->id }}, {{ $agenda->cliente->id }}, this.checked)">
                                             </td>
                                         </tr>
                                     @endforeach
@@ -62,11 +62,11 @@
             });
     </script>
     <script>
-        function actualizarAsistencia(eventoId, clienteId, asistio) {
+        function actualizarAsistencia(agendaoId, clienteId, asistio) {
 
             const data = {                                              // Crear un objeto con los datos a enviar
                 _token: '{{ csrf_token() }}',
-                eventos: {[eventoId]: { cliente_id: clienteId, asistio: asistio ? 1 : 0}}
+                agendaos: {[agendaoId]: { cliente_id: clienteId, asistio: asistio ? 1 : 0}}
             };
 
             fetch("{{ route('admin.asistencias.store') }}", {            // Realizar la solicitud POST usando Fetch API
