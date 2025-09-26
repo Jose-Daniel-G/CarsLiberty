@@ -161,7 +161,7 @@ php artisan queue:failed
 php artisan queue:retry {id}
 
 ```
-###### NOTIFICATIONS IS NOT IMPLEMENTED ########################
+###### [ NOTIFICATIONS ] ##############
 First, create the migrations for the notifications and queues tables.
 ```
 php artisan notification:table

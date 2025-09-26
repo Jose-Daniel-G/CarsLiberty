@@ -43,9 +43,7 @@ class HomeController extends Controller
         $agendas = CalendarAgenda::all(); // dd(Auth::user()->getRoleNames());
 
         if (Auth::user()->hasRole('espectador')) {
-            $posts = Post::with(['category', 'image'])
-                ->latest()
-                ->get();
+            $posts = Post::with(['category', 'image'])->latest()->get();
 
                 // dd($posts);
             return view('home', compact('posts'));

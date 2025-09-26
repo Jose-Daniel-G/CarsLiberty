@@ -25,7 +25,7 @@
                         <p>Configuracion</p>
                     </div>
                     <div class="icon">
-                        <i class="bi bi-gear"></i>
+                        <i class="fa-solid fa-gear"></i>
                     </div>
                     <a href="{{ route('admin.config.index') }}" class="small-box-footer">Mas info <i
                             class="fas fa-arrow-circle-right"></i></a>
@@ -90,7 +90,7 @@
                         <p>Profesores</p>
                     </div>
                     <div class="icon">
-                        <i class="ion fas bi bi-person-lines-fill"></i>
+                        <i class="fa-solid fa-chalkboard-user"></i>
                     </div>
                     <a href="{{ route('admin.profesores.index') }}" class="small-box-footer">Mas info <i
                             class="fas fa-arrow-circle-right"></i></a>
@@ -107,7 +107,7 @@
                         <p>{{ __('actions.schedules') }}</p>
                     </div>
                     <div class="icon">
-                        <i class="ion fas bi bi-calendar2-week"></i>
+                        <i class="fa-solid fa-calendar-days"></i>
                     </div>
                     <a href="{{ route('admin.horarios.index') }}" class="small-box-footer">Mas info <i
                             class="fas fa-arrow-circle-right"></i></a>
@@ -140,7 +140,7 @@
                         <p>Vehiculos</p>
                     </div>
                     <div class="icon">
-                        <i class="bi bi-car-front"></i>
+                        <i class="fa fa-car"></i>
                     </div>
                     <a href="{{ route('admin.vehiculos.index') }}" class="small-box-footer">Mas info <i
                             class="fas fa-arrow-circle-right"></i></a>
@@ -157,7 +157,7 @@
                     <p>Cursos completados</p>
                 </div>
                 <div class="icon">
-                    <i class="bi bi-check-circle"></i>
+                    <i class="fa-regular fa-check-circle"></i>
                 </div>
                 <a href="{{ route('admin.cursos.completados') }}" class="small-box-footer">Mas info <i
                         class="fas fa-arrow-circle-right"></i></a>

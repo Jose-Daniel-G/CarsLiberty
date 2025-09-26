@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\HomeController;
 
 use App\Http\Controllers\Admin\HorarioController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +30,14 @@ Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_
 
 Route::resource('categories',CategoriesController::class)->names('categories');
 Route::resource('posts', PostController::class)->names('posts');
+Route::get('home', function(){  $posts = Post::with(['category', 'image'])->latest()->get(); return view('home', compact('posts'));})->name('home');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () { // Es para leer las notificaciones de los posts creados por otros
     Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
+
+
 // Route::post('/historial/registrar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'registrarCursoCompletado']);
 // Route::get('/historial/completar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'completarCurso']);
 // Route::get('/historial/listar/{clienteId}', [HistorialCursoController::class, 'listarCursosCompletados']);

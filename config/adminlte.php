@@ -385,7 +385,7 @@ return [
         ],
         [
             'text' => 'Profesores',
-            'icon' => 'ion fas bi bi-person-lines-fill',
+            'icon' => 'fa-solid fa-chalkboard-user',
             'can' => 'admin.profesores.index',
             'submenu' => [
                 // ['text' => 'Creacion de profesores','icon' => 'far fa-circle nav-icon','route' => 'admin.profesores.create', ],
@@ -477,6 +477,11 @@ return [
                     'text'  => 'Posts',
                     'route' => 'posts.index',
                     'icon'  => 'nav-icon fas fa-copy',
+                ],
+                [
+                    'text'  => 'VER NOTICIAS/POSTS',
+                    'route' => 'home',
+                    'icon'  => 'fa-solid fa-newspaper',
                 ],
             ],
         ]
