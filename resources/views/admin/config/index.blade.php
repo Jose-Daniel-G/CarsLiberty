@@ -30,7 +30,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-outline card-primary">
+            <div class="card card-outline card-primary  px-2 py-2">
                 <div class="card-body">
                     @if (session('info'))
                         <div class="alert alert-success"><strong>{{ $info }}</strong></div>
@@ -38,8 +38,7 @@
                     @if ($config)
                         <table id="configuraciones" class="table table-bordered table-striped">
                             <thead>
-                                <tr>
-                                    <th>#</th>
+                                <tr><th>#</th>
                                     <th>Nombre</th>
                                     <th>Dirección</th>
                                     <th>Teléfono</th>
@@ -70,11 +69,8 @@
                                                 action="{{ route('admin.config.destroy', $config->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="confirmDelete({{ $config->id }})"><i
-                                                        class="fas fa-trash"></i></button>
+                                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $config->id }})"><i     class="fas fa-trash"></i></button>
                                             </form>
-
                                         </div>
                                     </td>
                                 </tr>
@@ -82,13 +78,9 @@
                         </table>
                     @else
                         @include('admin.config.create')
-
                         <div class="alert alert-danger">
                             No hay configuraciones registradas.
-                            {{-- button create --}}
-                            <a class="btn btn-secondary" data-toggle="modal" data-target="#createModal">Registrar<i
-                                    class="bi bi-plus-circle-fill"></i></a>
-
+                            <a class="btn btn-secondary" data-toggle="modal" data-target="#createModal">Registrar<i class="bi bi-plus-circle-fill"></i></a>
                         </div>
                     @endif
 
@@ -112,8 +104,7 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
+                    document.getElementById('delete-form-' + id).submit(); // Si el usuario confirma, se envía el formulario.
                 }
             });
         }

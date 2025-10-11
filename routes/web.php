@@ -18,8 +18,7 @@ use App\Notifications\PostNotification;
 
 Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
 
-/** LANDPAGE  **/Route::get('/landpage', function () {return Auth::check() ? app(HomeController::class)->index() : view('template.index'); });
-/** LOGIN     **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('auth.login'); });
+/** LANDING-PAGE/LOGIN **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('welcome'); });
 /** REGISTER  **/Route::get('/register', function () {return redirect('/');});
 /** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
 

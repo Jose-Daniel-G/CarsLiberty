@@ -34,8 +34,7 @@ class AsistenciaController extends Controller
         // $asistencias = Asistencia::with('agenda', 'cliente')
         //     ->whereHas('agenda', function ($query) use ($hoy) {
         //         $query->whereDate('start', $hoy);
-        //     })
-        //     ->get()
+        //     })->get()
         //     ->keyBy(function ($item) {
         //         return $item->agenda_id . '-' . $item->cliente_id;
         //     });

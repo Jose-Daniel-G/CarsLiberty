@@ -537,60 +537,33 @@ return [
         'Datatables' => [
             'active' => true,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css',
-                ],
+                // 1. CORE - DataTables base (PRIMERO)
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js'],
+
+                // 2. LIBRERÍAS NECESARIAS (jszip, pdfmake)
+                ['type' => 'js','asset' => true,'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js'],
+
+                // 3. BUTTONS (después de jszip y pdfmake)
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js'],
+
+                // 4. RESPONSIVE (opcional)
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js'],
+                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js'],
+
+                // 5. CSS (al final)
+                ['type' => 'css','asset' => true,'location' => '//cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css'],
+                ['type' => 'css','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap4.min.css'],
+                ['type' => 'css','asset' => true,'location' => '//cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css'],
+                ['type' => 'css','asset' => true,'location' => '//cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css'],
             ],
         ],
-
-
         'Select2' => [
             'active' => true,
             'files' => [

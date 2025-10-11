@@ -4,13 +4,10 @@
 @section('css')
 @stop
 @section('content_header')
-    <h1>Sistema de reservas </h1>
+    <h1>Panel principal</h1>
 @stop
 
-@section('content')
-    <div class="row">
-        <h1>Panel principal</h1>
-    </div>
+@section('content') 
     <div class="row">
         <div class="col-md-12">
             <div class="card card-outline card-primary">    
@@ -67,9 +64,17 @@
                         { data: 'cc', name: 'cc' },
                         { data: 'user.email', name: 'user.email' },
                         { data: 'direccion', name: 'direccion' },
-                        { data: 'action', name: 'action', orderable: false, searchable: false }],
-                dom: 'Bfrtip',
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
+                        { data: 'action', name: 'action', orderable: false, searchable: false }], 
+                scrollX: true,
+                autoWidth: false,
+                dom: 'Bfrtip', // This correctly enables the Buttons extension
+                buttons: [{extend: 'copyHtml5',text: '<i class="bi bi-clipboard-check"></i> Copiar',className: 'btn btn-sm btn-success'}, // Added btn-sm for better consistency
+                          {extend: 'csvHtml5',text: '<i class="bi bi-filetype-csv"></i> CSV',className: 'btn btn-sm btn-warning'},
+                          {extend: 'excelHtml5',text: '<i class="bi bi-file-earmark-excel"></i> Excel',className: 'btn btn-sm btn-secondary'},
+                          {extend: 'pdfHtml5',text: '<i class="bi bi-filetype-pdf"></i> PDF',className: 'btn btn-sm btn-danger'},
+                          {extend: 'print',text: '<i class="bi bi-printer"></i> Imprimir',className: 'btn btn-sm btn-dark' },
+                          {extend: 'colvis'}
+                ],
                 language: {
                     decimal: "",
                     emptyTable: "No hay datos disponibles en la tabla",

@@ -1,10 +1,9 @@
-
 <!-- Modal de Create -->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">Crear Vehículo</h5>
+                <h5 class="modal-title" id="createModalLabel">Configuracion</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -15,15 +14,13 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="logo">Logo</label>
-
                             <div class="form-group">
 
                                 <div class="image-wrapper">
 
                                     <img id="picture"
                                         src="{{ isset($config->logo) ? asset('storage/' . $config->logo) : 'https://cdn.pixabay.com/photo/2020/03/27/13/02/venice-4973502_1280.jpg' }}"
-                                        alt="" style="cursor:pointer; max-width:100%; height:auto;">
+                                        alt="" style="cursor:pointer; max-width:90%; height:auto;">
                                 </div>
                             </div>
                             <div class="form-group">

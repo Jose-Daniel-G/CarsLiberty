@@ -6,16 +6,12 @@
 
 @stop
 @section('content_header')
-    <h1>Sistema de reservas </h1>
+    {{-- <h1><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}</h1> --}}
 @stop
 
-@section('content')
-    <div class="row">
-        <h3><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}
-        </h3>
-    </div>
+@section('content') 
 
-    <div class="row">
+    <div class="row pt-3">
         {{-- Configuracion --}}
         @can('admin.config.index')
             <div class="col-lg-3 col-6">
@@ -455,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#cursoid').on('change', function(){
         const cursoid = $(this).val();
         if(!cursoid) return;
-        const url = "{{ route('obtenerProfesores', ':id') }}".replace(':id', cursoid);
+        const url = "{{ route('admin.obtenerProfesores', ':id') }}".replace(':id', cursoid);
         $.get(url, function(data){
             if(Array.isArray(data)){
                 $('#profesorid').empty().append('<option value="" selected disabled>Seleccione un Profesor</option>');
@@ -467,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#cliente_id').on('change', function(){
         const cliente_id = $(this).val();
         if(!cliente_id) return;
-        const url = "{{ route('obtenerCursos', ':id') }}".replace(':id', cliente_id);
+        const url = "{{ route('admin.obtenerCursos', ':id') }}".replace(':id', cliente_id);
         $.get(url, function(data){
             if(Array.isArray(data)){
                 $('#cursoid').empty().append('<option value="" selected disabled>Seleccione un Curso</option>');

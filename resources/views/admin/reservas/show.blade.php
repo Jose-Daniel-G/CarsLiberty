@@ -108,9 +108,17 @@
             responsive: true,
             autoWidth: false, //no le vi la funcionalidad
             dom: 'Bfrtip', // Añade el contenedor de botones
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print', 'colvis' // Botones que aparecen en la imagen
-            ],
+            buttons: [{
+                extend: 'collection',
+                text: 'Reportes',
+                orientation: 'landscape',
+                buttons: [{extend: 'copyHtml5',text: '<i class="bi bi-clipboard-check"></i> Copiar'}, // Added btn-sm for better consistency
+                          {extend: 'csvHtml5',text: '<i class="bi bi-filetype-csv"></i> CSV'},
+                          {extend: 'excelHtml5',text: '<i class="bi bi-file-earmark-excel"></i> Excel'},
+                          {extend: 'pdfHtml5',text: '<i class="bi bi-filetype-pdf"></i> PDF'},
+                          {extend: 'print',text: '<i class="bi bi-printer"></i> Imprimir' },
+                          {extend: 'colvis'}],
+            }, ],
             "language": {
                 "decimal": "",
                 "emptyTable": "No hay datos disponibles en la tabla",

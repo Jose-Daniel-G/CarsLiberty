@@ -7,14 +7,11 @@
 @stop
 
 @section('content_header')
-    <h1>Sistema de Reservas</h1>
+    <h1>Informacion general</h1>
 @stop
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <h1>Informacion general</h1>
-        </div>
+    <div class="container-fluid"> 
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-outline card-primary">

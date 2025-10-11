@@ -39,7 +39,7 @@ class AgendaController extends Controller
         // Buscar el profesor por su ID
         $profesor = Profesor::find($request->profesorid);
         $fecha_reserva = $request->fecha_reserva;
-        $hora_inicio = $request->hora_inicio . ':00';                          // Asegurarse de que la hora esté en formato correcto
+        $hora_inicio = $request->hora_inicio . ':00';                           // Asegurarse de que la hora esté en formato correcto
         $fecha_hora_inicio = Carbon::parse("{$fecha_reserva} {$hora_inicio}");  // Crear un objeto Carbon para la fecha y hora de inicio
         $fecha_hora_fin = $fecha_hora_inicio->copy()->addHours($request->hora_fin); // Sumamos las horas ingresadas en el campo 'hora_fin'
         $cursoid = $request->cursoid;

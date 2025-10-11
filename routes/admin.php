@@ -16,76 +16,76 @@ use App\Http\Controllers\ProfesorController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\PicoyplacaController;
 
-// Route::get("/", [HomeController::class, "index"])->name("admin.home")->middleware('can:admin.home');
+// Route::get("/", [HomeController::class, "index"])->name("home")->middleware('can:home');
 //RUTAS TOGGLE ACTIVATE / DEACTIVATE
-Route::patch('/clientes/{id}/toggle-status', [ClienteController::class, 'toggleStatus'])->name('admin.clientes.toggleStatus');
-Route::patch('/programador/{id}/toggle-status', [SecretariaController::class, 'toggleStatus'])->name('admin.secretarias.toggleStatus');
-Route::patch('/profesor/{id}/toggle-status', [ProfesorController::class, 'toggleStatus'])->name('admin.profesors.toggleStatus');
-Route::patch('/curso/{id}/toggle-status', [CursoController::class, 'toggleStatus'])->name('admin.cursos.toggleStatus');
+Route::patch('/clientes/{id}/toggle-status', [ClienteController::class, 'toggleStatus'])->name('clientes.toggleStatus');
+Route::patch('/programador/{id}/toggle-status', [SecretariaController::class, 'toggleStatus'])->name('secretarias.toggleStatus');
+Route::patch('/profesor/{id}/toggle-status', [ProfesorController::class, 'toggleStatus'])->name('profesors.toggleStatus');
+Route::patch('/curso/{id}/toggle-status', [CursoController::class, 'toggleStatus'])->name('cursos.toggleStatus');
 
 //RUTAS ADMIN
 
 //RUTAS HOME
-Route::get('/admin', [HomeController::class, 'index'])->name('admin.index')->middleware('auth');
+Route::get('/admin', [HomeController::class, 'index'])->name('index')->middleware('auth');
 
 //esta ruta es para los profesore ver quien tiene una reserva con el
-Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('admin.show_reservas');
+Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('show_reservas');
 
 Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores']) //Esta ruta es para los estudiantes 
-                                                        ->name('admin.horarios.show_reserva_profesores'); //ver reservas tiene
+                                                        ->name('horarios.show_reserva_profesores'); //ver reservas tiene
 
 //RUTAS CONFIGURACIONES
-Route::resource('/config', ConfigController::class)->names('admin.config')->middleware('auth', 'can:admin.config');
+Route::resource('/config', ConfigController::class)->names('config')->middleware('auth', 'can:config');
 /** CONFIG PROFILE  **/
-Route::get('/user/profile', [UserProfileController::class, 'index'])->name('admin.profile.index');
-Route::put('/user/profile-information', [UserProfileController::class, 'update'])->name('admin.user-profile-information.update');
-Route::put('/user/profile-password', [UserProfileController::class, 'updatePassword'])->name('admin.user-profile-password.updatePassword');
+Route::get('/user/profile', [UserProfileController::class, 'index'])->name('profile.index');
+Route::put('/user/profile-information', [UserProfileController::class, 'update'])->name('user-profile-information.update');
+Route::put('/user/profile-password', [UserProfileController::class, 'updatePassword'])->name('user-profile-password.updatePassword');
 
 // Rutas para profesores
-Route::get('/admin/profesor/asistencia', [AsistenciaController::class, 'index'])->name('admin.asistencias.index');
-Route::post('/admin/asistencia/registrar', [AsistenciaController::class, 'store'])->name('admin.asistencias.store');
+Route::get('/admin/profesor/asistencia', [AsistenciaController::class, 'index'])->name('asistencias.index');
+Route::post('/admin/asistencia/registrar', [AsistenciaController::class, 'store'])->name('asistencias.store');
 
 // Rutas para secretarias
-Route::get('/admin/secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('admin.secretarias.inasistencias');
+Route::get('/admin/secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('secretarias.inasistencias');
 Route::post('/admin/asistencia/habilitar/{id}', [AsistenciaController::class, 'habilitarCliente'])->name('asistencia.habilitar');
 
 //RUTAS SECRETARIAS
-Route::resource('/secretarias', SecretariaController::class)->names('admin.secretarias');
+Route::resource('/secretarias', SecretariaController::class)->names('secretarias');
 
 // RUTAS PROFESORES (->parameters) para usar profesores en ves de profesore 
-Route::resource('/profesores', ProfesorController::class)->names('admin.profesores')->parameters(['profesores' => 'profesor']);
+Route::resource('/profesores', ProfesorController::class)->names('profesores')->parameters(['profesores' => 'profesor']);
 
 //RUTAS CLIENTES
-Route::resource('/clientes', ClienteController::class)->names('admin.clientes')->middleware('auth', 'can:admin.clientes');
+Route::resource('/clientes', ClienteController::class)->names('clientes')->middleware('auth', 'can:clientes');
 
 //RUTAS CURSOS
-Route::get('/cursos/completados', [CursoController::class, 'completados'])->name('admin.cursos.completados');
-Route::resource('/cursos', CursoController::class)->names('admin.cursos')->middleware('auth', 'can:admin.cursos');
+Route::get('/cursos/completados', [CursoController::class, 'completados'])->name('cursos.completados');
+Route::resource('/cursos', CursoController::class)->names('cursos')->middleware('auth', 'can:cursos');
 
 //RUTAS PARA LOS EVENTOS / CLASES
-Route::resource('/agendas', AgendaController::class)->names('admin.agendas');
+Route::resource('/agendas', AgendaController::class)->names('agendas');
 
 //RUTAS para desplegar select
 Route::get('/admin/profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
 Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtenerCursos'])->name('obtenerCursos');
 
 //RUTAS PARA LOS VEHICULOS
-Route::resource('vehiculos', VehiculoController::class)->names('admin.vehiculos');
-Route::resource('picoyplaca', PicoyplacaController::class)->names('admin.picoyplaca');
+Route::resource('vehiculos', VehiculoController::class)->names('vehiculos');
+Route::resource('picoyplaca', PicoyplacaController::class)->names('picoyplaca');
 Route::put('/picoyplaca', [PicoyPlacaController::class, 'update'])->name('picoyplaca.update');
 
 Route::middleware('auth')->group(function () {
     //PERMISIONS ROUTE
-    Route::get('/permissions',        [PermissionController::class, 'index'])->name('admin.permissions.index');
-    Route::get('/permissions/create', [PermissionController::class, 'create'])->name('admin.permissions.create');
-    Route::post('/permissions',        [PermissionController::class, 'store'])->name('admin.permissions.store');
-    Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->name('admin.permissions.edit');
-    Route::put('/permissions/{id}',  [PermissionController::class, 'update'])->name('admin.permissions.update');
-    Route::delete('/permissions/{id}', [PermissionController::class, 'destroy'])->name('admin.permissions.destroy');
+    Route::get('/permissions',        [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
+    Route::post('/permissions',        [PermissionController::class, 'store'])->name('permissions.store');
+    Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+    Route::put('/permissions/{id}',  [PermissionController::class, 'update'])->name('permissions.update');
+    Route::delete('/permissions/{id}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
     //ROLES ROUTES
-    Route::resource('roles', RoleController::class)->names('admin.roles');
+    Route::resource('roles', RoleController::class)->names('roles');
     //USERS ROUTES
-    Route::resource('/users', UserController::class)->names('admin.users');
+    Route::resource('/users', UserController::class)->names('users');
     Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
 });
 
@@ -109,14 +109,14 @@ Route::middleware('auth')->group(function () {
 
 // //RUTAS REPORTES PROFESORES ADMIN
 // /*NO INCLUDO */
-// Route::get('/profesores/pdf/{id}', [ProfesorController::class, 'reportes'])->name('admin.profesores.pdf');
+// Route::get('/profesores/pdf/{id}', [ProfesorController::class, 'reportes'])->name('profesores.pdf');
 // /*NO INCLUDO */
-// Route::get('/profesores/reportes', [ProfesorController::class, 'reportes'])->name('admin.profesores.reportes')->middleware('auth', 'can:admin.profesores.reportes');
+// Route::get('/profesores/reportes', [ProfesorController::class, 'reportes'])->name('profesores.reportes')->middleware('auth', 'can:profesores.reportes');
 
 // //RUTAS para las reservas
 // /*NO INCLUDO */
-// Route::get('/reservas/reportes', [AgendaController::class, 'reportes'])->name('admin.reservas.reportes')->middleware('auth', 'can:admin.reservas.reportes');
+// Route::get('/reservas/reportes', [AgendaController::class, 'reportes'])->name('reservas.reportes')->middleware('auth', 'can:reservas.reportes');
 // /*NO INCLUDO */
-// Route::get('/reservas/pdf/{id}', [AgendaController::class, 'pdf'])->name('admin.reservas.pdf')->middleware('auth', 'can:admin.reservas.pdf');
+// Route::get('/reservas/pdf/{id}', [AgendaController::class, 'pdf'])->name('reservas.pdf')->middleware('auth', 'can:reservas.pdf');
 // /*NO INCLUDO */
-// Route::get('/reservas/pdf_fechas', [AgendaController::class, 'pdf_fechas'])->name('admin.reservas.pdf_fechas')->middleware('auth', 'can:admin.event.pdf_fechas');
+// Route::get('/reservas/pdf_fechas', [AgendaController::class, 'pdf_fechas'])->name('reservas.pdf_fechas')->middleware('auth', 'can:event.pdf_fechas');

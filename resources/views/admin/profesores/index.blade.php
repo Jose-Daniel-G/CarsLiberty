@@ -1,13 +1,7 @@
 @extends('adminlte::page')
 
 @section('title', 'Dashboard')
-@section('css')
-{{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css">
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script> --}}
+@section('css') 
 @stop
 @section('content_header')
     <h1>Listado de profesores</h1>
@@ -138,13 +132,12 @@
                         extend: 'collection',
                         text: 'Reportes',
                         className: 'btn btn-primary', // Aplica clase Bootstrap
-                        buttons: [
-                            { text: 'Copiar', extend: 'copy', className: 'btn btn-secondary' },
-                            { extend: 'pdf', className: 'btn btn-danger' },
-                            { extend: 'csv', className: 'btn btn-success' },
-                            { extend: 'excel', className: 'btn btn-info' },
-                            { text: 'Imprimir', extend: 'print', className: 'btn btn-warning' }
-                        ]
+                buttons: [{extend: 'copyHtml5',text: '<i class="bi bi-clipboard-check"></i> Copiar'}, // Added btn-sm for better consistency
+                          {extend: 'csvHtml5',text: '<i class="bi bi-filetype-csv"></i> CSV'},
+                          {extend: 'excelHtml5',text: '<i class="bi bi-file-earmark-excel"></i> Excel'},
+                          {extend: 'pdfHtml5',text: '<i class="bi bi-filetype-pdf"></i> PDF'},
+                          {extend: 'print',text: '<i class="bi bi-printer"></i> Imprimir' },
+                          {extend: 'colvis'}],
                     }
                 ],
                 language: {

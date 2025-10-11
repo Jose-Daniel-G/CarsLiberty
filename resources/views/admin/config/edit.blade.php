@@ -3,15 +3,10 @@
     @section('title', 'Dashboard')
 
     @section('content_header')
-        <h1>Sistema de reservas </h1>
+        <h1>Modificacion configuracion</h1>
     @stop
 
-    @section('content')
-
-        <div class="row">
-            <h1>Modificacion configuracion</h1>
-
-        </div>
+    @section('content') 
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-outline card-success">

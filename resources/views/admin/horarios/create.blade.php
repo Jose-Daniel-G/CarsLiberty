@@ -3,15 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Sistema de reservas </h1>
+    <h1>Registro de un nuevo horario</h1>
 @stop
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <h1>Registro de un nuevo horario</h1>
-        </div>
-
+    <div class="container-fluid"> 
         <div class="card card-outline card-primary">
             <div class="card-header">
                 <h3 class="card-title">Llene los Datos</h3>
@@ -40,7 +36,8 @@
                                 <div id="curso_checkboxes" class="d-flex flex-wrap">
                                     @foreach ($cursos as $curso)
                                         <div class="form-check me-3"> {{-- Espaciado entre checkboxes --}}
-                                            <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}" value="{{ $curso->id }}" class="form-check-input">
+                                            <input type="checkbox" name="cursos[]" id="curso_{{ $curso->id }}"
+                                                value="{{ $curso->id }}" class="form-check-input">
                                             {{ $curso->nombre }}
                                             <label class="form-check-label" for="curso_{{ $curso->id }}"></label>
                                         </div>
@@ -50,8 +47,8 @@
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>
-                            
-                            
+
+
                             <div class="form-group">
                                 <label for="dia">Dia </label><b class="text-danger">*</b>
                                 <select class="form-control" name="dia" id="dia">
@@ -130,7 +127,6 @@
                 $('#curso_info').html('');
             }
         });
-
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

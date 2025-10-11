@@ -137,7 +137,7 @@ class HomeController extends Controller
 
     public function message_landing_page(Request $request)
     {
-        $valid = $request->validate([
+        $valid [] = $request->validate([
             'title'   => 'required',
             'email'   => 'required|email',
             'phone'   => 'required',
@@ -149,6 +149,7 @@ class HomeController extends Controller
 
         Notification::route('mail', 'destino@tudominio.com')->notify(
             new PostNotification($request->title,$request->email,$request->phone,$request->message));
+            // new PostNotification($valid[]));
 
         return back()->with('success', '✅ Tu mensaje fue enviado correctamente.');
     }

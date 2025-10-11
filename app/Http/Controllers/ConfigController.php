@@ -19,7 +19,7 @@ class ConfigController extends Controller
 
     public function index()
     {
-        $config = Config::first(); // Obtén la primera fila de la tabla de configuración
+        $config = Config::first();  
         return view('admin.config.index', compact('config'));
     }
     // public function create()  {  return view('admin.config.create'); }
