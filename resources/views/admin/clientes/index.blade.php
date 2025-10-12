@@ -168,22 +168,5 @@
             });
         });
 
-        // function confirmDelete(id) {
-        //     Swal.fire({
-        //         title: '¿Estás seguro?',
-        //         text: "¿Estás seguro de que deseas eliminar este cliente?",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Sí, eliminar',
-        //         cancelButtonText: 'Cancelar'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             // Si el usuario confirma, se envía el formulario.
-        //             document.getElementById('delete-form-' + id).submit();
-        //         }
-        //     });
-        // }
     </script>
 @stop

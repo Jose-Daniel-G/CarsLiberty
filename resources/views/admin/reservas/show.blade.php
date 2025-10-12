@@ -65,9 +65,11 @@
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-danger"
-                                                            onclick="confirmDelete({{ $agenda->id }})"><i
-                                                                class="fas fa-trash"></i></button>
+                                                <button type="button" class="btn btn-danger btn-delete"
+                                                    data-id="{{ $agenda->id }}"
+                                                    data-text="¿Estás seguro de eliminar esta  reserva?">
+                                                    <i class="fas fa-trash"></i>
+                                        </form>
                                                     </form>
                                                 </div>
                                             </div>
@@ -87,23 +89,6 @@
 @section('js')
 
     <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¿Estás seguro de que deseas eliminar este curso?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
         new DataTable('#reservas', {
             responsive: true,
             autoWidth: false, //no le vi la funcionalidad

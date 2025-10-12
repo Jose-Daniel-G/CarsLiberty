@@ -80,4 +80,5 @@ class DateHelper
     {
         return now()->diffInDays(Carbon::parse($fecha), false);
     }
+    
 }

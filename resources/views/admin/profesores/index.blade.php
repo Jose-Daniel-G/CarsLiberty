@@ -74,10 +74,11 @@
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="confirmDelete({{ $profesor->id }})">
+                                                <button type="button" class="btn btn-danger btn-delete"
+                                                    data-id="{{ $profesor->id }}"
+                                                    data-text="¿Estás seguro de eliminar este profesor?">
                                                     <i class="fas fa-trash"></i>
-                                                </button>
+                                                </form>
                                             </form>
 
                                         </div>
@@ -97,23 +98,7 @@
 
 @section('js')
 
-    <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) { // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
+    <script> 
         $(document).ready(function() {
 
             // Destruir solo si ya existe la instancia jQuery DataTable

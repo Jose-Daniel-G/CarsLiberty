@@ -58,10 +58,10 @@
                                             class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
-                                                onclick="confirmDelete({{ $role->id }})">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                                <button type="button" class="btn btn-danger btn-delete"
+                                                    data-id="{{ $role->id }}"
+                                                    data-text="¿Estás seguro de que deseas eliminar este rol?">
+                                                    <i class="fas fa-trash"></i>
                                         </form>
                                         {{-- @endcan --}}
                                     </td>
@@ -87,22 +87,6 @@
 
 @section('js')
     <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¿Estás seguro de que deseas eliminar este rol?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
         new DataTable('#roles', {
             responsive: true,
             scrollX: true,

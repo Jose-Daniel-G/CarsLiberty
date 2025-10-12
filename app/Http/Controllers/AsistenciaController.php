@@ -31,13 +31,7 @@ class AsistenciaController extends Controller
         
         // ================ [ FINAL/CODIGO CORRECTO ] ===================
         // Obtener las asistencias del día actual y organizarlas en un array con clave 'agenda_id-cliente_id'
-        // $asistencias = Asistencia::with('agenda', 'cliente')
-        //     ->whereHas('agenda', function ($query) use ($hoy) {
-        //         $query->whereDate('start', $hoy);
-        //     })->get()
-        //     ->keyBy(function ($item) {
-        //         return $item->agenda_id . '-' . $item->cliente_id;
-        //     });
+        // $asistencias = Asistencia::with('agenda', 'cliente')->whereHas('agenda', function ($query) use ($hoy) {$query->whereDate('start', $hoy);})->get()->keyBy(function ($item) {return $item->agenda_id . '-' . $item->cliente_id;});
 
  
         if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('superAdmin')) {// Obtener Agendas basados en el rol del usuario
@@ -53,15 +47,7 @@ class AsistenciaController extends Controller
                 ->where('users.id', Auth::user()->id)
                 ->select('agendas.*')
                 ->get();
-        }
-        // Calcular las horas penalizadas en PHP
-        foreach ($clientes as $cliente) {
-            $start = new \DateTime($cliente->start);
-            $end = new \DateTime($cliente->end);
-            $diff = $start->diff($end);
-            $hours = $diff->h + ($diff->i / 60); // Calcular horas con minutos convertidos a horas
-            $cliente->cant_horas = round($hours, 2); // Asignar la cantidad de horas calculadas
-        }
+        } 
         return view('admin.asistencias.index', compact('agendas', 'asistencias'));
     }
 
@@ -224,8 +210,7 @@ class AsistenciaController extends Controller
     //         $agenda->update([
     //             'asistio' => $asistio,
     //         ]);
-    //     }
-
+    //     } 
     //     return redirect()->back()->with('success', 'Asistencia registrada correctamente');
     // }
 }

@@ -67,8 +67,11 @@
                                             {{-- <form id="delete-form-{{ $secretaria->id }}" action="{{ route('admin.secretarias.destroy', $secretaria->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $secretaria->id }})"><i class="fas fa-trash"></i></button>
-                                            </form> --}}
+                                                <button type="button" class="btn btn-danger btn-delete"
+                                                    data-id="{{ $curso->id }}"
+                                                    data-text="¿Estás seguro de que deseas eliminar este programador?">
+                                                    <i class="fas fa-trash"></i>
+                                        </form> --}}
 
                                             <div class="text-center">
                                                 <form id="delete-form-{{ $secretaria->id }}"
@@ -151,24 +154,7 @@
                 });
             },
         });
-
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¿Deseas eliminar este secretaria?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
+ 
     </script>
     <!-- EDIT MODAL -->
     <script>

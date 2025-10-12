@@ -100,5 +100,5 @@
 <div class="mt-3">
     <div class="alert alert-primary d-inline-block me-2 p-2"><strong>Azul:</strong> Ocupado (otro cliente)</div>
     <div class="alert alert-success d-inline-block me-2 p-2"><strong>Verde:</strong> Agendado por ti</div>
-    <div class="alert alert-light border border-dark text-center d-inline-block me-2 p-2"><strong>Blando:</strong> Disponible</div>
+    <div class="alert alert-light border border-dark text-center d-inline-block me-2 p-2"><strong>Blanco:</strong> Disponible</div>
 </div>

@@ -38,7 +38,8 @@
                     @if ($config)
                         <table id="configuraciones" class="table table-bordered table-striped">
                             <thead>
-                                <tr><th>#</th>
+                                <tr>
+                                    <th>#</th>
                                     <th>Nombre</th>
                                     <th>Dirección</th>
                                     <th>Teléfono</th>
@@ -69,7 +70,12 @@
                                                 action="{{ route('admin.config.destroy', $config->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $config->id }})"><i     class="fas fa-trash"></i></button>
+                                                <button type="button" class="btn btn-danger btn-delete"
+                                                    data-id="{{ $config->id }}"
+                                                    data-text="¿Deseas eliminar esta configuración?">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+
                                             </form>
                                         </div>
                                     </td>
@@ -80,7 +86,8 @@
                         @include('admin.config.create')
                         <div class="alert alert-danger">
                             No hay configuraciones registradas.
-                            <a class="btn btn-secondary" data-toggle="modal" data-target="#createModal">Registrar<i class="bi bi-plus-circle-fill"></i></a>
+                            <a class="btn btn-secondary" data-toggle="modal" data-target="#createModal">Registrar<i
+                                    class="bi bi-plus-circle-fill"></i></a>
                         </div>
                     @endif
 
@@ -91,27 +98,12 @@
 @stop
 
 @section('js')
+
     <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¿Deseas eliminar esta configuracion?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + id).submit(); // Si el usuario confirma, se envía el formulario.
-                }
-            });
-        }
         new DataTable('#configuraciones', {
             responsive: true,
             scrollX: true,
-            autoWidth: false, 
+            autoWidth: false,
             dom: 'Bfrtip', // Añade el contenedor de botones
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'], // Botones que aparecen en la imagen
             "language": {

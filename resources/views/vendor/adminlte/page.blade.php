@@ -63,5 +63,7 @@
     @if (session('info'))  <!-- TOAST ALERT MESSAGE -->
         <script>toastr.success('{{ session('info') }}');</script> 
     @endif 
+    @vite(['resources/js/pages/delete-confirm.ts'])
+
     {{-- @if (($message = Session::get('message')) && ($icon = Session::get('icon')))  <script></script> @endif --}}
 @stop

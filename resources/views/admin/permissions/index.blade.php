@@ -53,10 +53,11 @@
                                                 method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
-                                                    onclick="confirmDelete({{ $permission->id }})">
+                                                <button type="button" class="btn btn-danger btn-delete"
+                                                    data-id="{{ $permission->id }}"
+                                                    data-text="¿Estás seguro de que deseas eliminar este permiso?">
                                                     <i class="fas fa-trash"></i>
-                                                </button>
+                                        </form>
                                             </form>
                                         @endcan
                                     </td>
@@ -83,7 +84,6 @@
 
 @section('js')
     <script>
-        // --- Modal Edit Logic (Kept separate for clarity) ---
         $('#editModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // button that opened the modal
             var id = button.data('id'); // permission ID
@@ -97,15 +97,13 @@
                 method: 'GET',
                 success: function(data) {
                     // Set the form action URL for update
-                    var formAction = "{{ route('admin.permissions.update', ':id') }}".replace(':id',
-                        data.permission.id);
+                    var formAction = "{{ route('admin.permissions.update', ':id') }}".replace(':id', data.permission.id);
                     modal.find('#editForm').attr('action', formAction);
-                    // Populate the name field
-                    modal.find('#edit-name').val(data.permission.name);
+                    modal.find('#edit-name').val(data.permission.name); // Populate the name field
                 },
-                error: function(xhr) {
+                error: function(xhr) {  // You might want to show a SweetAlert error here
                     console.error('Error al cargar los datos del permiso:', xhr);
-                    // You might want to show a SweetAlert error here
+
                     Swal.fire('Error', 'No se pudieron cargar los datos del permiso.', 'error');
                 }
             });
@@ -152,23 +150,6 @@
             });
         });
 
-        // --- SweetAlert Delete Confirmation Logic ---
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¿Estás seguro de que deseas eliminar este permiso?", // Corrected "curso" to "permiso"
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
     </script>
 
     {{-- SweetAlert Flash Message Logic --}}

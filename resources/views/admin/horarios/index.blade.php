@@ -60,10 +60,11 @@
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="confirmDelete({{ $horario->id }})">
+                                                <button type="button" class="btn btn-danger btn-delete"
+                                                    data-id="{{ $horario->id }}"
+                                                    data-text="¿Estás seguro de eliminar este horario?">
                                                     <i class="fas fa-trash"></i>
-                                                </button>
+                                        </form>
                                             </form>
                                         </div>
                                     </td>
@@ -112,32 +113,7 @@
 
 @section('js')
 
-    <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, se envía el formulario.
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            })
-        }
-        @if (session('info') && session('icon'))
-            Swal.fire({
-                title: "{{ session('title') }}",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icon') }}"
-            });
-        @endif
-
+    <script> 
         // carga contenido de tabla en  curso_info
         $('#curso_select').on('change', function() {
             var curso_id = $('#curso_select').val();
