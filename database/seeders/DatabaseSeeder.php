@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             HorarioSeeder::class,
             PicoyPlacaSeeder::class,
             VehiculoSeeder::class,
-            ClienteSeeder::class,
+            ClienteSeeder::class,ClienteCursoSeeder::class,
         ]);
         // $profesores = Profesor::factory()->count(10)->create();
         // Crear registros de PicoyPlaca antes de crear Vehiculos
