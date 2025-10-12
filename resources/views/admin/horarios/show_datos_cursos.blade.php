@@ -32,9 +32,9 @@
 
             @foreach ($horas as $hora)
                 @php
-                    [$hora_inicio, $hora_fin] = explode(' - ', $hora);
+                    [$hora_inicio, $tiempo] = explode(' - ', $hora);
                     $hora_inicio_24 = date('H:i:s', strtotime($hora_inicio));
-                    $hora_fin_24 = date('H:i:s', strtotime($hora_fin));
+                    $hora_fin_24 = date('H:i:s', strtotime($tiempo));
                 @endphp
                 <tr>
                     <td scope="row">{{ $hora }}</td>
@@ -45,18 +45,18 @@
 
                             foreach ($horarios as $horario) {
                                 $horario_inicio_24 = date('H:i', strtotime($horario->hora_inicio));
-                                $horario_fin_24 = date('H:i', strtotime($horario->hora_fin));
+                                $horario_fin_24 = date('H:i', strtotime($horario->tiempo));
 
                                 if (
                                     strtoupper($horario->dia) == $dia &&
                                     $hora_inicio_24 >= $horario->hora_inicio &&
-                                    $hora_fin_24 <= $horario->hora_fin
+                                    $hora_fin_24 <= $horario->tiempo
                                 ) {
                                     $curso_mostrado = $horario->cursos->pluck('nombre')->join(', ');
 
                                     foreach ($horarios_asignados as $horario_asignado) {
                                         $asignado_inicio_24 = date('H:i', strtotime($horario_asignado->hora_inicio));
-                                        $asignado_fin_24 = date('H:i', strtotime($horario_asignado->hora_fin));
+                                        $asignado_fin_24 = date('H:i', strtotime($horario_asignado->tiempo));
                                         $asignado_dia = strtoupper($horario_asignado->dia);
                                         $agendado = false;
                                         // Comparación con mayor flexibilidad (solapamiento)

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Horario extends Model
 {
     use HasFactory;
-    protected $fillable = ['dia', 'hora_inicio', 'hora_fin', 'profesor_id', 'curso_id'];
+    protected $fillable = ['dia', 'hora_inicio', 'tiempo', 'profesor_id', 'curso_id'];
 
     public function profesores()
     {
@@ -28,5 +28,9 @@ class Horario extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    protected $casts = [
+        'hora_inicio' => 'datetime:H:i:s',
+        'tiempo' => 'datetime:H:i:s',
+    ];
 
 }

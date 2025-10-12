@@ -19,8 +19,7 @@ class CursoController extends Controller
     }
 
     public function index() { $cursos = Curso::all();   return view('admin.cursos.index', compact(('cursos'))); }
-    // public function create() {  return view('admin.cursos.create'); }
-    // public function show(Curso $curso) { return view('admin.cursos.show', compact('curso')); }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -29,7 +28,6 @@ class CursoController extends Controller
             'estado' => 'required|in:0,1',
             'descripcion' => 'nullable',
         ]);
-        // dd($request->all());
         Curso::create($request->all());// Crear un nuevo curso
 
         return redirect()->route('admin.cursos.index')->with(['title' => 'Exito','info'=> 'Curso registrado correctamente.','icono'=>'success']);
@@ -39,7 +37,7 @@ class CursoController extends Controller
     {    return response()->json($curso); }
 
     public function update(Request $request, Curso $curso)
-    { //dd($request->all()); 
+    { 
         $request->validate([
             'nombre' => 'required',
             'descripcion' => 'required',
@@ -69,8 +67,7 @@ class CursoController extends Controller
 
             $userId = Auth::user()->id;
             $clienteId = Cliente::where('user_id', $userId)->first();
-            // $query = DB::table('cursos')
-            //     ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
+            //$query = DB::table('cursos')->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
             //     ->select('cursos.id', 'cursos.nombre', 'cursos.descripcion', 'cursos.horas_requeridas', 'cliente_curso.horas_realizadas')
             //     ->where('cliente_curso.cliente_id', $clienteId);
 
@@ -87,10 +84,8 @@ class CursoController extends Controller
     
     public function destroy(Curso $curso)
     {
-        if ($curso->user) { // Si existe un usuario asociado, eliminarlo
-            $curso->user->delete();
-        }
-
+        if ($curso->user) { $curso->user->delete();  } // Si existe un usuario asociado, eliminarlo
+           
         $curso->delete(); // Eliminar el curso
 
         return redirect()->route('admin.cursos.index')

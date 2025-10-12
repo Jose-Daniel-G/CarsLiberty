@@ -55,8 +55,8 @@
                         </div>
                         <div class="col-md-3"><!-- Hora fin -->
                             <div class="form-group">
-                                <label for="edit-hora_fin">Hora Fin</label>
-                                <input type="time" id="edit-hora_fin" name="hora_fin" class="form-control">
+                                <label for="edit-tiempo">Hora Fin</label>
+                                <input type="time" id="edit-tiempo" name="tiempo" class="form-control">
                             </div>
                         </div>
                     </div>

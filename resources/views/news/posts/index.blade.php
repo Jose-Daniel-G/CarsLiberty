@@ -41,7 +41,7 @@
                                             <tr>
                                                 <td>{{ $post->id }}</td>
                                                 <td>{{ $post->title }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($post->created_at)->format('d M, Y') }}</td>
+                                                <td>{{ $post->created_at->format('d M, Y') }}</td>
                                                 <td class="text-center">
                                                     {{-- @can('posts.edit') --}}
                                                     <a href="{{ route('posts.edit', $post->id) }}"

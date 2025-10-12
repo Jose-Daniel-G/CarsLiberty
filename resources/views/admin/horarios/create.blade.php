@@ -76,10 +76,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="hora_fin">Hora Final </label><b class="text-danger">*</b>
-                                <input type="time" class="form-control" name="hora_fin" id="hora_fin"
-                                    value="{{ old('hora_fin') }}" required>
-                                @error('hora_fin')
+                                <label for="tiempo">Hora Final </label><b class="text-danger">*</b>
+                                <input type="time" class="form-control" name="tiempo" id="tiempo"
+                                    value="{{ old('tiempo') }}" required>
+                                @error('tiempo')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -132,7 +132,7 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             const HoraIncioInput = document.getElementById('hora_inicio');
-            const HoraFinInput = document.getElementById('hora_fin');
+            const HoraFinInput = document.getElementById('tiempo');
 
             // Escuchar el evento de cambio en el campo de hora de reserva
             HoraIncioInput.addEventListener('change', function() {

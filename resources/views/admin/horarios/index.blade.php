@@ -45,8 +45,8 @@
                                     <td scope="row">{{ $horario->cursos->pluck('nombre')->join(', ') }}</td>
 
                                     <td scope="row">{{ $horario->dia }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_inicio)->format('h:i A') }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_fin)->format('h:i A') }}</td>
+                                    <td scope="row" class="text-center">{{ $horario->hora_inicio->format('h:i A') }}</td>
+                                    <td scope="row" class="text-center">{{ $horario->tiempo->format('h:i A') }}</td>
                                     <td scope="row">
                                         <div class="btn-group" role="group" aria-label="basic example">
 
@@ -253,7 +253,7 @@
                     // Inputs de horario
                     modal.find('#edit-dia').val(data.horario.dia);
                     modal.find('#edit-hora_inicio').val(data.horario.hora_inicio);
-                    modal.find('#edit-hora_fin').val(data.horario.hora_fin);
+                    modal.find('#edit-tiempo').val(data.horario.tiempo);
                 },
                 error: function(xhr) {
                     console.error('Error al cargar los datos del horario:', xhr);

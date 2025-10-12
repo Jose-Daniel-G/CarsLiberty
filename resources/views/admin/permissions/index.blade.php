@@ -39,7 +39,7 @@
                                 <tr>
                                     <td>{{ $permission->id }}</td>
                                     <td>{{ $permission->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($permission->created_at)->format('d M, Y') }}</td>
+                                    <td>{{ $permission->created_at->format('d M, Y') }}</td>
                                     <td class="text-center">
                                         @can('permissions.edit')
                                             {{-- button EDIT --}}

@@ -63,7 +63,7 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             const HoraIncioInput = document.getElementById('hora_inicio');
-            const HoraFinInput = document.getElementById('hora_fin');
+            const HoraFinInput = document.getElementById('tiempo');
 
             // Escuchar el evento de cambio en el campo de hora de reserva
             HoraIncioInput.addEventListener('change', function() {

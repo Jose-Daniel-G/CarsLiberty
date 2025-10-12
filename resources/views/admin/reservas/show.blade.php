@@ -44,9 +44,9 @@
                                     <td scope="row">{{ $agenda->profesor->nombres . ' ' . $agenda->profesor->apellidos }}</td>
                                     <td scope="row">{{ $agenda->cliente->nombres . ' ' . $agenda->cliente->apellidos }}</td>
                                     <td scope="row" class="text-center">{{ $agenda->curso->nombre }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($agenda->start)->format('Y-m-d') }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($agenda->start)->format('H:i') }}</td>
-                                    <td scope="row" class="text-center">{{ \Carbon\Carbon::parse($agenda->end)->format('H:i') }}</td>
+                                    <td scope="row" class="text-center">{{ $agenda->start->format('d M, Y') }}</td>
+                                    <td scope="row" class="text-center">{{ $agenda->start->format('H:i') }}</td>
+                                    <td scope="row" class="text-center">{{ $agenda->end->format('H:i') }}</td>
                                     {{-- <td scope="row" class="text-center">{{ $agenda->created_at }}</td> --}}
                                     {{-- <td scope="row" class="text-center">{{ $agenda->id }}</td> --}}
 

@@ -29,4 +29,8 @@ class Agenda extends Model
     {
         return $this->hasMany(Asistencia::class, 'agenda_id');
     }
+    protected $casts = [
+        'start' => 'datetime',
+        'end' => 'datetime',
+    ];
 }

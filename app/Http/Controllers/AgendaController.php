@@ -34,14 +34,14 @@ class AgendaController extends Controller
             'profesorid' => 'required|exists:profesors,id',
             'fecha_reserva' => 'required',
             'hora_inicio' => 'required',
-            'hora_fin' => 'required|numeric|min:1', //'hora_fin' => 'required|date_format:H:i',
+            'tiempo' => 'required|numeric|min:1', //'tiempo' => 'required|date_format:H:i',
         ]);
         // Buscar el profesor por su ID
         $profesor = Profesor::find($request->profesorid);
         $fecha_reserva = $request->fecha_reserva;
         $hora_inicio = $request->hora_inicio . ':00';                           // Asegurarse de que la hora esté en formato correcto
         $fecha_hora_inicio = Carbon::parse("{$fecha_reserva} {$hora_inicio}");  // Crear un objeto Carbon para la fecha y hora de inicio
-        $fecha_hora_fin = $fecha_hora_inicio->copy()->addHours($request->hora_fin); // Sumamos las horas ingresadas en el campo 'hora_fin'
+        $fecha_hora_fin = $fecha_hora_inicio->copy()->addHours($request->tiempo); // Sumamos las horas ingresadas en el campo 'tiempo'
         $cursoid = $request->cursoid;
 
         // Obtener el cliente para verificar asistencia
@@ -72,7 +72,7 @@ class AgendaController extends Controller
             ->where('horario_profesor_curso.profesor_id', $profesor->id)
             ->where('horarios.dia', $dia_de_reserva)                        // Filtrar por el día en la tabla correcta
             ->where('horarios.hora_inicio', '<=', $hora_inicio_formato)     // Ahora filtramos por horarios.hora_inicio
-            ->where('horarios.hora_fin', '>=', $hora_fin_formato)           // Ahora filtramos por horarios.hora_fin
+            ->where('horarios.tiempo', '>=', $hora_fin_formato)           // Ahora filtramos por horarios.tiempo
             ->where('horario_profesor_curso.curso_id', $cursoid)            // Si la tabla maneja cursos
             ->get();
 
@@ -113,7 +113,7 @@ class AgendaController extends Controller
             'cliente_id' => $agenda->cliente_id,
             'agenda_id' => $agenda->id,
             'asistio' => false,                         // Inasistencia por defecto
-            'penalidad' => 20000 * $request->hora_fin,  // Penalidad por inasistencia
+            'penalidad' => 20000 * $request->tiempo,  // Penalidad por inasistencia
             'liquidado' => false,
             'fecha_pago_multa' => null,
         ]);

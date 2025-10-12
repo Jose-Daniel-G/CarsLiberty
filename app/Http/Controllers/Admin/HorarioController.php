@@ -58,7 +58,7 @@ class HorarioController extends Controller
                     'agendas.profesor_id',
                     'agendas.curso_id',
                     'agendas.start AS hora_inicio',
-                    'agendas.end AS hora_fin',
+                    'agendas.end AS tiempo',
                     DB::raw('DAYNAME(agendas.start) AS dia'),
                     'users.id AS user_id',
                     'users.name AS user_nombre',
@@ -69,7 +69,7 @@ class HorarioController extends Controller
                 ->join('users', 'clientes.user_id', '=', 'users.id')
                 ->where('agendas.profesor_id', $id)
                 ->get();
-            // dd(['titulo' => 'Datos de horarios asignados', 'horarios asignados' => $horarios_asignados->toArray()]);
+            \Log::info(['titulo' => 'Datos de horarios asignados', 'horarios asignados' => $horarios_asignados->toArray(),'horarios' =>$horarios->toArray(),'cursos_profesor' =>$cursos_profesor->toArray()]);
 
             // Traducir los días al español
             $horarios_asignados = $horarios_asignados->map(function ($horario) {
@@ -90,7 +90,7 @@ class HorarioController extends Controller
         $validatedData = $request->validate([
             'dia' => 'required',
             'hora_inicio' => 'required|date_format:H:i',
-            'hora_fin' => 'required|date_format:H:i|after:hora_inicio',
+            'tiempo' => 'required|date_format:H:i|after:hora_inicio',
             'profesor_id' => 'required|exists:profesors,id',
             'cursos' => 'required|array|min:1', // Al menos 1 curso
             'cursos.*' => 'exists:cursos,id',
@@ -98,7 +98,7 @@ class HorarioController extends Controller
 
         // Normalizar el formato de las horas (si en la BD se guarda con segundos, por ejemplo "H:i:s")
         $horaInicio = Carbon::parse($validatedData['hora_inicio'])->format('H:i:s');
-        $horaFin    = Carbon::parse($validatedData['hora_fin'])->format('H:i:s');
+        $horaFin    = Carbon::parse($validatedData['tiempo'])->format('H:i:s');
 
         // Verificar si el profesor ya tiene un horario agendado en ese día con superposición en el rango de horas
         $horarioExistente = Horario::where('dia', $validatedData['dia'])
@@ -109,12 +109,12 @@ class HorarioController extends Controller
                         ->where('hora_inicio', '<', $horaFin);
                 })
                     ->orWhere(function ($query) use ($horaInicio, $horaFin) {
-                        $query->where('hora_fin', '>', $horaInicio)
-                            ->where('hora_fin', '<=', $horaFin);
+                        $query->where('tiempo', '>', $horaInicio)
+                            ->where('tiempo', '<=', $horaFin);
                     })
                     ->orWhere(function ($query) use ($horaInicio, $horaFin) {
                         $query->where('hora_inicio', '<', $horaInicio)
-                            ->where('hora_fin', '>', $horaFin);
+                            ->where('tiempo', '>', $horaFin);
                     });
             })
             ->exists();
@@ -132,7 +132,7 @@ class HorarioController extends Controller
             $horario = Horario::firstOrCreate([
                 'dia' => $validatedData['dia'],
                 'hora_inicio' => $horaInicio,
-                'hora_fin' => $horaFin,
+                'tiempo' => $horaFin,
                 'profesor_id' => $validatedData['profesor_id'],
             ]);
 
@@ -176,14 +176,14 @@ class HorarioController extends Controller
         $validatedData = $request->validate([
             'dia' => 'required',
             'hora_inicio' => 'required',
-            'hora_fin' => 'required',
+            'tiempo' => 'required',
             'curso_id' => 'required',
         ]);
         // Actualizar datos propios del horario
         $horario->update([
             'dia' => $request->dia,
             'hora_inicio' => $request->hora_inicio,
-            'hora_fin' => $request->hora_fin,
+            'tiempo' => $request->tiempo,
         ]);
 
         $horario->profesores()->syncWithPivotValues(

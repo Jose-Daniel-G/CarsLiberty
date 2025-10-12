@@ -20,7 +20,7 @@ class HorarioSeeder extends Seeder
         Horario::create([                //1
             'dia' => 'LUNES',
             'hora_inicio' => '6:00:00',
-            'hora_fin' => '19:00:00',
+            'tiempo' => '19:00:00',
             'profesor_id' => '1',
         ]);
         HorarioProfesorCurso::create([
@@ -31,7 +31,7 @@ class HorarioSeeder extends Seeder
         Horario::create([                //2
             'dia' => 'MARTES',
             'hora_inicio' => '6:00:00',
-            'hora_fin' => '18:00:00',
+            'tiempo' => '18:00:00',
             'profesor_id' => '2',
         ]);
         HorarioProfesorCurso::create([
@@ -42,7 +42,7 @@ class HorarioSeeder extends Seeder
         Horario::create([               //3
             'dia' => 'MIERCOLES',
             'hora_inicio' => '6:00:00',
-            'hora_fin' => '20:00:00',
+            'tiempo' => '20:00:00',
             'profesor_id' => '1',
         ]);
         HorarioProfesorCurso::create([
@@ -53,7 +53,7 @@ class HorarioSeeder extends Seeder
         Horario::create([               //4
             'dia' => 'JUEVES',
             'hora_inicio' => '6:00:00',
-            'hora_fin' => '14:00:00',
+            'tiempo' => '14:00:00',
             'profesor_id' => '3',
         ]);
         HorarioProfesorCurso::create([
@@ -64,7 +64,7 @@ class HorarioSeeder extends Seeder
         Horario::create([               //5
             'dia' => 'JUEVES',
             'hora_inicio' => '6:00:00',
-            'hora_fin' => '14:00:00',
+            'tiempo' => '14:00:00',
             'profesor_id' => '1',
         ]);
         HorarioProfesorCurso::create([
@@ -75,7 +75,7 @@ class HorarioSeeder extends Seeder
         Horario::create([
             'dia' => 'VIERNES',           //6
             'hora_inicio' => '6:00:00',
-            'hora_fin' => '20:00:00',
+            'tiempo' => '20:00:00',
             'profesor_id' => '1',
         ]);
         HorarioProfesorCurso::create([
@@ -86,7 +86,7 @@ class HorarioSeeder extends Seeder
         Horario::create([
             'dia' => 'SABADO',              //7
             'hora_inicio' => '6:00:00',
-            'hora_fin' => '20:00:00',
+            'tiempo' => '20:00:00',
             'profesor_id' => '3',
         ]);
         HorarioProfesorCurso::create([

@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.agendas.store') }}" method="POST">
+                <form action="{{ route('admin.agendas.store') }}" method="POST" id="formReserva">
                     @csrf
                     <div class="row">
                         @can('admin.listUsers')
@@ -82,9 +82,9 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="form-group"><label for="hora_fin">Horas</label>
-                                <input type="number" class="form-control" name="hora_fin" id="hora_fin">
-                                @error('hora_fin')
+                            <div class="form-group"><label for="tiempo">Horas</label>
+                                <input type="number" class="form-control" name="tiempo" id="tiempo">
+                                @error('tiempo')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
                             </div>

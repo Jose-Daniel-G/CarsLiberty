@@ -50,18 +50,13 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 @endsection
 
 @section('js')
     <script> 
-            new DataTable('#asistencias', {
-                responsive: true,
-                autoWidth: false,scrollX:true,
-                scrollX: true,
-            });
-    </script>
-    <script>
+        new DataTable('#asistencias', {responsive: true,autoWidth: false,scrollX:true,scrollX: true,});
+
         function actualizarAsistencia(agendaoId, clienteId, asistio) {
 
             const data = {                                              // Crear un objeto con los datos a enviar

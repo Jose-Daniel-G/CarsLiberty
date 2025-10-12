@@ -1,16 +1,11 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
-{{-- @section('plugins.Sweetalert2', true) --}}
+@section('title', 'Dashboard'){{-- @section('plugins.Sweetalert2', true) --}}
 @section('css')
-
 @stop
-@section('content_header')
-    {{-- <h1><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}</h1> --}}
+@section('content_header'){{-- <h1><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}</h1> --}}
 @stop
-
-@section('content') 
-
+@section('content')
     <div class="row pt-3">
         {{-- Configuracion --}}
         @can('admin.config.index')
@@ -115,7 +110,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-secondary">
                     <div class="inner">
-                        <h3>{{ $total_eventos }}</h3>
+                        <h3>{{ $total_agendas }}</h3>
 
                         <p>Reservas</p>
                     </div>
@@ -149,7 +144,6 @@
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3>{{ $total_cursos }}</h3>
-
                     <p>Cursos completados</p>
                 </div>
                 <div class="icon">
@@ -164,7 +158,6 @@
     <div class="card card-primary card-outline card-tabs">
         <div class="card-header p-0 pt-1 border-bottom-0">
             <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-
                 @can('show_datos_cursos')
                     <li class="nav-item">
                         <a class="nav-link active" id="custom-tabs-three-profile-tab" data-toggle="pill"
@@ -174,8 +167,7 @@
                 @endcan
                 <li class="nav-item">
                     <a class="nav-link " id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home"
-                        role="tab" aria-controls="custom-tabs-three-home" aria-selected="false">Horario de
-                        profesores</a>
+                        role="tab" aria-controls="custom-tabs-three-home" aria-selected="false">Horario de profesores</a>
                 </li>
             </ul>
         </div>
@@ -221,9 +213,7 @@
                             <div class="col-md-12">
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#claseModal">
-                                    Agendar Clase
-                                </button>
+                                    data-target="#claseModal"> Agendar Clase</button>
 
                                 <a href="{{ route('admin.reservas.show', Auth::user()->id) }}" class="btn btn-success">
                                     <i class="bi bi-calendar-check"></i>Ver las reservas
@@ -244,7 +234,7 @@
                 @include('admin.agenda-modal.agenda')
             </div>
         </div>
-    </div>
+    </div>{{-- PROFESORES AGENDA --}}
     @if (Auth::check() && Auth::user()->profesor)
         <div class="row">
             <div class="col-md-12">
@@ -256,6 +246,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="card-body">
                         {{ Auth::user()->profesor->nombres }}
                         <table id="reservas" class="table table-striped table-bordered table-hover table-sm">
@@ -270,20 +261,20 @@
                             </thead>
                             <tbody>
                                 <?php $contador = 1; ?>
-                                @foreach ($events as $evento)
-                                    @if (Auth::user()->profesor->id == $evento->profesor_id)
+                                @foreach ($agendas as $agenda)
+                                    @if (Auth::user()->profesor->id == $agenda->profesor_id)
                                         <tr>
                                             <td scope="row">{{ $contador++ }}</td>
                                             <td scope="row">
-                                                {{ $evento->profesor->nombres . ' ' . $evento->profesor->apellidos }}
+                                                {{ $agenda->profesor->nombres . ' ' . $agenda->profesor->apellidos }}
                                             </td>
                                             <td scope="row">
-                                                {{ $evento->cliente->nombres . ' ' . $evento->cliente->apellidos }}
+                                                {{ $agenda->cliente->nombres . ' ' . $agenda->cliente->apellidos }}
                                             </td>
                                             <td scope="row" class="text-center">
-                                                {{ \Carbon\Carbon::parse($evento->start)->format('Y/m/d') }}</td>
+                                                {{ $agenda->start->format('d M, Y') }}</td>
                                             <td scope="row" class="text-center">
-                                                {{ \Carbon\Carbon::parse($evento->end)->format('H:i') }}</td>
+                                                {{ $agenda->end->format('H:i') }}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -298,203 +289,64 @@
 @stop
 
 @section('js')
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-
-    // ---------------------------------------
-    // Variables globales
-    // ---------------------------------------
-    let isAdmin = @json(Auth::check() && Auth::user()->hasRole('superAdmin'));
-    const horaFinInput = document.getElementById('hora_fin');
-    const horaInicioInput = document.getElementById('hora_inicio');
-    const fechaReservaInput = document.getElementById('fecha_reserva');
-
-    // ---------------------------------------
-    // Validación de cantidad de horas
-    // ---------------------------------------
-    if (!isAdmin && horaFinInput) {
-        horaFinInput.addEventListener('change', function() {
-            const selected = parseInt(this.value);
-            if (selected < 2 || selected > 4) {
-                this.value = null;
-                Swal.fire({ text: "Solo puede agendar hasta máximo 4 horas y mínimo 2", icon: "error" });
+    <script>
+        window.Laravel = {
+            isAdmin: @json(Auth::check() && Auth::user()->hasRole('superAdmin')),
+            routes: {
+                horariosShowReservaProfesores: "{{ route('admin.horarios.show_reserva_profesores') }}", 
             }
-        });
-    }
+        };
+    </script>
 
-    // ---------------------------------------
-    // Función auxiliar: fecha local en YYYY-MM-DD
-    // ---------------------------------------
-    function getLocalDate() {
-        const today = new Date();
-        return `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    }
-
-    // ---------------------------------------
-    // Validar fecha pasada
-    // ---------------------------------------
-    if(fechaReservaInput){
-        fechaReservaInput.addEventListener('change', function() {
-            if(this.value < getLocalDate()){
-                this.value = null;
-                Swal.fire({ title: "No es posible", text: "No se puede seleccionar una fecha pasada", icon: "warning" });
+    @vite(['resources/js/pages/dashboard.ts'])
+    <script>
+        // ---------------------------------------
+        // Cargar contenido dinámico en selects
+        // ---------------------------------------
+        $('#profesor_select').on('change', function() {
+            const curso_id = $(this).val();
+            console.log(curso_id);
+            const url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}".replace(':id', curso_id);
+            if (!curso_id) {
+                $('#curso_info').html('');
+                return;
             }
+            $.get(url, function(data) {
+                $('#curso_info').html(data);
+            }).fail(() => alert('Error al obtener datos del curso'));
         });
-    }
 
-    // ---------------------------------------
-    // Validar hora
-    // ---------------------------------------
-        const HoraIncioInput = document.getElementById('hora_inicio');
-
-        if (HoraIncioInput) {
-            HoraIncioInput.addEventListener('change', function() {
-                let selectedTime = this.value;
-                let now = new Date();
-
-                if (selectedTime) {
-                    // Forzar formato HH:00
-                    let [hour] = selectedTime.split(':');
-                    selectedTime = `${hour.padStart(2, '0')}:00`;
-                    this.value = selectedTime;
-
-                    let [selectedHour, selectedMinutes] = selectedTime.split(':').map(Number);
-
-                    // Rango permitido (06:00 - 20:00)
-                    if (selectedHour < 6 || selectedHour > 20) {
-                        Swal.fire({
-                            title: "No es posible",
-                            text: "Seleccione una hora entre las 06:00 am y las 8:00 pm.",
-                            icon: "warning"
-                        });
-                        return;
-                    }
-
-                    // Verificar si es la fecha de hoy
-                    let selectedDate = fechaReservaInput ? fechaReservaInput.value : null;
-                    let today = now.toISOString().slice(0, 10);
-
-                    if (selectedDate === today) {
-                        let currentHour = now.getHours();
-                        let currentMinutes = now.getMinutes();
-
-                        if (
-                            selectedHour < currentHour ||
-                            (selectedHour === currentHour && selectedMinutes < currentMinutes)
-                        ) {
-                            Swal.fire({
-                                text: "No puede seleccionar una hora que ya ha pasado.",
-                                icon: "error"
-                            });
-                        }
-                    }
+        $('#cursoid').on('change', function() {
+            const cursoid = $(this).val();
+            if (!cursoid) return;
+            const url = "{{ route('admin.obtenerProfesores', ':id') }}".replace(':id', cursoid);
+            $.get(url, function(data) {
+                if (Array.isArray(data)) {
+                    $('#profesorid').empty().append(
+                        '<option value="" selected disabled>Seleccione un Profesor</option>');
+                    data.forEach(p => $('#profesorid').append(
+                        `<option value="${p.id}">${p.nombres} ${p.apellidos}</option>`));
+                } else {
+                    alert('No se encontraron profesores');
                 }
-            });
-        }
-
-
-    // ---------------------------------------
-    // FullCalendar
-    // ---------------------------------------
-    const calendarEl = document.getElementById('calendar');
-    if(calendarEl){
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es',
-            headerToolbar: {
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,listWeek'
-            },
-            events: [], // Se cargan vía Ajax luego
-            eventClick: function(info){
-                const agenda = info.event;
-                const start = agenda.start;
-                const end = agenda.end;
-                const prof = agenda.extendedProps.profesor || {};
-                const cliente = agenda.extendedProps.cliente || {};
-
-                document.getElementById('nombres_cliente').textContent = `${cliente.nombres || 'No disponible'} ${cliente.apellidos || ''}`;
-                document.getElementById('nombres_teacher').textContent = `${prof.nombres || 'No disponible'} ${prof.apellidos || ''}`;
-                document.getElementById('fecha_reserva1').textContent = start.toISOString().split('T')[0];
-                document.getElementById('hora_inicio1').textContent = start.toLocaleTimeString();
-                document.getElementById('hora_fin1').textContent = end.toLocaleTimeString();
-
-                $("#mdalSelected").modal("show");
-            }
+            }).fail(() => alert('Error al cargar los profesores'));
         });
 
-        // Renderizar al cargar
-        calendar.render();
-
-        // Cargar eventos desde Laravel
-        $.ajax({
-            url: "{{ route('admin.horarios.show_reserva_profesores') }}",
-            type: 'GET',
-            dataType: 'json',
-            success: function(data){ calendar.addEventSource(data); },
-            error: function(){ alert('Error al obtener datos del profesor'); }
+        $('#cliente_id').on('change', function() {
+            const cliente_id = $(this).val();
+            if (!cliente_id) return;
+            const url = "{{ route('admin.obtenerCursos', ':id') }}".replace(':id', cliente_id);
+            $.get(url, function(data) {
+                if (Array.isArray(data)) {
+                    $('#cursoid').empty().append(
+                        '<option value="" selected disabled>Seleccione un Curso</option>');
+                    data.forEach(c => $('#cursoid').append(`<option value="${c.id}">${c.nombre}</option>`));
+                } else {
+                    alert('No se encontraron cursos');
+                }
+            }).fail(() => alert('Error al cargar los cursos'));
         });
-    }
-
-    // ---------------------------------------
-    // Cargar contenido dinámico en selects
-    // ---------------------------------------
-    $('#profesor_select').on('change', function(){
-        const curso_id = $(this).val();
-        const url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}".replace(':id', curso_id);
-        if(!curso_id) { $('#curso_info').html(''); return; }
-        $.get(url, function(data){ $('#curso_info').html(data); }).fail(()=> alert('Error al obtener datos del curso'));
-    });
-
-    $('#cursoid').on('change', function(){
-        const cursoid = $(this).val();
-        if(!cursoid) return;
-        const url = "{{ route('admin.obtenerProfesores', ':id') }}".replace(':id', cursoid);
-        $.get(url, function(data){
-            if(Array.isArray(data)){
-                $('#profesorid').empty().append('<option value="" selected disabled>Seleccione un Profesor</option>');
-                data.forEach(p=> $('#profesorid').append(`<option value="${p.id}">${p.nombres} ${p.apellidos}</option>`));
-            } else { alert('No se encontraron profesores'); }
-        }).fail(()=> alert('Error al cargar los profesores'));
-    });
-
-    $('#cliente_id').on('change', function(){
-        const cliente_id = $(this).val();
-        if(!cliente_id) return;
-        const url = "{{ route('admin.obtenerCursos', ':id') }}".replace(':id', cliente_id);
-        $.get(url, function(data){
-            if(Array.isArray(data)){
-                $('#cursoid').empty().append('<option value="" selected disabled>Seleccione un Curso</option>');
-                data.forEach(c=> $('#cursoid').append(`<option value="${c.id}">${c.nombre}</option>`));
-            } else { alert('No se encontraron cursos'); }
-        }).fail(()=> alert('Error al cargar los cursos'));
-    });
-
-    // ---------------------------------------
-    // DataTables
-    // ---------------------------------------
-    new DataTable('#reservas',{
-        responsive: true,
-        autoWidth: false,
-        dom: 'Bfrtip',
-        buttons: ['copy','csv','excel','pdf','print','colvis'],
-        language: {
-            emptyTable: "No hay datos disponibles en la tabla",
-            info: "Mostrando _START_ a _END_ de _TOTAL_ reservas",
-            infoEmpty: "Mostrando 0 a 0 de 0 reservas",
-            infoFiltered: "(filtrado de _MAX_ reservas totales)",
-            lengthMenu: "Mostrar _MENU_ reservas",
-            loadingRecords: "Cargando...",
-            search: "Buscar:",
-            zeroRecords: "No se encontraron registros",
-            paginate: {first:"Primero",last:"Último",next:"Siguiente",previous:"Anterior"}
-        }
-    });
-
-});
-</script>
+    </script>
 
 @stop
-

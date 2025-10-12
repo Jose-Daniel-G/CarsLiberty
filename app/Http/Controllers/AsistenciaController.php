@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Asistencia;
 use App\Models\Cliente;
-use App\Models\Agenda as CalendarAgenda;
+use App\Models\Agenda;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +23,8 @@ class AsistenciaController extends Controller
     {
         $clientes = Cliente::all();
         $hoy = Carbon::now()->format('Y-m-d'); // Fecha de hoy
-        // $Agendas = CalendarAgenda::whereDate('start', '>=', now())->get(); // Filtra solo los Agendas futuros o del día actual
-        // $Agendas = CalendarAgenda::whereDate('start', $hoy)->get();
+        // $agendas = Agenda::whereDate('start', '>=', now())->get(); // Filtra solo los Agendas futuros o del día actual
+        // $agendas = Agenda::whereDate('start', $hoy)->get();
 
         // ================ [ TEMPORAL ] ===================
         $asistencias=Asistencia::with('agenda','cliente')->get()->keyBy(function($item){return$item->agenda_id.'-'.$item->cliente_id;});
@@ -41,14 +41,14 @@ class AsistenciaController extends Controller
 
  
         if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('superAdmin')) {// Obtener Agendas basados en el rol del usuario
-            $Agendas = CalendarAgenda::whereDate('start', '>=', now())
+            $agendas = Agenda::whereDate('start', '>=', now())
                 ->join('profesors', 'agendas.profesor_id', '=', 'profesors.id')
                 ->join('users', 'profesors.user_id', '=', 'users.id')
-                ->select('Agendas.*')
+                ->select('agendas.*')
                 ->get();
         } else {
-            $Agendas = CalendarAgenda::whereDate('start', '>=', now())
-                ->join('profesors', 'Agendas.profesor_id', '=', 'profesors.id')
+            $agendas = Agenda::whereDate('start', '>=', now())
+                ->join('profesors', 'agendas.profesor_id', '=', 'profesors.id')
                 ->join('users', 'profesors.user_id', '=', 'users.id')
                 ->where('users.id', Auth::user()->id)
                 ->select('agendas.*')
@@ -67,20 +67,20 @@ class AsistenciaController extends Controller
 
     public function store(Request $request)
     {
-        foreach ($request->Agendas as $AgendaoId => $Agendao) {
-            // Validamos los datos de cada Agendao
-            $validatedData = Validator::make($Agendao, [
+        foreach ($request->agendas as $agendaId => $agenda) {
+            // Validamos los datos de cada agenda
+            $validatedData = Validator::make($agenda, [
                 'cliente_id' => 'required|exists:clientes,id',
                 'asistio' => 'nullable|boolean',])->validate();      // Puede ser null si no está marcado
             
-            $validatedData['agenda_id'] = $AgendaoId;                 // Añadimos el agenda_id al array de datos validados
+            $validatedData['agenda_id'] = $agendaId;                 // Añadimos el agenda_id al array de datos validados
             $validatedData['asistio'] = isset($validatedData['asistio']) ? $validatedData['asistio'] : 0; // Asignamos 0 si no está marcado el checkbox de 'asistió'
 
            
-            $Agenda = CalendarAgenda::find($AgendaoId);                 // Obtener el Agendao para calcular la duración
-            if ($Agenda) {
-                $start = Carbon::parse($Agenda->start);
-                $end = Carbon::parse($Agenda->end);
+            $agenda = Agenda::find($agendaId);                 // Obtener el agenda para calcular la duración
+            if ($agenda) {
+                $start = Carbon::parse($agenda->start);
+                $end = Carbon::parse($agenda->end);
 
                 
                 $duracionHoras = $end->diffInHours($start);           // Calcular la duración en horas
@@ -91,7 +91,7 @@ class AsistenciaController extends Controller
 
            
             $asistenciaExistente = Asistencia::where('cliente_id', $validatedData['cliente_id'])
-                ->where('agenda_id', $AgendaoId)                        // Verificar si ya existe una asistencia para este cliente y Agendao
+                ->where('agenda_id', $agendaId)                        // Verificar si ya existe una asistencia para este cliente y agenda
                 ->first();
 
             if ($asistenciaExistente) {
@@ -102,13 +102,13 @@ class AsistenciaController extends Controller
 
             $clienteCurso = DB::table('cliente_curso')                  // Verificar si el registro en cliente_curso existe,
                 ->where('cliente_id', $validatedData['cliente_id'])     // y crearlo si no existe
-                ->where('curso_id', $Agenda->curso_id)
+                ->where('curso_id', $agenda->curso_id)
                 ->first();
 
             if (!$clienteCurso) {
                 DB::table('cliente_curso')->insert([
                     'cliente_id' => $validatedData['cliente_id'],
-                    'curso_id' => $Agenda->curso_id,
+                    'curso_id' => $agenda->curso_id,
                     'horas_realizadas' => 0,                  // Inicializamos en 0
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -119,17 +119,17 @@ class AsistenciaController extends Controller
             if ($validatedData['asistio']) {                  // Incrementar o decrementar horas realizadas solo si el cliente asistió
                 DB::table('cliente_curso')
                     ->where('cliente_id', $validatedData['cliente_id'])
-                    ->where('curso_id', $Agenda->curso_id)
+                    ->where('curso_id', $agenda->curso_id)
                     ->increment('horas_realizadas', $duracionHoras);
             } else {
                 DB::table('cliente_curso')
                     ->where('cliente_id', $validatedData['cliente_id'])
-                    ->where('curso_id', $Agenda->curso_id)
+                    ->where('curso_id', $agenda->curso_id)
                     ->decrement('horas_realizadas', $duracionHoras);
             }
         }
 
-        return response()->json(['message' => 'Agendao actualizado correctamente']);
+        return response()->json(['message' => 'agenda actualizado correctamente']);
     }
 
     public function show()  //ver INASISTENCIAS y habilitar cliente
@@ -140,17 +140,17 @@ class AsistenciaController extends Controller
                 'clientes.nombres AS nombre',
                 'clientes.apellidos AS apellido',
                 'asistencias.id AS asistencia_id',
-                'Agendas.title AS nombre_Agendao',
-                DB::raw('DATE(Agendas.start) AS date'),
-                DB::raw('TIME(Agendas.start) AS start'),
-                DB::raw('TIME(Agendas.end) AS end'),
+                'agendas.title AS nombre_agenda',
+                DB::raw('DATE(agendas.start) AS date'),
+                DB::raw('TIME(agendas.start) AS start'),
+                DB::raw('TIME(agendas.end) AS end'),
                 'asistencias.asistio',
                 'asistencias.penalidad',
                 'asistencias.liquidado',
                 'asistencias.fecha_pago_multa'
             )
                 ->join('asistencias', 'clientes.id', '=', 'asistencias.cliente_id')
-                ->join('Agendas', 'asistencias.agenda_id', '=', 'Agendas.id')
+                ->join('agendas', 'asistencias.agenda_id', '=', 'agendas.id')
                 ->get();
             
             foreach ($clientes as $cliente) {             // Calcular las horas penalizadas en PHP
@@ -165,13 +165,13 @@ class AsistenciaController extends Controller
             $clientes = Cliente::select('clientes.id', 'clientes.nombres AS nombre', 
                 'clientes.apellidos AS apellido', 
                 'asistencias.id AS asistencia_id', 
-                'Agendas.title AS nombre_Agendao', 
-                DB::raw('DATE(Agendas.start) AS date'),
-                DB::raw('TIME(Agendas.start) AS start'),
-                DB::raw('TIME(Agendas.end)   AS end'), 
+                'agendas.title AS nombre_agenda', 
+                DB::raw('DATE(agendas.start) AS date'),
+                DB::raw('TIME(agendas.start) AS start'),
+                DB::raw('TIME(agendas.end)   AS end'), 
                 'asistencias.asistio', 'asistencias.penalidad', 'asistencias.liquidado', 'asistencias.fecha_pago_multa')
                 ->join('asistencias', 'clientes.id', '=', 'asistencias.cliente_id')
-                ->join('Agendas', 'asistencias.agenda_id', '=', 'Agendas.id')
+                ->join('agendas', 'asistencias.agenda_id', '=', 'agendas.id')
                 ->where('asistencias.asistio', 0)
                 ->where('asistencias.penalidad', '>=', 0)
                 ->get();
@@ -217,11 +217,11 @@ class AsistenciaController extends Controller
 
     // public function update(Request $request)
     // {
-    //     foreach ($request->Agendas as $agenda_id => $data) {
-    //         $Agendao = CalendarAgenda::find($agenda_id);
+    //     foreach ($request->agendas as $agenda_id => $data) {
+    //         $agenda = Agenda::find($agenda_id);
     //         $asistio = isset($data['asistio']) ? 1 : 0;
 
-    //         $Agendao->update([
+    //         $agenda->update([
     //             'asistio' => $asistio,
     //         ]);
     //     }
