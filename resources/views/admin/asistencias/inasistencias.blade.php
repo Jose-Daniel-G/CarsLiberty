@@ -57,7 +57,7 @@
                                     </td>
                                     <td>
                                         @if (!$cliente->liquidado)
-                                            <form action="{{ route('asistencia.habilitar', $cliente->id) }}"
+                                            <form action="{{ route('admin.asistencia.habilitar', $cliente->id) }}"
                                                 method="POST">
                                                 @csrf
 

@@ -154,9 +154,7 @@ public function estadisticas()
 
     public function destroy(Curso $curso)
     {
-        if ($curso->user) {
-            $curso->user->delete();
-        } // Si existe un usuario asociado, eliminarlo
+        if ($curso->user) { $curso->user->delete();  } // Si existe un usuario asociado, eliminarlo
 
         $curso->delete(); // Eliminar el curso
 

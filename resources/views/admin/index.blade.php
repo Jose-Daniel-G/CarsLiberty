@@ -2,7 +2,10 @@
 
 @section('title', 'Dashboard'){{-- @section('plugins.Sweetalert2', true) --}}
 @section('css')
+    @vite('resources/css/items.css')
+
 @stop
+
 @section('content_header'){{-- <h1><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}</h1> --}}
 @stop
 @section('content')
@@ -141,10 +144,10 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    @if (Auth::user()->hasRole('superAdmin'))
-                            <h4>Estadísticas</h4>
-                            <h5 class="mb-2">(Cursos)</h5>
-                            <br>
+                    @if (Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria'))
+                        <h4>Estadísticas</h4>
+                        <h5 class="mb-2">(Cursos)</h5>
+                        <br>
                     @else
                         <div>
                             <h3>{{ $total_cursos }}</h3>
@@ -160,6 +163,61 @@
             </div>
         </div>
         {{-- @endcan --}}
+        @if (Auth::user()->hasRole('cliente'))
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="info-box">
+                    <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Likes</span>
+                        <span class="info-box-number">93,139</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="info-box">
+                    <!-- ROMBO -->
+                    <div class="shape-item shape-sm">
+                        <div class="diamond badge-shape">
+                            <span class="diamond-text"><i class="far fa-star"></i></span>
+                        </div>
+                    </div>
+                    <div class="info-box-content"> Insign Rombo</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="info-box">
+                    <div class="shape-item shape-sm">
+                        <div class="octagon badge-shape">
+                            <span class="octagon-text">Oct</span>
+                        </div>
+                    </div>
+                    <div class="shape-label">Octagono</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="info-box">
+                <div class="shape-item shape-sm">
+                    <div class="shield badge-shape">
+                        <span class="shield-text">Escudo</span>
+                    </div>
+                </div><div class="shape-label">Escudo</div>
+                </div>
+            </div>
+            {{-- <div class="col-lg-2 col-2"> 
+                <div class="shape-item shape-sm">
+                    <div class="pentagon">
+                        <span class="pentagon-text">PREMIUM</span>
+                    </div>
+                    <div class="shape-label">Pentágono</div>
+                </div>
+            </div> --}}
+    </div>
+    @endif
+
+
     </div>
     <div class="card card-primary card-outline card-tabs">
         <div class="card-header p-0 pt-1 border-bottom-0">
@@ -172,8 +230,9 @@
                     </li>
                 @endcan
                 <li class="nav-item">
-                    <a class="nav-link " id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home"
-                        role="tab" aria-controls="custom-tabs-three-home" aria-selected="false">Horario de
+                    <a class="nav-link " id="custom-tabs-three-home-tab" data-toggle="pill"
+                        href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home"
+                        aria-selected="false">Horario de
                         profesores</a>
                 </li>
             </ul>
