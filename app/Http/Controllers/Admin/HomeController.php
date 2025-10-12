@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\Config;
 use App\Models\Post;
+use App\Models\Vehiculo;
 use App\Notifications\PostNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,13 +32,13 @@ class HomeController extends Controller
         $total_usuarios = User::count();
         $total_secretarias = Secretaria::count();
         $total_clientes = Cliente::count();
-        // $total_cursos = Curso::count();
-        $total_cursos = Curso::count();
+        $total_vehiculos = Vehiculo::count();
+
         $total_profesores = Profesor::count();
         $total_horarios = Horario::count();
         $total_agendas = Agenda::count();
         $total_configuraciones = Config::count();
-        // $total_completados = Config::count();
+        $total_cursos = Curso::count();
 
         $profesores = Profesor::all();
         $agendas = Agenda::all(); // dd(Auth::user()->getRoleNames());
@@ -72,7 +73,7 @@ class HomeController extends Controller
 
             $role = 'admin'; // Asegúrate de tener un campo 'role'
 
-            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'agendas', 'total_configuraciones', 'role'));
+            return view('admin.index', compact('total_usuarios','total_cursos' ,'total_vehiculos', 'total_secretarias', 'total_clientes', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'agendas', 'total_configuraciones', 'role'));
         } else {
             $cliente = Cliente::where('user_id', Auth::id())->first();
             \Log::info('cliente', [$cliente]);
@@ -97,6 +98,11 @@ class HomeController extends Controller
                 ->limit(100)
                 ->get();
 
+        $total_cursos = DB::table('cliente_curso')
+                        ->join('cursos', 'cliente_curso.curso_id', '=', 'cursos.id')
+                        ->where('cliente_curso.cliente_id', Auth::id())
+                        ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
+                        ->count();
             return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesorSelect', 'agendas', 'total_configuraciones'));
         }
     }

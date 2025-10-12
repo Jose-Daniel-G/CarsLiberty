@@ -66,41 +66,25 @@ class CursoController extends Controller
             Auth::user()->hasRole('profesor')
         ) {
             // 🔹 ADMIN: Todos los clientes
-            $cursosCompletados = DB::table('cursos')
+            $cursosClientes = DB::table('cursos')
                 ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
                 ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
                 ->select(
                     'cliente_curso.id as relacion_id',
                     'clientes.id as cliente_id',
                     DB::raw("CONCAT(clientes.nombres, ' ', clientes.apellidos) AS cliente_nombre"),
-                    'cursos.id as id',
+                    'cursos.id as curso_id',
                     'cursos.nombre as curso_nombre',
+                    'cursos.descripcion',
                     'cursos.horas_requeridas',
                     'cliente_curso.horas_realizadas',
-                    'cliente_curso.fecha_realizacion'
+                    'cliente_curso.fecha_realizacion', 
                 )
-                ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
                 ->orderBy('clientes.id')
                 ->get();
 
-            $cursosEnProgreso = DB::table('cursos')
-                ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-                ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
-                ->select(
-                    'cliente_curso.id as relacion_id',
-                    'clientes.id as cliente_id',
-                    DB::raw("CONCAT(clientes.nombres, ' ', clientes.apellidos) AS cliente_nombre"),
-                    'cursos.id as id',
-                    'cursos.nombre as curso_nombre',
-                    'cursos.horas_requeridas',
-                    'cliente_curso.horas_realizadas',
-                    'cliente_curso.fecha_realizacion'
-                )
-                ->whereColumn('cliente_curso.horas_realizadas', '<', 'cursos.horas_requeridas')
-                ->orderBy('clientes.id')
-                ->get();
 
-            return view('admin.cursos.completados_all', compact('cursosCompletados', 'cursosEnProgreso'));
+            return view('admin.cursos.completados_all', compact('cursosClientes'));
         } else {
             // 🔹 CLIENTE NORMAL: solo sus cursos
             $userId = Auth::user()->id;
@@ -145,61 +129,29 @@ class CursoController extends Controller
         }
     }
 
-    public function completadosw()
-    {
-        // Verificar si el usuario tiene un rol administrativo o de profesor
-        if (
-            Auth::user()->hasRole('superAdmin') ||
-            Auth::user()->hasRole('admin') ||
-            Auth::user()->hasRole('secretaria') ||
-            Auth::user()->hasRole('profesor')
-        ) {
-            // 🔹 Consulta global para ver todos los cursos completados de todos los clientes
-            $cursos = DB::table('cursos')
-                ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-                ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
-                ->select(
-                    'clientes.id as cliente_id',
-                    DB::raw("CONCAT(clientes.nombres, ' ', clientes.apellidos) AS cliente_nombre"),
-                    'cursos.id as curso_id',
-                    'cursos.nombre as curso_nombre',
-                    'cursos.horas_requeridas',
-                    'cliente_curso.horas_realizadas',
-                    'cliente_curso.fecha_realizacion'
-                )
-                ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
-                ->orderBy('clientes.id')
-                ->get();
+public function estadisticas()
+{
+    $cursosClientes = DB::table('cursos')
+        ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
+        ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
+        ->select(
+            'clientes.id as cliente_id',
+            DB::raw("CONCAT(clientes.nombres, ' ', clientes.apellidos) as cliente_nombre"),
+            'cursos.id as curso_id',
+            'cursos.nombre as curso_nombre',
+            'cursos.horas_requeridas',
+            'cliente_curso.horas_realizadas',
+            'cliente_curso.fecha_realizacion'
+        )
+        ->orderBy('clientes.id')
+        ->get();
 
-            return view('admin.cursos.completados_all', compact('cursos'));
-        } else {
-            // 🔹 Caso para clientes normales (solo ven sus cursos)
-            $userId = Auth::user()->id;
+    $cursosCompletados = $cursosClientes->filter(fn($c) => $c->horas_realizadas >= $c->horas_requeridas);
+    $cursosEnProgreso  = $cursosClientes->filter(fn($c) => $c->horas_realizadas < $c->horas_requeridas);
 
-            $cliente = \App\Models\Cliente::where('user_id', $userId)->first();
+    return view('admin.cursos.estadisticas', compact('cursosClientes', 'cursosCompletados', 'cursosEnProgreso'));
+}
 
-            if (!$cliente) {
-                return back()->with('error', 'No se encontró un registro asociado al usuario actual.');
-            }
-
-            $cursos = DB::table('cursos')
-                ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-                ->select(
-                    'cursos.id',
-                    'cursos.nombre',
-                    'cursos.descripcion',
-                    'cursos.horas_requeridas',
-                    'cliente_curso.horas_realizadas',
-                    'cliente_curso.fecha_realizacion'
-                )
-                ->where('cliente_curso.cliente_id', $cliente->id)
-                ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
-                ->orderBy('cursos.id')
-                ->get();
-
-            return view('admin.cursos.completados', compact('cursos'));
-        }
-    }
     public function destroy(Curso $curso)
     {
         if ($curso->user) {

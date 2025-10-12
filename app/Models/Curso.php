@@ -27,10 +27,13 @@ class Curso extends Model
     public function horarios()              // Muchos a muchos con horarios
     {   return $this->belongsToMany(Horario::class, 'horario_profesor_curso', 'curso_id', 'horario_id');}
     
-    public function clientes()              // Muchos a muchos con clientes
+    public function clientes()
     {
-        return $this->belongsToMany(Cliente::class, 'horario_profesor_curso')->withPivot('horas_realizadas');
+        return $this->belongsToMany(Cliente::class, 'cliente_curso', 'curso_id', 'cliente_id')
+                    ->withPivot('horas_realizadas', 'fecha_realizacion')
+                    ->withTimestamps();
     }
+
     
     public function historialCursos()
     {

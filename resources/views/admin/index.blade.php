@@ -77,11 +77,9 @@
                 <div class="small-box bg-primary">
                     <div class="inner">
                         <h3>{{ $total_profesores }}</h3>
-
                         <p>Profesores</p>
                     </div>
-                    <div class="icon">
-                        <i class="fa-solid fa-chalkboard-user"></i>
+                    <div class="icon"><i class="fa-solid fa-chalkboard-user"></i>
                     </div>
                     <a href="{{ route('admin.profesores.index') }}" class="small-box-footer">Mas info <i
                             class="fas fa-arrow-circle-right"></i></a>
@@ -126,7 +124,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{ $total_cursos }}</h3>
+                        <h3>{{ $total_vehiculos }}</h3>
 
                         <p>Vehiculos</p>
                     </div>
@@ -143,11 +141,19 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>{{ $total_cursos }}</h3>
-                    <p>Cursos completados</p>
+                    @if (Auth::user()->hasRole('superAdmin'))
+                            <h4>Estadísticas</h4>
+                            <h5 class="mb-2">(Cursos)</h5>
+                            <br>
+                    @else
+                        <div>
+                            <h3>{{ $total_cursos }}</h3>
+                            <p>Cursos </p>
+                        </div>
+                    @endif
+
                 </div>
-                <div class="icon">
-                    <i class="fa-regular fa-check-circle"></i>
+                <div class="icon"> <i class="fa-regular fa-check-circle"></i>
                 </div>
                 <a href="{{ route('admin.cursos.completados') }}" class="small-box-footer">Mas info <i
                         class="fas fa-arrow-circle-right"></i></a>
@@ -167,7 +173,8 @@
                 @endcan
                 <li class="nav-item">
                     <a class="nav-link " id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home"
-                        role="tab" aria-controls="custom-tabs-three-home" aria-selected="false">Horario de profesores</a>
+                        role="tab" aria-controls="custom-tabs-three-home" aria-selected="false">Horario de
+                        profesores</a>
                 </li>
             </ul>
         </div>
@@ -294,7 +301,7 @@
         window.Laravel = {
             isAdmin: @json(Auth::check() && Auth::user()->hasRole('superAdmin')),
             routes: {
-                horariosShowReservaProfesores: "{{ route('admin.horarios.show_reserva_profesores') }}", 
+                horariosShowReservaProfesores: "{{ route('admin.horarios.show_reserva_profesores') }}",
             }
         };
     </script>

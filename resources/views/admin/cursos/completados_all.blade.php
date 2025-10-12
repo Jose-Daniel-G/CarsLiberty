@@ -1,136 +1,248 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
-
-@section('css')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-@stop
+@section('title', 'Estadísticas de Cursos')
 
 @section('content_header')
-    {{-- <h1>Sistema de Reservas</h1> --}}
+    <h1 class="text-primary">📊 Estadísticas de Cursos y Clientes</h1>
 @stop
 
 @section('content')
+@php
+    // Asegurarnos que $cursosClientes es una colección
+    $cursos = collect($cursosClientes ?? []);
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Informacion de cursos terminados por cliente</h3>
-                </div>
-                <div class="card-body">
-                    @foreach ($cursosCompletados as $curso)
-                        <div class="col-md-4 mb-4">
-                            <table id="cursos" class="table table-striped table-bordered table-hover table-sm">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Nro</th>
-                                        <th>Nombres Apellidos</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $contador = 1; ?>
-                                    {{-- @foreach ($cursos as $curso)
-                                                    <tr>
-                                                        <td scope="row">{{ $contador++ }}</td>
-                                                        <td scope="row">{{ $curso->nombre }}</td>
-                                                        <td scope="row">{{ $curso->horas_requeridas }}</td>
-                                                        <td scope="row">{{ $curso->estado == 'A' ? 'Activo' : 'Inactivo' }}</td>
-                                                        <td scope="row">
-                                                            <div class="btn-group" role="group" aria-label="basic example">
-                                                                <a href="{{ route('admin.cursos.show', $curso->id) }}"
-                                                                    class="btn btn-info btn-sm"><i class="fas fa-eye"></i>
-                                                                </a>
-                                                                <a href="{{ route('admin.cursos.edit', $curso->id) }}"
-                                                                    class="btn btn-success btn-sm"><i class="fas fa-edit"></i>
-                                                                </a>
-                                                                <form id="delete-form-{{ $curso->id }}" action="{{ route('admin.cursos.destroy', $curso->id) }}" method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $curso->id }})"><i
-                                                                            class="fas fa-trash"></i></button>
-                                                                </form>
-                    
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach --}}
-                                </tbody>
-                            </table>
+    // Colecciones derivadas
+    $cursosCompletados = $cursos->filter(fn($c) => (int)$c->horas_realizadas >= (int)$c->horas_requeridas)->values();
+    $cursosEnProgreso  = $cursos->filter(fn($c) => (int)$c->horas_realizadas < (int)$c->horas_requeridas)->values();
 
-                        </div>
+    // Datos para "Horas por cliente"
+    $horasPorClienteLabels = $cursos->groupBy('cliente_nombre')->keys()->values();
+    $horasPorClienteData = $cursos->groupBy('cliente_nombre')->map(fn($g) => $g->sum(fn($x) => (int)$x->horas_realizadas))->values();
 
-                        <!-- Modal para cada curso -->
-                        <div class="modal fade" id="cursoModal{{ $curso->id }}" tabindex="-1"
-                            aria-labelledby="cursoModalLabel{{ $curso->id }}" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="cursoModalLabel{{ $curso->id }}">
-                                            {{ $curso->nombre }}</h5>
-                                        <button type="button" class="btn-close" data-dismiss="modal"
-                                            aria-label="Cerrar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p><strong>Descripción:</strong> {{ $curso->descripcion }}</p>
-                                        <p><strong>Horas Totales:</strong> {{ $curso->horas_requeridas }}</p>
-                                        <p><strong>Horas Realizadas:</strong> {{ $curso->horas_realizadas }}</p>
+    // Datos para "Avance por curso" (cada fila curso_cliente es una entrada)
+    $avanceLabels = $cursos->map(fn($c) => $c->cliente_nombre . ' — ' . $c->curso_nombre)->values();
+    $avanceData = $cursos->map(fn($c) => $c->horas_requeridas ? round(((int)$c->horas_realizadas / (int)$c->horas_requeridas) * 100, 1) : 0)->values();
 
-                                        <!-- Contenedor de Gráfica -->
-                                        <div>
-                                            <canvas id="graficaCurso{{ $curso->id }}"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Cerrar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+    // Datos para evolución: agrupar completados por fecha (Y-m-d)
+    $fechasCompletados = $cursosCompletados
+        ->pluck('fecha_realizacion')
+        ->filter()
+        ->map(fn($f) => \Carbon\Carbon::parse($f)->format('Y-m-d'))
+        ->values();
+
+    $fechasAgrupadas = $fechasCompletados->count()
+        ? $fechasCompletados->countBy()->sortKeys()
+        : collect([]);
+
+    $evolLabels = $fechasAgrupadas->keys()->values();
+    $evolData = $fechasAgrupadas->values()->map(fn($v) => (int)$v)->values();
+@endphp
+
+<div class="row">
+    {{-- 1️⃣ Gráfico de Completados vs En Progreso --}}
+    <div class="col-md-6">
+        <div class="card card-outline card-success">
+            <div class="card-header">
+                <h3 class="card-title">Progreso general de los cursos</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoCompletados"></canvas>
             </div>
         </div>
     </div>
-@endsection
 
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            @foreach ($cursosCompletados as $curso)
-                var ctx = document.getElementById("graficaCurso{{ $curso->id }}").getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'bar', // Tipo de gráfica (puedes cambiar a 'line', 'pie', etc.)
-                    data: {
-                        labels: ["Horas Realizadas", "Horas Totales"],
-                        datasets: [{
-                            label: 'Progreso del Curso',
-                            data: [{{ $curso->horas_realizadas }},
-                                {{ $curso->horas_requeridas }}
-                            ], // Datos reales de cada curso
-                            backgroundColor: [
-                                'rgba(75, 192, 192, 0.5)',
-                                'rgba(153, 102, 255, 0.5)'
-                            ],
-                            borderColor: [
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            @endforeach
+    {{-- 2️⃣ Horas Realizadas por Cliente --}}
+    <div class="col-md-6">
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">Horas realizadas por cliente</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoHorasPorCliente"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    {{-- 3️⃣ Avance por Curso (por cliente-curso) --}}
+    <div class="col-md-6">
+        <div class="card card-outline card-warning">
+            <div class="card-header">
+                <h3 class="card-title">Porcentaje de avance (cliente - curso)</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoAvanceCursos"></canvas>
+            </div>
+        </div>
+    </div>
+
+    {{-- 4️⃣ Evolución de cursos completados --}}
+    <div class="col-md-6">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Evolución de cursos completados</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoEvolucion"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Tabla de referencia --}}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card card-outline card-secondary">
+            <div class="card-header">
+                <h3 class="card-title">Detalle de Cursos y Clientes</h3>
+            </div>
+            <div class="card-body">
+                <table id="cursos" class="table table-striped table-bordered table-hover table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Curso</th>
+                            <th>Horas Realizadas / Requeridas</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $i = 1; @endphp
+                        @foreach ($cursos as $curso)
+                            <tr>
+                                <td>{{ $i++ }}</td>
+                                <td>{{ $curso->cliente_nombre }}</td>
+                                <td>{{ $curso->curso_nombre }}</td>
+                                <td>{{ $curso->horas_realizadas }} / {{ $curso->horas_requeridas }}</td>
+                                <td>
+                                    @if ((int)$curso->horas_realizadas >= (int)$curso->horas_requeridas)
+                                        <span class="badge badge-success">Completado</span>
+                                    @else
+                                        <span class="badge badge-warning">En progreso</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                {{-- Para depuración rápida (opcional) --}}
+                {{-- <pre>{{ json_encode($cursos->take(10)) }}</pre> --}}
+            </div>
+        </div>
+    </div>
+</div>
+@stop
+
+@section('js')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // 1️⃣ Completados vs En progreso (desde la colección calculada en Blade)
+    new Chart(document.getElementById('graficoCompletados'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Completados', 'En progreso'],
+            datasets: [{
+                data: [{{ $cursosCompletados->count() }}, {{ $cursosEnProgreso->count() }}],
+                backgroundColor: ['#28a745', '#ffc107']
+            }]
+        },
+        options: { plugins: { title: { display: true, text: 'Estado general de los cursos' } } }
+    });
+
+    // 2️⃣ Horas Realizadas por Cliente
+    new Chart(document.getElementById('graficoHorasPorCliente'), {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($horasPorClienteLabels) !!},
+            datasets: [{
+                label: 'Horas Realizadas',
+                data: {!! json_encode($horasPorClienteData) !!},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: '#007bff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: { title: { display: true, text: 'Horas realizadas por cliente' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // 3️⃣ Avance por curso (cada entrada cliente-curso)
+    new Chart(document.getElementById('graficoAvanceCursos'), {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($avanceLabels) !!},
+            datasets: [{
+                label: 'Avance (%)',
+                data: {!! json_encode($avanceData) !!},
+                backgroundColor: 'rgba(255, 193, 7, 0.6)',
+                borderColor: '#ffc107',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: { title: { display: true, text: 'Porcentaje de avance por cliente-curso' } },
+            scales: { x: { beginAtZero: true, max: 100 } }
+        }
+    });
+
+    // 4️⃣ Evolución de Cursos Completados
+    new Chart(document.getElementById('graficoEvolucion'), {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($evolLabels) !!},
+            datasets: [{
+                label: 'Cursos completados',
+                data: {!! json_encode($evolData) !!},
+                fill: true,
+                backgroundColor: 'rgba(40, 167, 69, 0.15)',
+                borderColor: '#28a745',
+                tension: 0.3
+            }]
+        },
+        options: {
+            plugins: { title: { display: true, text: 'Evolución de cursos completados' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // 5️⃣ Inicializar DataTable (usa jQuery DataTables si está cargado)
+    if (typeof $ !== 'undefined' && $.fn.dataTable) {
+        $('#cursos').DataTable({
+            responsive: true,
+            scrollX: true,
+            dom: 'Bfrtip',
+            buttons: [
+                { extend: 'copyHtml5', text: 'Copiar' },
+                { extend: 'excelHtml5', text: 'Excel' },
+                { extend: 'pdfHtml5', text: 'PDF' },
+                { extend: 'print', text: 'Imprimir' }
+            ],
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ registros",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                paginate: { previous: "Anterior", next: "Siguiente" }
+            }
         });
-    </script>
-@endsection
+    } else {
+        // Fallback: si usas DataTable moderno (no-jQuery) puedes inicializarlo aquí
+        try {
+            if (typeof DataTable !== 'undefined') {
+                new DataTable('#cursos', { responsive: true, dom: 'Bfrtip' });
+            }
+        } catch (e) {
+            console.warn('DataTable no inicializado (falta librería) -', e.message);
+        }
+    }
+
+});
+</script>
+@stop
