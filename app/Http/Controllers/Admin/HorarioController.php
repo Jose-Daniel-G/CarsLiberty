@@ -16,7 +16,7 @@ class HorarioController extends Controller
 {
     public function __construct()
     {  // Solo los que tengan el permiso pueden acceder a estas acciones
-        $this->middleware('can:admin.horarios')->only('index'); 
+        // $this->middleware('can:admin.horarios')->only('index'); 
     }
     public function index()
     {
