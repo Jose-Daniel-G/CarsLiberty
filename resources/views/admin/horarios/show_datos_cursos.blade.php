@@ -14,13 +14,19 @@
         <tbody>
             @php
                 $horas = [
-                    '06:00 am - 07:00 am','07:00 am - 08:00 am',
-                    '08:00 am - 09:00 am','09:00 am - 10:00 am',
-                    '10:00 am - 11:00 am','11:00 am - 12:00 pm',
-                    '12:00 pm - 01:00 pm','01:00 pm - 02:00 pm',
-                    '02:00 pm - 03:00 pm','03:00 pm - 04:00 pm',
-                    '04:00 pm - 05:00 pm','05:00 pm - 06:00 pm',
-                    '06:00 pm - 07:00 pm','07:00 pm - 08:00 pm',
+                    '06:00 am - 07:00 am',
+                    '07:00 am - 08:00 am',
+                    '08:00 am - 09:00 am',
+                    '09:00 am - 10:00 am',
+                    '10:00 am - 11:00 am',
+                    '11:00 am - 12:00 pm', 
+                    '01:00 pm - 02:00 pm',
+                    '02:00 pm - 03:00 pm',
+                    '03:00 pm - 04:00 pm',
+                    '04:00 pm - 05:00 pm',
+                    '05:00 pm - 06:00 pm',
+                    '06:00 pm - 07:00 pm',
+                    '07:00 pm - 08:00 pm',
                 ];
             @endphp
 
@@ -75,22 +81,24 @@
 
                             // 🔹 Define el color de la celda
                             $clase = '';
+                             $contenido = $curso_mostrado;
                             if ($agendado) {
                                 $clase = $es_del_usuario ? 'table-success' : 'table-primary';
                             } elseif ($curso_mostrado) {
-                                $clase = 'table-light';
+                                // Badge para horarios disponibles (no agendados)
+                                $contenido = '<span class="badge badge-pill badge-light border border-dark">' . e($curso_mostrado) . '</span>';;
                             }
                         @endphp
 
-                        <td class="{{ $clase }}">{{ $curso_mostrado }}</td>
+                        <td class="{{ $clase }}  text-center">{!! $contenido !!}</td>
                     @endforeach
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
-        <div class="mt-3">
-            <div class="alert alert-primary d-inline-block me-2 p-2"><strong>Azul:</strong> Ocupado (otro cliente)</div>
-            <div class="alert alert-success d-inline-block me-2 p-2"><strong>Verde:</strong> Agendado por ti</div>
-            <div class="alert alert-warning d-inline-block me-2 p-2"><strong>Amarillo:</strong> Disponible</div>
-        </div>
+<div class="mt-3">
+    <div class="alert alert-primary d-inline-block me-2 p-2"><strong>Azul:</strong> Ocupado (otro cliente)</div>
+    <div class="alert alert-success d-inline-block me-2 p-2"><strong>Verde:</strong> Agendado por ti</div>
+    <div class="alert alert-light border border-dark text-center d-inline-block me-2 p-2"><strong>Blando:</strong> Disponible</div>
+</div>

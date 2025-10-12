@@ -75,9 +75,9 @@ class HorarioController extends Controller
                 $horario->dia = DateHelper::traducirDia($horario->dia);
                 return $horario;
             });
-            \Log::info(['titulo' => 'Datos de horarios asignados']);
-            \Log::info(['horarios asignados' => $horarios_asignados->toArray()]);
-            \Log::info(['horarios' =>$horarios->toArray()]);
+            // \Log::info(['titulo' => 'Datos de horarios asignados']);
+            // \Log::info(['horarios asignados' => $horarios_asignados->toArray()]);
+            // \Log::info(['horarios' =>$horarios->toArray()]);
             return view('admin.horarios.show_datos_cursos', compact('cursos_profesor', 'horarios', 'horarios_asignados'));
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error', 'detalle' => $exception->getMessage()]);
