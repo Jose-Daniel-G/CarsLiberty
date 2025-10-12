@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Curso;
 use App\Models\Profesor;
-use App\Models\Agenda as CalendarAgenda;  // Usa un alias para el modelo Agenda
+use App\Models\Agenda;  // Usa un alias para el modelo Agenda
 use App\Models\Horario;
 use App\Models\Cliente;
 use App\Models\Secretaria;
@@ -35,12 +35,12 @@ class HomeController extends Controller
         $total_cursos = Curso::count();
         $total_profesores = Profesor::count();
         $total_horarios = Horario::count();
-        $total_agendas = CalendarAgenda::count();
+        $total_agendas = Agenda::count();
         $total_configuraciones = Config::count();
         // $total_completados = Config::count();
 
         $profesores = Profesor::all();
-        $agendas = CalendarAgenda::all(); // dd(Auth::user()->getRoleNames());
+        $agendas = Agenda::all(); // dd(Auth::user()->getRoleNames());
 
         if (Auth::user()->hasRole('espectador')) {
             $posts = Post::with(['category', 'image'])->latest()->get();
@@ -103,9 +103,9 @@ class HomeController extends Controller
     public function show($id) //show_reservas
     {
         if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
-            $agendas = CalendarAgenda::with('cliente')->get(); // $agendas = CalendarAgenda::all();
+            $agendas = Agenda::with('cliente')->get(); // $agendas = Agenda::all();
         } else {
-            $agendas = CalendarAgenda::where('cliente_id',  Auth::user()->cliente->id)->get();
+            $agendas = Agenda::where('cliente_id',  Auth::user()->cliente->id)->get();
         }
         return view('admin.reservas.show', compact('agendas'));
     }
@@ -116,11 +116,11 @@ class HomeController extends Controller
             // Verifica si el usuario autenticado es un administrador
             if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
                 // Obtener todos los agendas del profesor específico
-                $agendas = CalendarAgenda::with(['profesor', 'cliente'])->get();
+                $agendas = Agenda::with(['profesor', 'cliente'])->get();
                 return response()->json($agendas);
             } else {
 
-                $agendas = CalendarAgenda::with(['profesor', 'cliente'])
+                $agendas = Agenda::with(['profesor', 'cliente'])
                     ->join('users as profesores', 'profesores.id', '=', 'agendas.profesor_id')
                     ->join('clientes', 'clientes.id', '=', 'agendas.cliente_id')
                     ->join('users as clientes_users', 'clientes.user_id', '=', 'clientes_users.id')

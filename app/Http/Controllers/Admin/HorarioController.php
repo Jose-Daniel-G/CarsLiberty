@@ -7,11 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Helpers\DateHelper;
 use App\Models\Curso;
 use App\Models\Profesor;
-use App\Models\Horario;
-use App\Models\Agenda as CalendarAgenda;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Horario; 
+use Illuminate\Http\Request; 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -69,14 +66,18 @@ class HorarioController extends Controller
                 ->join('users', 'clientes.user_id', '=', 'users.id')
                 ->where('agendas.profesor_id', $id)
                 ->get();
-            \Log::info(['titulo' => 'Datos de horarios asignados', 'horarios asignados' => $horarios_asignados->toArray(),'horarios' =>$horarios->toArray(),'cursos_profesor' =>$cursos_profesor->toArray()]);
+
+
+            // \Log::info(['cursos_profesor' =>$cursos_profesor->toArray()]);
 
             // Traducir los días al español
             $horarios_asignados = $horarios_asignados->map(function ($horario) {
                 $horario->dia = DateHelper::traducirDia($horario->dia);
                 return $horario;
             });
-
+            \Log::info(['titulo' => 'Datos de horarios asignados']);
+            \Log::info(['horarios asignados' => $horarios_asignados->toArray()]);
+            \Log::info(['horarios' =>$horarios->toArray()]);
             return view('admin.horarios.show_datos_cursos', compact('cursos_profesor', 'horarios', 'horarios_asignados'));
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error', 'detalle' => $exception->getMessage()]);

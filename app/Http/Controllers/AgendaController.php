@@ -5,18 +5,13 @@ namespace App\Http\Controllers;
 use App\Helpers\DateHelper;
 
 use App\Models\Asistencia;
-use App\Models\Cliente;
-use App\Models\Config;
 use App\Models\Curso;
 use App\Models\Profesor;
-use App\Models\Agenda as CalendarAgenda;
-use App\Models\Horario;
+use App\Models\Agenda;
 use App\Models\HorarioProfesorCurso;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth; 
 
 class AgendaController extends Controller
 {
@@ -72,7 +67,7 @@ class AgendaController extends Controller
             ->where('horario_profesor_curso.profesor_id', $profesor->id)
             ->where('horarios.dia', $dia_de_reserva)                        // Filtrar por el día en la tabla correcta
             ->where('horarios.hora_inicio', '<=', $hora_inicio_formato)     // Ahora filtramos por horarios.hora_inicio
-            ->where('horarios.tiempo', '>=', $hora_fin_formato)           // Ahora filtramos por horarios.tiempo
+            ->where('horarios.tiempo', '>=', $hora_fin_formato)             // Ahora filtramos por horarios.tiempo
             ->where('horario_profesor_curso.curso_id', $cursoid)            // Si la tabla maneja cursos
             ->get();
 
@@ -83,7 +78,7 @@ class AgendaController extends Controller
             ]);
         }
 
-        $agendas_duplicados = CalendarAgenda::where('profesor_id', $profesor->id)    // Validar si existen agendas duplicados
+        $agendas_duplicados = Agenda::where('profesor_id', $profesor->id)    // Validar si existen agendas duplicados
             ->where(function ($query) use ($fecha_hora_inicio, $fecha_hora_fin) {
                 $query->whereBetween('start', [$fecha_hora_inicio, $fecha_hora_fin])
                     ->orWhereBetween('end', [$fecha_hora_inicio, $fecha_hora_fin]);
@@ -94,8 +89,8 @@ class AgendaController extends Controller
         }
 
         $curso = Curso::find($cursoid);
-        // Crear una nueva instancia de CalendarAgenda
-        $agenda = new CalendarAgenda();
+        // Crear una nueva instancia de Agenda
+        $agenda = new Agenda();
         $agenda->title = $curso->nombre;
         $agenda->start = $fecha_hora_inicio;
         $agenda->end = $fecha_hora_fin;
@@ -126,76 +121,23 @@ class AgendaController extends Controller
 
     public function show()
     {  try {
-            $agendas = CalendarAgenda::with('profesor', 'cliente')->get(); // Carga la relación 'profesor'
+            $agendas = Agenda::with('profesor', 'cliente')->get(); // Carga la relación 'profesor'
             return response()->json($agendas); // Devuelve todos los agendas
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener agendas'], 500);
         }
     }
 
-    public function update(Request $request, CalendarAgenda $agenda)
+    public function update(Request $request, Agenda $agenda)
     {
         $validatedData = $request->validate(['profesor_id' => 'required', 'hora_inicio' => 'required', 'fecha_reserva' => 'required|date']);
         $agenda->update($validatedData);
         return response()->json(['message' => 'agenda actualizado correctamente']);
     }
 
-    public function destroy(CalendarAgenda $agenda)
+    public function destroy(Agenda $agenda)
     {
         $agenda->delete();
         return redirect()->back()->with(['mensaje' => 'Se eliminó la reserva de manera correcta', 'icono' => 'success',]);
     }
-    
-    // private function traducir_dia($dia)
-    // { $dias = ['Monday'=>'LUNES','Tuesday'=>'MARTES','Wednesday'=>'MIERCOLES','Thursday'=>'JUEVES','Friday'=>'VIERNES','Saturday'=>'SABADO','Sunday'=>'DOMINGO',];
-    //     return $dias[$dia] ?? $dias; }
-    ///================ [ NO SE ESTAN USANDO ]================
-
-    // public function reportes(){
-    //     return view('admin.reservas.reportes');
-    // }
-
-    // public function pdf()
-    // {
-    //     $configuracion = Config::latest()->first();
-    //     $agendas = CalendarAgenda::all();
-
-    //     $pdf = Pdf::loadView('admin.reservas.pdf', compact('configuracion', 'agendas'));
-
-    //     // Incluir la numeración de páginas y el pie de página
-    //     $pdf->output();
-    //     $dompdf = $pdf->getDomPDF();
-    //     $canvas = $dompdf->getCanvas();
-    //     $canvas->page_text(20, 800, "Impreso por: " . Auth::user()->email, null, 10, array(0, 0, 0));
-    //     $canvas->page_text(270, 800, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-    //     $canvas->page_text(450, 800, "Fecha: " . \Carbon\Carbon::now()->format('d/m/Y') . " - " . \Carbon\Carbon::now()->format('H:i:s'), null, 10, array(0, 0, 0));
-
-
-    //     return $pdf->stream();
-    // }
-
-    // public function pdf_fechas(Request $request){
-    //     //$datos = request()->all();
-    //     //return response()->json($datos);
-
-    //     $configuracion = Configuracione::latest()->first();
-
-    //     $fecha_inicio = $request->input('fecha_inicio');
-    //     $fecha_fin = $request->input('fecha_fin');
-
-    //     $agendas = CalendarAgenda::whereBetween('start',[$fecha_inicio, $fecha_fin])->get();
-
-    //     $pdf = \PDF::loadView('admin.reservas.pdf_fechas', compact('configuracion','agendas','fecha_inicio','fecha_fin'));
-
-    //     // Incluir la numeración de páginas y el pie de página
-    //     $pdf->output();
-    //     $dompdf = $pdf->getDomPDF();
-    //     $canvas = $dompdf->getCanvas();
-    //     $canvas->page_text(20, 800, "Impreso por: ".Auth::user()->email, null, 10, array(0,0,0));
-    //     $canvas->page_text(270, 800, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0,0,0));
-    //     $canvas->page_text(450, 800, "Fecha: " . \Carbon\Carbon::now()->format('d/m/Y')." - ".\Carbon\Carbon::now()->format('H:i:s'), null, 10, array(0,0,0));
-
-
-    //     return $pdf->stream();
-    // }
 }
