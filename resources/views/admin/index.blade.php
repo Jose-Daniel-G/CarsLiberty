@@ -199,11 +199,12 @@
             </div>
             <div class="col-md-2 col-sm-4 col-6">
                 <div class="info-box">
-                <div class="shape-item shape-sm">
-                    <div class="shield badge-shape">
-                        <span class="shield-text">Escudo</span>
+                    <div class="shape-item shape-sm">
+                        <div class="shield badge-shape">
+                            <span class="shield-text">Escudo</span>
+                        </div>
                     </div>
-                </div><div class="shape-label">Escudo</div>
+                    <div class="shape-label">Escudo</div>
                 </div>
             </div>
             {{-- <div class="col-lg-2 col-2"> 
@@ -214,7 +215,6 @@
                     <div class="shape-label">Pentágono</div>
                 </div>
             </div> --}}
-    </div>
     @endif
 
 

@@ -46,11 +46,11 @@ class HomeController extends Controller
         if (Auth::user()->hasRole('espectador')) {
             $posts = Post::with(['category', 'image'])->latest()->get();
 
-                // dd($posts);
+            // dd($posts);
             return view('home', compact('posts'));
         }
         if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') || Auth::user()->hasRole('profesor')) {
-            $cursos = Curso::all();
+            $cursosDisponibles = Curso::all();
             $clientes = Cliente::all();
 
 
@@ -73,12 +73,10 @@ class HomeController extends Controller
 
             $role = 'admin'; // Asegúrate de tener un campo 'role'
 
-            return view('admin.index', compact('total_usuarios','total_cursos' ,'total_vehiculos', 'total_secretarias', 'total_clientes', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesores', 'profesorSelect', 'clientes', 'agendas', 'total_configuraciones', 'role'));
+            return view('admin.index', compact('total_usuarios', 'total_cursos', 'total_vehiculos', 'total_secretarias', 'total_clientes', 'total_profesores', 'total_horarios', 'total_agendas', 'cursosDisponibles', 'profesores', 'profesorSelect', 'clientes', 'agendas', 'total_configuraciones', 'role'));
         } else {
-            $cliente = Cliente::where('user_id', Auth::id())->first();
-            \Log::info('cliente', [$cliente]);
-            $cursos = $cliente?->cursos ?? collect();
-
+            $clienteId = Auth::user()->cliente->id;
+            $cursos = Auth::user()->cliente->cursos;
 
             $profesorSelect = DB::table('profesors')
                 ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
@@ -98,12 +96,20 @@ class HomeController extends Controller
                 ->limit(100)
                 ->get();
 
-        $total_cursos = DB::table('cliente_curso')
-                        ->join('cursos', 'cliente_curso.curso_id', '=', 'cursos.id')
-                        ->where('cliente_curso.cliente_id', Auth::id())
-                        ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
-                        ->count();
-            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesorSelect', 'agendas', 'total_configuraciones'));
+            $total_cursos = DB::table('cliente_curso')
+                ->join('cursos', 'cliente_curso.curso_id', '=', 'cursos.id')
+                ->where('cliente_curso.cliente_id', $clienteId)
+                ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
+                ->count();
+            if ($clienteId) {
+                    $cursosDisponibles = Curso::whereHas('clientes', function ($q) use ($clienteId) {    // Obtenemos cursos del cliente que aún no están completados
+                        $q->where('cliente_id', $clienteId)
+                        ->whereColumn('cliente_curso.horas_realizadas', '<', 'cursos.horas_requeridas');
+                    })->get();
+            } else {
+                $cursosDisponibles = Curso::all();
+            }
+            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesorSelect', 'agendas','cursosDisponibles', 'total_configuraciones'));
         }
     }
     public function show($id) //show_reservas
@@ -143,7 +149,7 @@ class HomeController extends Controller
 
     public function message_landing_page(Request $request)
     {
-        $valid [] = $request->validate([
+        $valid[] = $request->validate([
             'title'   => 'required',
             'email'   => 'required|email',
             'phone'   => 'required',
@@ -154,10 +160,10 @@ class HomeController extends Controller
         // dd($valid);
 
         Notification::route('mail', 'destino@tudominio.com')->notify(
-            new PostNotification($request->title,$request->email,$request->phone,$request->message));
-            // new PostNotification($valid[]));
+            new PostNotification($request->title, $request->email, $request->phone, $request->message)
+        );
+        // new PostNotification($valid[]));
 
         return back()->with('success', '✅ Tu mensaje fue enviado correctamente.');
     }
-
 }

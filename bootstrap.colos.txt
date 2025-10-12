@@ -49,3 +49,13 @@
 <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+cuando los cursos esten completados, no volver a mostrar en la secion para agendar
+categorias
+ principiante - avanzado - teminado 
+
+ACERCA DE MI
+Educacion
+Ubicacion
+Habilidades
+Notas

@@ -36,12 +36,11 @@
                             <div class="form-group"><label for="cliente_id">Curso</label>
                                 <select name="cursoid" class="form-control" id="cursoid">
                                     <option value="" selected disabled>Seleccione un Curso</option>
-                                    @foreach ($cursos as $curso)
-                                        <option value="{{ $curso->id }}">
-                                            {{ $curso->nombre }}
-                                        </option>
+                                    @foreach ($cursosDisponibles as $curso)
+                                        <option value="{{ $curso->id }}">{{ $curso->nombre }}</option>
                                     @endforeach
                                 </select>
+
                                 @error('cursoid')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
@@ -61,14 +60,16 @@
                         </div>
                     </div>
                     @php
-                        use App\Helpers\DateHelper; $dateRange = DateHelper::getCurrentMonthRange(); 
+                        use App\Helpers\DateHelper;
+                        $dateRange = DateHelper::getCurrentMonthRange();
                     @endphp
 
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group"><label for="profesor">Fecha de reserva</label>
-                                <input type="date" id="fecha_reserva" name="fecha_reserva" min="{{ $dateRange['firstDay'] }}" class="form-control" value="<?php echo date('Y-m-d'); ?>">
-                                 {{-- max="{{ $dateRange['lastDay'] }}"> --}}
+                                <input type="date" id="fecha_reserva" name="fecha_reserva"
+                                    min="{{ $dateRange['firstDay'] }}" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                {{-- max="{{ $dateRange['lastDay'] }}"> --}}
                             </div>
                         </div>
                     </div>
