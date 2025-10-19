@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const horaFinInput = document.getElementById('tiempo') as HTMLInputElement | null;
     const horaInicioInput = document.getElementById('hora_inicio') as HTMLInputElement | null;
-    const fechaReservaInput = document.getElementById('fecha_reserva') as HTMLInputElement | null;
+    const fechaReserva = document.getElementById('fecha_reserva') as HTMLInputElement | null;
     const isAdmin = window.Laravel?.isAdmin ?? false;
 
     // ---------------------------------------
@@ -68,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // ---------------------------------------
     // Validar fecha pasada
     // ---------------------------------------
-    if (fechaReservaInput) {
-        fechaReservaInput.addEventListener('change', function (this: HTMLInputElement) {
+    if (fechaReserva) {
+        fechaReserva.addEventListener('change', function (this: HTMLInputElement) {
             if (this.value < getLocalDate()) {
                 this.value = '';
                 Swal.fire({
@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Rango permitido (06:00 - 20:00)
                 if (selectedHour < 6 || selectedHour > 20) {
+                    this.value = '';
                     Swal.fire({
                         title: "No es posible",
                         text: "Seleccione una hora entre las 06:00 am y las 8:00 pm.",
@@ -107,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Verificar si es la fecha de hoy
-                const selectedDate = fechaReservaInput?.value ?? null;
+                const selectedDate = fechaReserva?.value ?? null;
                 const today = now.toISOString().slice(0, 10);
 
                 if (selectedDate === today) {

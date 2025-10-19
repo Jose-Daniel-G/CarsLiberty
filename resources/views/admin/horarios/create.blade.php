@@ -68,8 +68,7 @@
 
                             <div class="form-group">
                                 <label for="hora_inicio">Hora Inicio </label><b class="text-danger">*</b>
-                                <input type="time" class="form-control" name="hora_inicio" id="hora_inicio"
-                                    value="{{ old('hora_inicio') }}" required>
+                                <input type="time" class="form-control" name="hora_inicio" id="hora_inicio" required>
                                 @error('hora_inicio')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
@@ -77,8 +76,7 @@
 
                             <div class="form-group">
                                 <label for="tiempo">Hora Final </label><b class="text-danger">*</b>
-                                <input type="time" class="form-control" name="tiempo" id="tiempo"
-                                    value="{{ old('tiempo') }}" required>
+                                <input type="time" class="form-control" name="tiempo" id="tiempo"  required>
                                 @error('tiempo')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror
@@ -108,20 +106,11 @@
             var url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}";
             url = url.replace(':id', profesor_id);
 
-            // console.log("Profesor ID:", profesor_id);  console.log("URL generada:", url);
-
             if (profesor_id) {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(data) {
-                        // console.log("Respuesta del servidor:", data);
-                        $('#curso_info').html(data);
+                $.ajax({url: url,type: 'GET',success: function(data) {
+                        $('#curso_info').html(data);// console.log("Respuesta del servidor:", data);
                     },
-                    error: function(xhr) {
-                        // console.log("Error AJAX:", xhr.responseText);
-                        alert('Error al obtener datos del curso');
-                    }
+                    error: function(xhr) {alert('Error al obtener datos del curso');}
                 });
             } else {
                 $('#curso_info').html('');
@@ -131,21 +120,19 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            const HoraIncioInput = document.getElementById('hora_inicio');
-            const HoraFinInput = document.getElementById('tiempo');
-
-            // Escuchar el evento de cambio en el campo de hora de reserva
-            HoraIncioInput.addEventListener('change', function() {
-                let selectedTime = this.value; //Obtener fecha seleccionada
-                // verificar si la fecha selecionada es anterior a la fecha actual
-                if (selectedTime) {
+            const HoraIncio = document.getElementById('hora_inicio');
+            const Tiempo = document.getElementById('tiempo');
+ 
+            HoraIncio.addEventListener('change', function() {
+                let selectedTime = this.value;  
+                
+                if (selectedTime) {                        
                     selectedTime = selectedTime.split(':'); //Dividir la cadena en horas y minutos
                     selectedTime = selectedTime[0] + ':00'; //conservar la hora, ignorar los minutos
                     this.value = selectedTime; // Establecer la hora modificada en el campo de entrada
-                }
-                // verificar si la fecha selecionada es anterior a la fecha actual
-                if (selectedTime < '06:00' || selectedTime > '20:00') {
-                    // si es asi, establecer la hora seleccionada en null
+                } 
+
+                if (selectedTime < '06:00' || selectedTime > '20:00') { 
                     this.value = null;
                     Swal.fire({
                         title: "No fue posible",
@@ -155,16 +142,16 @@
                 }
             })
 
-            // Agregar un evento de cambio al input
-            HoraFinInput.addEventListener('change', function() {
+          
+            Tiempo.addEventListener('change', function() {
                 let selectedTime = this.value;
-                // Conservar solo la hora, ignorar los minutos
-                selectedTime = selectedTime.split(':')[0] + ':00'; // "14:00"
+                
+                selectedTime = selectedTime.split(':')[0] + ':00';     // Conservar solo la hora, ignorar los minutos
                 this.value = selectedTime;
-                // verificar si la fecha selecionada es anterior a la fecha actual
-                if (selectedTime < '06:00' || selectedTime > '20:00') {
-                    // si es asi, establecer la hora seleccionada en null
-                    this.value = null;
+                
+                if (selectedTime < '06:00' || selectedTime > '20:00') {// verificar si la fecha selecionada es anterior a la fecha actual
+
+                    this.value = null;                                 // si es asi, establecer la hora seleccionada en null
                     Swal.fire({
                         title: "No fue posible",
                         text: "Por favor seleccione una fecha entre 06:00 am y las 8:00 pm",
@@ -173,14 +160,5 @@
                 }
             });
         });
-    </script>
-    @if (session('info') && session('icono') && session('title'))
-        <script>
-            Swal.fire({
-                title: "{{ session('title') }}",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
-        </script>
-    @endif
+    </script> 
 @stop

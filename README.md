@@ -226,3 +226,5 @@ docker build -t miapp-php -f Dockerfile.php .
 ##### NEXT STEP: COFFEE GARDEN ALBUM
 users, posts, categories 
 
+## CHECK HOW MANY QUERYS REALIZED 
+composer require barryvdh/laravel-debugbar

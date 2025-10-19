@@ -103,7 +103,6 @@
                 },
                 error: function(xhr) {  // You might want to show a SweetAlert error here
                     console.error('Error al cargar los datos del permiso:', xhr);
-
                     Swal.fire('Error', 'No se pudieron cargar los datos del permiso.', 'error');
                 }
             });
@@ -150,16 +149,5 @@
             });
         });
 
-    </script>
-
-    {{-- SweetAlert Flash Message Logic --}}
-    @if (session('info') && session('icono'))
-        <script>
-            Swal.fire({
-                title: "{{ session('title') ?? 'Éxito' }}", // Added null coalescing for title
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
-        </script>
-    @endif
+    </script> 
 @stop

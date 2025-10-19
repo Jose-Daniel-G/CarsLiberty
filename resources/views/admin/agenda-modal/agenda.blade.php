@@ -76,7 +76,7 @@
                     <div class="row">
                         <div class="col-md-9">
                             <div class="form-group"><label for="hora_inicio">Hora inicio</label>
-                                <input type="time" class="form-control" name="hora_inicio" id="hora_inicio">
+                                <input type="time" class="form-control" name="hora_inicio" id="hora_inicio" min="06:00" max="20:00" >
                                 @error('hora_inicio')
                                     <small class="bg-danger text-white p-1">{{ $message }}</small>
                                 @enderror

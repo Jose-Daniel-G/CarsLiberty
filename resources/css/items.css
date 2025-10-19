@@ -1,0 +1,424 @@
+        /* ==================== TAMAÑOS GLOBALES ==================== */
+        .shape-sm {
+            --shape-size: 40px;
+            /* tamaño base */
+            --font-size: 0.6rem;
+        }
+
+        .shape-md {
+            --shape-size: 80px;
+            --font-size: 0.9rem;
+        }
+
+        .shape-lg {
+            --shape-size: 120px;
+            --font-size: 1.2rem;
+        }
+
+        /* ==================== ROMBOS ==================== */
+        .shape-sm .diamond,
+        .shape-md .diamond,
+        .shape-lg .diamond {
+            width: var(--shape-size);
+            height: var(--shape-size);
+        }
+
+        .shape-sm .diamond-text,
+        .shape-md .diamond-text,
+        .shape-lg .diamond-text {
+            font-size: var(--font-size);
+        }
+
+        /* ==================== TRIÁNGULOS ==================== */
+        .shape-sm .triangle-up,
+        .shape-md .triangle-up,
+        .shape-lg .triangle-up {
+            border-left-width: calc(var(--shape-size) * 0.5);
+            border-right-width: calc(var(--shape-size) * 0.5);
+            border-bottom-width: calc(var(--shape-size) * 0.875);
+        }
+
+        .shape-sm .triangle-up-text,
+        .shape-md .triangle-up-text,
+        .shape-lg .triangle-up-text {
+            font-size: var(--font-size);
+        }
+
+        .shape-sm .triangle-down,
+        .shape-md .triangle-down,
+        .shape-lg .triangle-down {
+            border-left-width: calc(var(--shape-size) * 0.5);
+            border-right-width: calc(var(--shape-size) * 0.5);
+            border-top-width: calc(var(--shape-size) * 0.875);
+        }
+
+        .shape-sm .triangle-down-text,
+        .shape-md .triangle-down-text,
+        .shape-lg .triangle-down-text {
+            font-size: var(--font-size);
+        }
+
+        /* ==================== HEXÁGONOS ==================== */
+        .shape-sm .hexagon,
+        .shape-md .hexagon,
+        .shape-lg .hexagon {
+            width: var(--shape-size);
+            height: calc(var(--shape-size) * 0.577);
+            /* altura proporcional */
+            margin: calc(var(--shape-size) * 0.2885) 0;
+        }
+
+        .shape-sm .hexagon:before,
+        .shape-md .hexagon:before,
+        .shape-lg .hexagon:before,
+        .shape-sm .hexagon:after,
+        .shape-md .hexagon:after,
+        .shape-lg .hexagon:after {
+            border-left: calc(var(--shape-size) * 0.5) solid transparent;
+            border-right: calc(var(--shape-size) * 0.5) solid transparent;
+        }
+
+        .shape-sm .hexagon:before,
+        .shape-md .hexagon:before,
+        .shape-lg .hexagon:before {
+            border-bottom: calc(var(--shape-size) * 0.2885) solid #ffc107;
+        }
+
+        .shape-sm .hexagon:after,
+        .shape-md .hexagon:after,
+        .shape-lg .hexagon:after {
+            border-top: calc(var(--shape-size) * 0.2885) solid #ffc107;
+        }
+
+        .shape-sm .hexagon-text,
+        .shape-md .hexagon-text,
+        .shape-lg .hexagon-text {
+            font-size: var(--font-size);
+        }
+
+        /* ==================== PENTÁGONOS ==================== */
+        .shape-sm .pentagon,
+        .shape-md .pentagon,
+        .shape-lg .pentagon {
+            width: var(--shape-size);
+            border-width: calc(var(--shape-size) * 0.625) calc(var(--shape-size) * 0.225) 0;
+        }
+
+        .shape-sm .pentagon-text,
+        .shape-md .pentagon-text,
+        .shape-lg .pentagon-text {
+            font-size: var(--font-size);
+        }
+
+        /* ==================== ESTRELLAS ==================== */
+        .shape-sm .star-container,
+        .shape-md .star-container,
+        .shape-lg .star-container {
+            width: var(--shape-size);
+            height: var(--shape-size);
+        }
+
+        .shape-sm .star,
+        .shape-md .star,
+        .shape-lg .star {
+            width: 100%;
+            height: 100%;
+        }
+
+        .shape-sm .star-text,
+        .shape-md .star-text,
+        .shape-lg .star-text {
+            font-size: var(--font-size);
+        }
+
+        /* ==================== OCTÁGONOS ==================== */
+        .shape-sm .octagon,
+        .shape-md .octagon,
+        .shape-lg .octagon {
+            width: var(--shape-size);
+            height: var(--shape-size);
+        }
+
+        .shape-sm .octagon-text,
+        .shape-md .octagon-text,
+        .shape-lg .octagon-text {
+            font-size: var(--font-size);
+        }
+
+        .shape-sm .shield,
+        .shape-md .shield,
+        .shape-lg .shield {
+            width: var(--shape-size);
+            height: calc(var(--shape-size) * 1.2);
+        }
+
+        .shape-sm .shield-text,
+        .shape-md .shield-text,
+        .shape-lg .shield-text {
+            font-size: var(--font-size);
+        }
+
+        .shape-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .shape-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 0.375rem;
+            border: 1px solid #ced4da;
+        }
+
+        .shape-item {
+            text-align: center;
+        }
+
+        .shape-label {
+            margin-top: 15px;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.875rem;
+        }
+
+        /* ==================== BASE BADGE ==================== */
+        .badge-shape {
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            background-clip: padding-box;
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+
+        .badge-shape:hover {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+            transform: translateY(-2px);
+        }
+
+
+        /* ==================== ROMBOS ==================== */
+        .diamond {
+            transform: rotate(45deg);
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #198754 0%, #157347 100%);
+        }
+
+        .diamond::before {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .diamond-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ==================== PENTAGONOS ==================== */
+        .pentagon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6f42c1 0%, #59359a 100%);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            position: relative;
+            display: inline-block;
+        }
+
+        .pentagon::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .pentagon-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+        }
+
+        /* ==================== ESTRELLAS ==================== */
+        .star-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .star {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #fd7e14 0%, #f76707 100%);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+                    50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .star::before {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .star-container:hover .star {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .star-text {
+            position: absolute;
+            color: white;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        /* ==================== OCTÁGONOS ==================== */
+        .octagon {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .octagon-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ==================== ESCUDOS ==================== */
+        .shield {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #d63384 0%, #b02a6e 100%);
+            clip-path: polygon(50% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%, 0% 0%);
+        }
+
+        .shield-text {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ==================== FLECHAS ==================== */
+        /* .shape-sm .arrow-right,
+                                        .shape-md .arrow-right,
+                                        .shape-lg .arrow-right {
+                                            width: var(--shape-size);
+                                            height: calc(var(--shape-size) / 2);
+                                        }
+
+                                        .shape-sm .arrow-right:after,
+                                        .shape-md .arrow-right:after,
+                                        .shape-lg .arrow-right:after {
+                                            left: var(--shape-size);
+                                            border-left: calc(var(--shape-size) / 3.6) solid #20c997;
+                                            border-top: calc(var(--shape-size) / 3.6) solid transparent;
+                                            border-bottom: calc(var(--shape-size) / 3.6) solid transparent;
+                                        }
+
+                                        .shape-sm .arrow-right-text,
+                                        .shape-md .arrow-right-text,
+                                        .shape-lg .arrow-right-text {
+                                            font-size: var(--font-size);
+                                        } */
+
+
+        /* ==================== TRIÁNGULOS ==================== */
+        /* .triangle-up,
+                                    .triangle-down {
+                                        position: relative;
+                                    }
+                                    
+                                    .triangle-up-text,
+                                    .triangle-down-text {
+                                        position: absolute;
+                                        left: 50%;
+                                        transform: translateX(-50%);
+                                        color: white;
+                                        font-weight: 600;
+                                        white-space: nowrap;
+                                        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+                                    } */
+
+        /* ==================== HEXÁGONOS ==================== */
+        /* .hexagon {
+                                        position: relative;
+                                        margin: calc(var(--shape-size, 80px) * 0.2885) 0;
+                                        background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+                                    }
+                
+                                    .hexagon:before,
+                                    .hexagon:after {
+                                        content: "";
+                                        position: absolute;
+                                        width: 0;
+                                        border-left: 50% solid transparent;
+                                        border-right: 50% solid transparent;
+                                    }
+                
+                                    .hexagon-text {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        color: #000;
+                                        font-weight: 600;
+                                    } */
+
+        /* ==================== FLECHAS ==================== */
+        /* .arrow-right {
+                    position: relative;
+                                            border-radius: 0.375rem;
+                                            background: linear-gradient(135deg, #20c997 0%, #1aa179 100%);
+                                        }
+
+                                        .arrow-right:after {
+                                            content: '';
+                                            position: absolute;
+                                            width: 0;
+                                            height: 0;
+                                            border-top: 50% solid transparent;
+                                            border-bottom: 50% solid transparent;
+                                            border-left: calc(var(--shape-size, 80px)/3.6) solid #20c997;
+                                        }
+
+                                        .arrow-right-text {
+                                            position: absolute;
+                                            top: 50%;
+                                            left: 45%;
+                                            transform: translate(-50%, -50%);
+                                            color: white;
+                                            font-weight: 600;
+                                        }*/

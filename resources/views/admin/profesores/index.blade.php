@@ -135,14 +135,6 @@
                 }
             });
         });
-
-        @if (session('info') && session('icono'))
-            Swal.fire({
-                title: "{{ session('info') }}",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
-        @endif
     </script>
     <script>
         $('#editProfesorModal').on('show.bs.modal', function(event) {

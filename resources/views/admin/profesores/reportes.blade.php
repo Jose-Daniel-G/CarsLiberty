@@ -3,12 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Sistema de reservas </h1>
+    {{-- <h1>Sistema de reservas </h1> --}}
 @stop
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
+    <div class="row py-2">
         <h1>Reportes de profesores</h1>
     </div>
     <div class="row">
@@ -30,7 +29,6 @@
             </div>
         </div>
     </div>
-</div>
 
 @stop
 

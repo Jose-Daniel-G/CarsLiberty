@@ -102,8 +102,7 @@
                 method: 'GET',
                 success: function(response) {
                     // Rellenar los campos del cliente
-                    var formAction = "{{ route('admin.clientes.update', ':id') }}".replace(':id',
-                        response.cliente.id);
+                    var formAction = "{{ route('admin.clientes.update', ':id') }}".replace(':id',response.cliente.id);
                     modal.find('#editClienteForm').attr('action', formAction);
 
                     modal.find('#edit-nombres').val(response.cliente.nombres);
@@ -155,10 +154,7 @@
                 data: form.serialize(),
                 success: function(response) {
                     $('#editClienteModal').modal('hide');
-                    Swal.fire({
-                        text: "Cliente actualizado correctamente",
-                        icon: "success"
-                    });
+                    Swal.fire({text: "Cliente actualizado correctamente",icon: "success"});
                     $('#clientes').DataTable().ajax.reload(null, false);
                 },
                 error: function(xhr) {

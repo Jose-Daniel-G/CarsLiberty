@@ -7,16 +7,19 @@ use App\Http\Controllers\Controller;
 use App\Helpers\DateHelper;
 use App\Models\Curso;
 use App\Models\Profesor;
-use App\Models\Horario; 
-use Illuminate\Http\Request; 
+use App\Models\Horario;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HorarioController extends Controller
 {
     public function __construct()
-    {  // Solo los que tengan el permiso pueden acceder a estas acciones
-        // $this->middleware('can:admin.horarios')->only('index'); 
+    {
+        $this->middleware('can:admin.horarios.index')->only('index');
+        $this->middleware('can:admin.horarios.create')->only('create', 'store');
+        $this->middleware('can:admin.horarios.edit')->only('edit', 'update');
+        $this->middleware('can:admin.horarios.destroy')->only('destroy');
     }
     public function index()
     {
@@ -67,23 +70,16 @@ class HorarioController extends Controller
                 ->where('agendas.profesor_id', $id)
                 ->get();
 
-
-            // \Log::info(['cursos_profesor' =>$cursos_profesor->toArray()]);
-
             // Traducir los días al español
             $horarios_asignados = $horarios_asignados->map(function ($horario) {
                 $horario->dia = DateHelper::traducirDia($horario->dia);
                 return $horario;
             });
-            // \Log::info(['titulo' => 'Datos de horarios asignados']);
-            // \Log::info(['horarios asignados' => $horarios_asignados->toArray()]);
-            // \Log::info(['horarios' =>$horarios->toArray()]);
             return view('admin.horarios.show_datos_cursos', compact('cursos_profesor', 'horarios', 'horarios_asignados'));
         } catch (\Exception $exception) {
             return response()->json(['mensaje' => 'Error', 'detalle' => $exception->getMessage()]);
         }
     }
-
 
     public function store(Request $request) //teacher schedule
     {
@@ -145,10 +141,9 @@ class HorarioController extends Controller
                     'profesor_id' => $validatedData['profesor_id']
                 ]);
             }
+            return redirect()->back()->with(['swal' => '1','info'=>'Se registraron los cursos para el horario correctamente.','icono'=> 'success']);
 
-            return redirect()->route('admin.horarios.create')
-                ->with('info', 'Se registraron los cursos para el horario correctamente.')
-                ->with('icono', 'success');
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Ocurrió un error al registrar el horario.');
@@ -157,8 +152,7 @@ class HorarioController extends Controller
 
     public function show(Horario $horario)
     {
-        $horario->load('profesores', 'cursos'); // Cargar relaciones en la instancia
-        // dd($horario);
+        $horario->load('profesores', 'cursos');
         return view('admin.horarios.show', compact('horario'));
     }
 
@@ -167,14 +161,12 @@ class HorarioController extends Controller
         $horario->load(['profesores', 'cursos']); // Cargar relaciones
         $profesores = Profesor::all();
         $cursos = Curso::all();
-        // \Log::info('horario',[$horario]);
-        // return view('admin.horarios.edit', compact('horario', 'curso', 'profesores', 'cursos'));'curso' => $curso,
         return response()->json(['horario' =>  $horario->toArray(),  'profesores' => $profesores, 'cursos' => $cursos]);
     }
 
     public function update(Request $request, Horario $horario)
-    {   //dd($horario);
-        $validatedData = $request->validate([
+    {
+        $request->validate([
             'dia' => 'required',
             'hora_inicio' => 'required',
             'tiempo' => 'required',

@@ -281,7 +281,7 @@
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
                                     data-target="#claseModal"> Agendar Clase</button>
 
-                                <a href="{{ route('admin.reservas.show', Auth::user()->id) }}" class="btn btn-success">
+                                <a href="{{ route('admin.home.show') }}" class="btn btn-success">
                                     <i class="bi bi-calendar-check"></i>Ver las reservas
                                 </a>
                             </div>

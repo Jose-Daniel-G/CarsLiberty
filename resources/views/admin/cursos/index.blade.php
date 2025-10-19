@@ -151,13 +151,6 @@
                 }
             }
 
-        });
-        @if (session('info') && session('icono'))
-            Swal.fire({
-                title: "{{ session('title') }}!",
-                text: "{{ session('info') }}",
-                icon: "{{ session('icono') }}"
-            });
-        @endif
+        }); 
     </script>
 @stop

@@ -59,7 +59,7 @@ class ClienteSeeder extends Seeder
         // Relacionar con los cursos (asumiendo que los cursos ya existen)
         $cursos = Curso::whereIn('id', [1, 3])->get(); // Obtener los cursos con ID 1 y 3
         $cliente->cursos()->attach($cursos); // Crear las relaciones
-        
+
         User::create([
             'name' => 'ARGEMIRO ESCOBAR GUTIERRES',
             'email' => 'argemiro.escobar@email.com',
@@ -99,23 +99,38 @@ class ClienteSeeder extends Seeder
             'observaciones' => 'migrana',
             'user_id' => '11',
         ]);
-        
+
         $cursos = Curso::whereIn('id', [2])->get(); // Obtener los cursos con ID 1 y 2
         $cliente->cursos()->attach($cursos); // Crear las relaciones
+        User::create([
+            'name' => 'Juan David Grijalba Osorio',
+            'email' => 'juandavidgo1997@email.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('123123123'),
+        ])->assignRole('cliente');
+        
+        $cliente = Cliente::create([
+            'nombres' => 'Juan David',
+            'apellidos' => 'Grijalba Osorio',
+            'cc' => '357986644',
+            'genero' => 'M',
+            'celular' => '314756832',
+            'direccion' => 'Cll 7 oeste',
+            'contacto_emergencia' => '65495113',
+            'observaciones' => 'migrana',
+            'user_id' => '12',
+        ])->assignRole('cliente');
+        $cursos = Curso::whereIn('id', [1,2, 3])->get(); // Obtener los cursos con ID 1 y 3
+        $cliente->cursos()->attach($cursos); // Crear las relaciones
 
+        //-------------[ ESPECTADOR ]----------------]
         User::create([
             'name' => 'Espectador',
             'email' => 'espectador@email.com',
             'email_verified_at' => now(),
             'password' => bcrypt('123123123'),
         ])->assignRole('espectador');
-        //    //-------------[ USUARIOS ]----------------]
-        //         User::create([
-        //             'name' => 'Juan David Grijalba Osorio',
-        //             'email' => 'juandavidgo1997@email.com',
-        //             'email_verified_at' => now(),
-        //             'password' => bcrypt('123123123'),
-        //         ])->assignRole('usuario');
+        //-------------[ USUARIOS ]----------------]
 
         //         User::factory()->create([
         //             'name' => 'Test User',

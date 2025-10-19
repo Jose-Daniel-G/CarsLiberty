@@ -4,7 +4,7 @@
 @section('css')
 @stop
 @section('content_header')
-    <h1>Sistema de reservas </h1>
+    {{-- <h1>Sistema de reservas </h1> --}}
 @stop
 
 @section('content')

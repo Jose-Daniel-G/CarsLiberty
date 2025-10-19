@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badges con Formas Geométricas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding: 40px;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .shape-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .shape-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 0.375rem;
+            /* borde estilo form-control */
+            border: 1px solid #ced4da;
+        }
+
+        .shape-item {
+            text-align: center;
+        }
+
+        .shape-label {
+            margin-top: 15px;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.875rem;
+        }
+
+        /* ==================== BASE BADGE STYLES ==================== */
+        .badge-shape {
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            background-clip: padding-box;
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+            /* sombra inicial transparente */
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+
+        .badge-shape:hover {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ==================== TRIÁNGULOS ==================== */
+        .triangle-up {
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 70px solid #0d6efd;
+            position: relative;
+        }
+
+        .triangle-up::before {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: -37px;
+            border-left: 37px solid transparent;
+            border-right: 37px solid transparent;
+            border-bottom: 65px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .triangle-up-text {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .triangle-down {
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-top: 70px solid #dc3545;
+            position: relative;
+        }
+
+        .triangle-down-text {
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ==================== ROMBOS ==================== */
+
+        /* ==================== HEXÁGONOS ==================== */
+        .hexagon {
+            position: relative;
+            width: 80px;
+            height: 46.19px;
+            background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+            margin: 23.09px 0;
+        }
+
+        .hexagon:before,
+        .hexagon:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+        }
+
+        .hexagon:before {
+            bottom: 100%;
+            border-bottom: 23.09px solid #ffc107;
+        }
+
+        .hexagon:after {
+            top: 100%;
+            border-top: 23.09px solid #ffc107;
+        }
+
+        .hexagon-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ==================== PENTÁGONOS ==================== */
+        .pentagon {
+            position: relative;
+            width: 70px;
+            box-sizing: content-box;
+            border-width: 50px 18px 0;
+            border-style: solid;
+            border-color: #0dcaf0 transparent;
+        }
+
+        .pentagon-text {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* ==================== ESTRELLAS ==================== */
+        .star-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .star {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fd7e14 0%, #f76707 100%);
+            clip-path: polygon(50% 0%,
+                    61% 35%,
+                    98% 35%,
+                    68% 57%,
+                    79% 91%,
+                    50% 70%,
+                    21% 91%,
+                    32% 57%,
+                    2% 35%,
+                    39% 35%);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .star::before {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: 8px;
+            /* estilo form-control */
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .star-container:hover .star {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .star-text {
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+
+        /* ==================== OCTÁGONOS ==================== */
+        .octagon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+            position: relative;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .octagon-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* ==================== FLECHAS ==================== */
+        .arrow-right {
+            width: 80px;
+            height: 40px;
+            background: linear-gradient(135deg, #20c997 0%, #1aa179 100%);
+            position: relative;
+            border-radius: 0.375rem;
+        }
+
+        .arrow-right:after {
+            content: '';
+            position: absolute;
+            left: 80px;
+            top: -2px;
+            width: 0;
+            height: 0;
+            border-left: 22px solid #20c997;
+            border-top: 22px solid transparent;
+            border-bottom: 22px solid transparent;
+        }
+
+        .arrow-right-text {
+            position: absolute;
+            top: 50%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* ==================== ESCUDOS ==================== */
+        .shield {
+            width: 70px;
+            height: 80px;
+            background: linear-gradient(135deg, #d63384 0%, #b02a6e 100%);
+            clip-path: polygon(50% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%, 0% 0%);
+        }
+
+        .shield-text {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+
+        <!-- ROMBOS -->
+        <div class="shape-section">
+            <h2 class="mb-4">◆ Rombos</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="diamond badge-shape">
+                        <span class="diamond-text">VIP</span>
+                    </div>
+                    <div class="shape-label">Rombo</div>
+                </div>
+            </div>
+        </div>
+        <!-- TRIÁNGULOS -->
+        <div class="shape-section">
+            <h2 class="mb-4">▲ Triángulos</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="triangle-up badge-shape">
+                        <span class="triangle-up-text">NUEVO</span>
+                    </div>
+                    <div class="shape-label">Triángulo Arriba</div>
+                </div>
+                <div class="shape-item">
+                    <div class="triangle-down badge-shape">
+                        <span class="triangle-down-text">OFERTA</span>
+                    </div>
+                    <div class="shape-label">Triángulo Abajo</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- HEXÁGONOS -->
+        <div class="shape-section">
+            <h2 class="mb-4">⬡ Hexágonos</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="hexagon badge-shape">
+                        <span class="hexagon-text">PRO</span>
+                    </div>
+                    <div class="shape-label">Hexágono</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PENTÁGONOS -->
+        <div class="shape-section">
+            <h2 class="mb-4">⬟ Pentágonos</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="pentagon badge-shape">
+                        <span class="pentagon-text">PREMIUM</span>
+                    </div>
+                    <div class="shape-label">Pentágono</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTRELLAS -->
+        <div class="shape-section">
+            <h2 class="mb-4">⭐ Estrellas</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="star-container badge-shape">
+                        <div class="star"></div>
+                        <span class="star-text">TOP</span>
+                    </div>
+                    <div class="shape-label">Estrella</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OCTÁGONOS -->
+        <div class="shape-section">
+            <h2 class="mb-4">⬢ Octágonos</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="octagon badge-shape">
+                        <span class="octagon-text">STOP</span>
+                    </div>
+                    <div class="shape-label">Octágono</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLECHAS -->
+        <div class="shape-section">
+            <h2 class="mb-4">➤ Flechas</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="arrow-right badge-shape">
+                        <span class="arrow-right-text">NEXT</span>
+                    </div>
+                    <div class="shape-label">Flecha Derecha</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESCUDOS -->
+        <div class="shape-section">
+            <h2 class="mb-4">🛡️ Escudos</h2>
+            <div class="shape-container">
+                <div class="shape-item">
+                    <div class="shield badge-shape">
+                        <span class="shield-text">ADMIN</span>
+                    </div>
+                    <div class="shape-label">Escudo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- USO PRÁCTICO -->
+        <div class="shape-section">
+            <h2 class="mb-4">💼 Ejemplos Prácticos de Uso</h2>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Producto Premium
+                                <div class="diamond badge-shape"
+                                    style="display: inline-block; width: 30px; height: 30px; vertical-align: middle;">
+                                    <span class="diamond-text" style="font-size: 8px;">VIP</span>
+                                </div>
+                            </h5>
+                            <p class="card-text">Producto con acceso exclusivo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Usuario TOP
+                                <div class="star-container badge-shape"
+                                    style="width: 30px; height: 30px; display: inline-block; vertical-align: middle;">
+                                    <div class="star"
+                                        style="width: 30px; height: 30px; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 5px solid gold;">
+                                    </div>
+                                </div>
+                            </h5>
+                            <p class="card-text">Miembro destacado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALTERNATIVA SIMPLE -->
+        <div class="alert alert-success mt-4">
+            <h4>💡 Alternativa Más Simple: Usar Emojis Unicode</h4>
+            <div class="d-flex gap-2 flex-wrap mt-3">
+                <span class="badge bg-primary">🔷 Diamante</span>
+                <span class="badge bg-success">⭐ Estrella</span>
+                <span class="badge bg-danger">🔺 Triángulo</span>
+                <span class="badge bg-warning text-dark">⬡ Hexágono</span>
+                <span class="badge bg-info text-dark">🛡️ Escudo</span>
+                <span class="badge bg-dark">◆ Rombo</span>
+                <span class="badge bg-secondary">➤ Flecha</span>
+            </div>
+        </div>
+
+    </div>
+    <h1 class="text-center mb-5">🔷 Badges con Formas Geométricas Personalizadas</h1>
+
+    <div class="alert alert-info">
+        <strong>📌 Nota:</strong> Bootstrap NO tiene estas formas por defecto. Estas son personalizaciones con CSS puro.
+    </div>
+</body>
+
+</html>

@@ -103,16 +103,7 @@
                     "orderableReverse": "Invertir el orden de esta columna"
                 }
             }
-
-        });
-
-        // @if (session('info') && session('icono'))
-        //     Swal.fire({
-        //         title: "{{ session('title') }}!",
-        //         text: "{{ session('info') }}",
-        //         icon: "{{ session('icono') }}"
-        //     });
-        // @endif
+        }); 
     </script>
 <script>
     $('#editModal').on('show.bs.modal', function(event) {

@@ -41,86 +41,45 @@ class HomeController extends Controller
         $total_cursos = Curso::count();
 
         $profesores = Profesor::all();
-        $agendas = Agenda::all(); // dd(Auth::user()->getRoleNames());
+        $agendas = Agenda::all();
 
         if (Auth::user()->hasRole('espectador')) {
             $posts = Post::with(['category', 'image'])->latest()->get();
-
-            // dd($posts);
             return view('home', compact('posts'));
         }
+
         if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria') || Auth::user()->hasRole('profesor')) {
-            $cursosDisponibles = Curso::all();
-            $clientes = Cliente::all();
 
+            $data = $this->handleStaffDashboard();
+            extract($data);
 
-            $profesorSelect = DB::table('profesors')
-                ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
-                ->join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id')
-                ->join('cursos', 'horario_profesor_curso.curso_id', '=', 'cursos.id') // Usamos la tabla intermedia
-                ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-                ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
-                ->join('users', 'clientes.user_id', '=', 'users.id')
-                ->select(
-                    'profesors.id',
-                    'profesors.nombres',
-                    'profesors.apellidos',
-                    DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
-                )
-                ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
-                ->limit(100)
-                ->get();
-
-            $role = 'admin'; // Asegúrate de tener un campo 'role'
+            $role = 'admin';
 
             return view('admin.index', compact('total_usuarios', 'total_cursos', 'total_vehiculos', 'total_secretarias', 'total_clientes', 'total_profesores', 'total_horarios', 'total_agendas', 'cursosDisponibles', 'profesores', 'profesorSelect', 'clientes', 'agendas', 'total_configuraciones', 'role'));
         } else {
             $clienteId = Auth::user()->cliente->id;
             $cursos = Auth::user()->cliente->cursos;
+            $data = $this->handleClientRole($clienteId);
+            extract($data);
 
-            $profesorSelect = DB::table('profesors')
-                ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
-                ->join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id')
-                ->join('cursos', 'horario_profesor_curso.curso_id', '=', 'cursos.id') // Usamos la tabla intermedia
-                ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
-                ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
-                ->join('users', 'clientes.user_id', '=', 'users.id')
-                ->where('users.id', Auth::id())
-                ->select(
-                    'profesors.id',
-                    'profesors.nombres',
-                    'profesors.apellidos',
-                    DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
-                )
-                ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
-                ->limit(100)
-                ->get();
-
-            $total_cursos = DB::table('cliente_curso')
-                ->join('cursos', 'cliente_curso.curso_id', '=', 'cursos.id')
-                ->where('cliente_curso.cliente_id', $clienteId)
-                ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
-                ->count();
-            if ($clienteId) {
-                    $cursosDisponibles = Curso::whereHas('clientes', function ($q) use ($clienteId) {    // Obtenemos cursos del cliente que aún no están completados
-                        $q->where('cliente_id', $clienteId)
-                        ->whereColumn('cliente_curso.horas_realizadas', '<', 'cursos.horas_requeridas');
-                    })->get();
-            } else {
-                $cursosDisponibles = Curso::all();
-            }
-            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesorSelect', 'agendas','cursosDisponibles', 'total_configuraciones'));
+            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesorSelect', 'agendas', 'cursosDisponibles', 'total_configuraciones'));
         }
     }
-    public function show($id) //show_reservas
+
+    public function show() // show_reservas
     {
-        if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
-            $agendas = Agenda::with('cliente')->get(); // $agendas = Agenda::all();
-        } else {
-            $agendas = Agenda::where('cliente_id',  Auth::user()->cliente->id)->get();
-        }
-        return view('admin.reservas.show', compact('agendas'));
+        $user = Auth::user();
+
+        // Precarga relaciones solo si es necesario
+        $agendas = $user->hasAnyRole(['superAdmin', 'admin', 'secretaria'])
+            ? Agenda::with(['cliente.user'])->get()
+            : Agenda::with(['cliente.user'])
+            ->where('cliente_id', $user->cliente->id)
+            ->get();
+
+        return view('admin.home.show', compact('agendas'));
     }
+
 
     public function show_reserva_profesores() //calendar
     {
@@ -165,5 +124,71 @@ class HomeController extends Controller
         // new PostNotification($valid[]));
 
         return back()->with('success', '✅ Tu mensaje fue enviado correctamente.');
+    }
+    private function handleStaffDashboard()
+    {
+        $cursosDisponibles = Curso::all();
+        $clientes = Cliente::all();
+        $profesorSelect = DB::table('profesors')
+            ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
+            ->join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id')
+            ->join('cursos', 'horario_profesor_curso.curso_id', '=', 'cursos.id') // Usamos la tabla intermedia
+            ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
+            ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
+            ->join('users', 'clientes.user_id', '=', 'users.id')
+            ->select(
+                'profesors.id',
+                'profesors.nombres',
+                'profesors.apellidos',
+                DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+            )
+            ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
+            ->limit(100)
+            ->get();
+        return [
+            'profesorSelect'   => $profesorSelect,
+            'cursosDisponibles' => $cursosDisponibles,
+            'clientes' => $clientes,
+        ];
+    }
+    private function handleClientRole($clienteId)
+    {
+        $profesorSelect = DB::table('profesors')
+            ->join('horario_profesor_curso', 'horario_profesor_curso.profesor_id', '=', 'profesors.id')
+            ->join('horarios', 'horario_profesor_curso.horario_id', '=', 'horarios.id')
+            ->join('cursos', 'horario_profesor_curso.curso_id', '=', 'cursos.id') // Usamos la tabla intermedia
+            ->join('cliente_curso', 'cursos.id', '=', 'cliente_curso.curso_id')
+            ->join('clientes', 'cliente_curso.cliente_id', '=', 'clientes.id')
+            ->join('users', 'clientes.user_id', '=', 'users.id')
+            ->where('users.id', Auth::id())
+            ->select(
+                'profesors.id',
+                'profesors.nombres',
+                'profesors.apellidos',
+                DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+            )
+            ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
+            ->limit(100)
+            ->get();
+
+        $total_cursos = DB::table('cliente_curso')
+            ->join('cursos', 'cliente_curso.curso_id', '=', 'cursos.id')
+            ->where('cliente_curso.cliente_id', $clienteId)
+            ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
+            ->count();
+
+        if ($clienteId) {
+            $cursosDisponibles = Curso::whereHas('clientes', function ($q) use ($clienteId) {    // Obtenemos cursos del cliente que aún no están completados
+                $q->where('cliente_id', $clienteId)
+                    ->whereColumn('cliente_curso.horas_realizadas', '<', 'cursos.horas_requeridas');
+            })->get();
+        } else {
+            $cursosDisponibles = Curso::all();
+        }
+        return [
+            'profesorSelect'   => $profesorSelect,
+            'total_cursos'     => $total_cursos,
+            'cursosDisponibles' => $cursosDisponibles,
+        ];
     }
 }

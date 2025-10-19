@@ -55,12 +55,11 @@
 
 @section('adminlte_js')
     @stack('js') @yield('js')
-    @if (session('swal') && session('info'))  <!-- SWEET ALERT MESSAGE -->
+    @if (session('swal'))  <!-- SWEET ALERT MESSAGE -->
         <script>
             Swal.fire({title: "{{ session('title') }}",text: "{{ session('info') }}",icon: "{{ session('icono') }}"});
         </script>
-    @endif
-    @if (session('info'))  <!-- TOAST ALERT MESSAGE -->
+    @else <!-- TOAST ALERT MESSAGE -->
         <script>toastr.success('{{ session('info') }}');</script> 
     @endif 
     @vite(['resources/js/pages/delete-confirm.ts'])
