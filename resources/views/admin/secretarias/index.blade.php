@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'CarsLiberty')
 @section('css')
 @stop
 @section('content_header')
@@ -26,7 +26,7 @@
                 <div class="card-body">
                     {{-- @if ($info = Session::get('info')) --}}
                     @if (session('info'))
-                        <div class="alert alert-success"><strong>{{ $info }}</strong></div>
+                        <div class="alert alert-success"><strong>{{ session('info') }}</strong></div>
                     @endif
                     <table id="secretarias" class="table table-striped table-bordered table-hover table-sm">
                         <thead class="thead-dark">

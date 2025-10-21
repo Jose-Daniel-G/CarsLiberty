@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'CarsLiberty')
 
 @section('content_header')
 {{-- The content header is left empty as requested --}}

@@ -71,7 +71,7 @@ class ClienteController extends Controller
             }
             DB::commit();  // ⬅️ Si todo salió bien, guarda en la base de datos
             return redirect()->route('admin.clientes.index')
-                ->with(['title' => 'Éxito', 'info' => 'Se registró al Cliente de forma correcta', 'icono' => 'success']);
+                ->with(['title' => 'Éxito', 'info' => 'Se registró al Cliente de forma correcta', 'icon' => 'success']);
         } catch (\Illuminate\Database\QueryException $e) {
             \Log::error('Error de base de datos al registrar cliente: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Error en la base de datos.'])->withInput();
@@ -122,7 +122,7 @@ class ClienteController extends Controller
         $cliente->cursos()->sync($request->cursos ?? []); // Sincronizar cursos
 
         return redirect()->route('admin.clientes.index')
-            ->with(['title' => 'Exito', 'info' => 'Cliente actualizado correctamente.', 'icono' => 'success']);
+            ->with(['toast'=>2,'title' => 'Exito!', 'info' => 'Cliente actualizado correctamente.', 'icon' => 'success']);
     }
 
     public function toggleStatus($id) //DEACTIVATE
@@ -131,13 +131,13 @@ class ClienteController extends Controller
         $user->status = !$user->status;
         $user->save();
 
-        return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
+        return redirect()->back()->with(['toast'=>2,'title' => 'Exito!','info' => 'Estado del usuario actualizado.', 'icon' => 'success']);
     }
 
     // public function destroy(Cliente $Cliente)
     // {
     //     if ($Cliente->user) {$Cliente->user->delete();} // Si existe un usuario asociado, eliminarlo
     //     $Cliente->delete();// Eliminar el Cliente
-    //     return redirect()->route('admin.clientes.index')->with(['title', 'Exito', 'info', 'El Cliente se eliminó con éxito', 'icono', 'success']);
+    //     return redirect()->route('admin.clientes.index')->with(['title', 'Exito', 'info', 'El Cliente se eliminó con éxito', 'icon', 'success']);
     // }
 }

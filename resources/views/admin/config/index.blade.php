@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'CarsLiberty')
 @section('css')
     <style>
         .image-wrapper {
@@ -33,7 +33,7 @@
             <div class="card card-outline card-primary  px-2 py-2">
                 <div class="card-body">
                     @if (session('info'))
-                        <div class="alert alert-success"><strong>{{ $info }}</strong></div>
+                        <div class="alert alert-success"><strong>{{ session('info') }}</strong></div>
                     @endif
                     @if ($config)
                         <table id="configuraciones" class="table table-bordered table-striped">

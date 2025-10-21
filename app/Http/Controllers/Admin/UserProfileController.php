@@ -20,7 +20,7 @@ class UserProfileController extends Controller
     public function show(){ return view('admin.profile.show');  }
 
     public function update(Request $request)
-    {   $user = Auth::user();  $request->validate([ 'photo' => 'nullable|image|max:2048',  ]);
+    {   $user = Auth::user();  $request->validate([ 'photo' => 'nullable|image|max:2048' ]);
 
         if ($request->hasFile('photo')) {                                       // Subir foto de perfil si viene en el request
             if ($user->profile_photo_path) {                                    // Borrar foto anterior si existe
@@ -35,7 +35,7 @@ class UserProfileController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Perfil actualizado correctamente.');
+        return redirect()->back()->with(['toast'=>2,'title' => 'Exito','info' => 'Perfil actualizado correctamente.','icon' => 'success']);
     }
 
 
@@ -58,6 +58,6 @@ class UserProfileController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return back()->with('success', 'Contraseña actualizada correctamente.');
+        return back()->with(['toast'=>2,'title' => 'Exito','info' => 'Contraseña actualizada correctamente.','icon' => 'success']);
     }
 }

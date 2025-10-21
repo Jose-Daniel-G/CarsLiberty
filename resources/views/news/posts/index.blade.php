@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'CarsLiberty')
 {{-- @section('plugins.Sweetalert2', true) --}}
 @section('css')
 

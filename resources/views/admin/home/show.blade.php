@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'CarsLiberty')
 @section('css')
 @stop
 @section('content_header')
@@ -16,8 +16,8 @@
                 </div>
 
                 <div class="card-body">
-                    @if (session('info') && session('icono'))
-                        <div class="alert alert-success"><strong>{{ $info }}</strong></div>
+                    @if (session('info') && session('icon'))
+                        <div class="alert alert-success"><strong>{{ session('info') }}</strong></div>
                     @endif
                     <table id="reservas" class="table table-striped table-bordered table-hover table-sm">
                         <thead class="thead-dark">

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'CarsLiberty')
 @section('css') 
 @stop
 @section('content_header')
@@ -22,7 +22,7 @@
 
                 <div class="card-body">
                     @if ($info = Session::get('info'))
-                        <div class="alert alert-success"><strong>{{ $info }}</strong></div>
+                        <div class="alert alert-success"><strong>{{ session('info') }}</strong></div>
                     @endif
                     <table id="profesores" class="table table-striped table-bordered table-hover table-sm">
                         <thead class="thead-dark">
@@ -64,9 +64,8 @@
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <a href="#" class="btn btn-warning btn-sm mr-1"
-                                                data-id="{{ $profesor->id }}" data-toggle="modal"
-                                                data-target="#editProfesorModal" title="Editar">
+                                            <a href="#" class="btn btn-warning" data-id="{{ $profesor->id }}"
+                                                data-toggle="modal" data-target="#editProfesorModal" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <form id="delete-form-{{ $profesor->id }}"
@@ -77,8 +76,7 @@
                                                 <button type="button" class="btn btn-danger btn-delete"
                                                     data-id="{{ $profesor->id }}"
                                                     data-text="¿Estás seguro de eliminar este profesor?">
-                                                    <i class="fas fa-trash"></i>
-                                                </form>
+                                                    <i class="fas fa-trash"></i></button>
                                             </form>
 
                                         </div>

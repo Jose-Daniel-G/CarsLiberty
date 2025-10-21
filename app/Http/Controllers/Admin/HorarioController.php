@@ -121,7 +121,7 @@ class HorarioController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with('info', 'El profesor ya tiene asignado un horario en ese rango de tiempo.')
-                ->with('icono', 'error');
+                ->with('icon', 'error');
         }
         // 
         try {
@@ -141,7 +141,7 @@ class HorarioController extends Controller
                     'profesor_id' => $validatedData['profesor_id']
                 ]);
             }
-            return redirect()->back()->with(['swal' => '1','info'=>'Se registraron los cursos para el horario correctamente.','icono'=> 'success']);
+            return redirect()->back()->with(['swal' => '1','info'=>'Se registraron los cursos para el horario correctamente.','icon'=> 'success']);
 
 
         } catch (\Exception $e) {
@@ -185,7 +185,7 @@ class HorarioController extends Controller
         );
 
         return redirect()->route('admin.horarios.index')
-            ->with(['info', 'Horario actualizado correctamente.', 'icono', 'success']);
+            ->with(['info', 'Horario actualizado correctamente.', 'icon', 'success']);
     }
 
 

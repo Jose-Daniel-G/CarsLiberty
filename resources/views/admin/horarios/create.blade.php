@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'CarsLiberty')
 
 @section('content_header')
     <h1>Registro de un nuevo horario</h1>

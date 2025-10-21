@@ -22,10 +22,7 @@ class AgendaController extends Controller
         $this->middleware('can:admin.agendas.destroy')->only('destroy');
     }
     // public function index() {} public function create() {}
-    public function create()
-    {
-
-    }
+    // public function create(){}
 
     public function store(Request $request)
     {
@@ -56,7 +53,7 @@ class AgendaController extends Controller
             if ($asistencia && $asistencia->asistio === 0) {     // Si hay asistencia y no asistió
                 return redirect()->back()->with([
                     'info' => 'No puedes agendar otra clase hasta que contactes con la escuela por faltar a tu último agenda.',
-                    'icono' => 'error',
+                    'icon' => 'error',
                     'title' => 'Asistencia pendiente',
                 ]);
             }
@@ -79,7 +76,8 @@ class AgendaController extends Controller
 
         if ($horarios->isEmpty()) {                                         // Si no hay horarios disponibles, retornar mensaje de error
             return redirect()->back()->with([
-                'icono' => 'error',
+                'swal'=>2,
+                'icon' => 'error',
                 'title' => 'Oh!.',
                 'info' => 'El profesor no está disponible en ese horario.',
             ]);
@@ -92,7 +90,7 @@ class AgendaController extends Controller
             })->exists();
 
         if ($agendas_duplicados) {
-            return redirect()->back()->with(['info' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.', 'icono' => 'error', 'title' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',]);
+            return redirect()->back()->with(['info' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.', 'icon' => 'error', 'title' => 'Ya existe una reserva con el mismo profesor en esa fecha y hora.',]);
         }
 
         $curso = Curso::find($cursoid);
@@ -124,8 +122,9 @@ class AgendaController extends Controller
 
         return redirect()->back()->with([               // Redirigir con un mensaje de éxito
             'swal' => '1',
+            'title'=>'Atencion!',
             'info' => 'Recuerda que no puedes faltar a tu clase, si faltas a las clases sin justificación se cobran 20 mil pesos por hora no vista.',
-            'icono' => 'success',
+            'icon' => 'success',
             'title' => 'Se ha agendado de forma correcta.',
         ]);
     }
@@ -144,12 +143,12 @@ class AgendaController extends Controller
     {
         $validatedData = $request->validate(['profesor_id' => 'required', 'hora_inicio' => 'required', 'fecha_reserva' => 'required|date']);
         $agenda->update($validatedData);
-        return response()->json(['message' => 'agenda actualizado correctamente']);
+        return response()->json(['toast'=>2,'title' => 'Exito','info' => 'agenda actualizado correctamente','icon' => 'success']);
     }
 
     public function destroy(Agenda $agenda)
     {
         $agenda->delete();
-        return redirect()->back()->with(['mensaje' => 'Se eliminó la reserva de manera correcta', 'icono' => 'success',]);
+        return redirect()->back()->with(['toast'=>2,'title' => 'Exito','info' => 'Se eliminó la reserva de manera correcta', 'icon' => 'success',]);
     }
 }

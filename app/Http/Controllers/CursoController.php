@@ -34,7 +34,7 @@ class CursoController extends Controller
         ]);
         Curso::create($request->all()); // Crear un nuevo curso
 
-        return redirect()->route('admin.cursos.index')->with(['title' => 'Exito', 'info' => 'Curso registrado correctamente.', 'icono' => 'success']);
+        return redirect()->route('admin.cursos.index')->with(['toast'=>2,'title' => 'Exito', 'info' => 'Curso registrado correctamente.', 'icon' => 'success']);
     }
 
     public function edit(Curso $curso)
@@ -54,7 +54,7 @@ class CursoController extends Controller
 
         return redirect()->route('admin.cursos.index')->with([
             'info' => 'Curso actualizado correctamente.',
-            'icono' => 'success'
+            'icon' => 'success'
         ]);
     }
     public function completados()
@@ -159,7 +159,7 @@ public function estadisticas()
         $curso->delete(); // Eliminar el curso
 
         return redirect()->route('admin.cursos.index')
-            ->with(['title', 'Exito', 'info', 'El curso se eliminó con éxito', 'icono', 'success']);
+            ->with(['title', 'Exito', 'info', 'El curso se eliminó con éxito', 'icon', 'success']);
     }
     public function toggleStatus($id) //DEACTIVATE
     {
@@ -167,7 +167,7 @@ public function estadisticas()
         $curso->estado = !$curso->estado;
         $curso->save();
 
-        return redirect()->back()->with(['success' => 'Estado del usuario actualizado.']);
+        return redirect()->back()->with(['toast'=>2,'success' => 'Estado del usuario actualizado.']);
     }
     public function obtenerCursos($clienteId)
     {

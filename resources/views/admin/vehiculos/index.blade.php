@@ -33,7 +33,7 @@
 
                 <div class="card-body">
                     @if ($info = Session::get('info'))
-                        <div class="alert alert-success"><strong>{{ $info }}</strong></div>
+                        <div class="alert alert-success"><strong>{{ session('info') }}</strong></div>
                     @endif
 
                     <table id="vehiculos" class="table table-striped table-bordered table-hover table-sm">

@@ -44,7 +44,7 @@ class RoleController extends Controller
                     $role->givePermissionTo($name);
                 }
             }
-            return redirect()->route('admin.roles.index')->with('success', 'Role añadido exitosamente');
+            return redirect()->route('admin.roles.index')->with(['toast'=>2,'title' => 'Exito','info' => 'Role añadido exitosamente']);
         } else {
             return redirect()->route('admin.roles.create')->withInput()->withErrors($validator);
         }
@@ -79,7 +79,7 @@ class RoleController extends Controller
             } else {
                 $role->syncPermissions([]);
             }
-            return redirect()->route('admin.roles.index')->with('success', 'Role actualizado exitosamente');
+            return redirect()->route('admin.roles.index')->with(['toast'=>2,'title' => 'Exito','info' => 'Role actualizado exitosamente']);
         } else {
             return redirect()->route('admin.roles.edit', $id)->withInput()->withErrors($validator);
         }
@@ -94,17 +94,12 @@ class RoleController extends Controller
 
         if ($role == null) {
             session()->flash('error', 'Role not found');
-            // return response()->json([
-            //     'status' => false
-            // ]);
+            // return response()->json(['status' => false]);
         }
 
         $role->delete();
-
-        session()->flash('success', 'Role deleted successfully');
-        return redirect()->back()->with('success', 'Role eliminado exitosamente.');
-        // return response()->json([
-        //     'status' => true
-        // ]);
+ 
+        return redirect()->back()->with(['toast'=>2,'title' => 'Exito','info' => 'Role eliminado exitosamente.']);
+        // return response()->json(['status' => true ]);
     }
 }

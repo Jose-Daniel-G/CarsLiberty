@@ -36,7 +36,7 @@ class UserController extends Controller
 
         // Storage::makeDirectory("users/{$username}");// // Crear la carpeta en storage/app/users/{username}
 
-        return redirect()->route('admin.users.index')->with('info', 'Se registro al usuario de forma correcta')->with('icono', 'success');
+        return redirect()->route('admin.users.index')->with(['toast'=>2,'title' => 'Exito','info' => 'Se registro al usuario de forma correcta','icon'=>'success']);
     }
     // public function show($id) {}
     public function edit($id)
@@ -50,12 +50,12 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $user->roles()->sync($request->roles);
-        return redirect()->route('admin.users.index', $user)->with('info', 'Se asigno los roles correctamente');
+        return redirect()->route('admin.users.index', $user)->with(['toast'=>2,'title' => 'Exito','info' => 'Se asigno los roles correctamente','icon' => 'success']);
     }
 
     public function toggleStatus($id) //DEACTIVATE
     {
         $user = User::findOrFail($id); $user->status = !$user->status;  $user->save();
-        return redirect()->back()->with('success', 'Estado del usuario actualizado.');
+        return redirect()->back()->with(['toast'=>2,'title' => 'Exito','info' => 'Estado del usuario actualizado.','icon' => 'success']);
     }
 }

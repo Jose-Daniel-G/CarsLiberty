@@ -64,7 +64,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     @if ($info = Session::get('success'))
-                                        <div class="alert alert-success"><strong>{{ $info }}</strong></div>
+                                        <div class="alert alert-success"><strong>{{ session('info') }}</strong></div>
                                     @endif
 
                                     <div class="form-group row">

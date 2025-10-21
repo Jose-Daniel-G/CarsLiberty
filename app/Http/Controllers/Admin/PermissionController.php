@@ -31,7 +31,7 @@ class PermissionController extends Controller
 
         if ($validator->passes()) {
             Permission::create(['name' => $request->name,'guard_name' => 'web',]);
-            return redirect()->route('admin.permissions.index')->with('success', 'Permiso añadido exitosamente');
+            return redirect()->route('admin.permissions.index')->with(['toast'=>2,'title' => 'Exito','info' => 'Permiso añadido exitosamente','icon' => 'success']);
         } else {
             return redirect()->route('admin.permissions.index')->withInput()->withErrors($validator);
         }
@@ -55,7 +55,7 @@ class PermissionController extends Controller
             $permission->guard_name ='web'; // <- necesario para evitar el error
 
             $permission->save();
-            return redirect()->route('admin.permissions.index')->with('success','Permiso Actualizado exitosamente.');
+            return redirect()->route('admin.permissions.index')->with(['toast'=>2,'title' => 'Exito','info' => 'Permiso Actualizado exitosamente.','icon' => 'success']);
         } else {
             return redirect()->route('admin.permissions.edit',$id)->withInput()->withErrors($validator);
         }
@@ -75,7 +75,7 @@ class PermissionController extends Controller
     
         $permission->delete();
     
-        session()->flash('success', 'Permission deleted successfully');
-        return redirect()->back()->with('success', 'Permiso eliminado exitosamente.');
+        session()->flash(['toast'=>2,'title' => 'Exito','info' => 'Permission deleted successfully','icon' => 'success']);
+        return redirect()->back()->with(['toast'=>2,'title' => 'Exito','info' => 'Permiso eliminado exitosamente.','icon' => 'success']);
     }
 }

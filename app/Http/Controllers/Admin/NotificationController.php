@@ -20,6 +20,6 @@ class NotificationController extends Controller
         $notification = Auth::user()->notifications()->findOrFail($id);
         $notification->markAsRead();
 
-        return redirect()->back()->with('success', 'Notificación marcada como leída.');
+        return redirect()->back()->with(['toast'=>2,'title' => 'Exito!','info' => 'Notificación marcada como leída.','icon' => 'success']);
     }
 }

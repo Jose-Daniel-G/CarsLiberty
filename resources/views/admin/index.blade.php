@@ -1,9 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard'){{-- @section('plugins.Sweetalert2', true) --}}
+@section('title', 'CarsLiberty'){{-- @section('plugins.Sweetalert2', true) --}}
 @section('css')
     @vite('resources/css/items.css')
-
 @stop
 
 @section('content_header'){{-- <h1><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}</h1> --}}

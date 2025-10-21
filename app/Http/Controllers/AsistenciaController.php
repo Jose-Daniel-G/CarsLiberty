@@ -115,7 +115,7 @@ class AsistenciaController extends Controller
             }
         }
 
-        return response()->json(['message' => 'agenda actualizado correctamente']);
+        return response()->json(['toast'=>2,'title' => 'Exito','info' => 'agenda actualizado correctamente','icon' => 'success']);
     }
 
     public function show()  //ver INASISTENCIAS y habilitar cliente
@@ -198,7 +198,7 @@ class AsistenciaController extends Controller
             $asistencia->save();                             // Guardar los cambios en cada asistencia
         }
 
-        return redirect()->back()->with('success', 'El estado del cliente ha sido actualizado correctamente');
+        return redirect()->back()->with(['toast'=>2,'title'=>'Exito!','info'=> 'El estado del cliente ha sido actualizado correctamente','icon' => 'success']);
     }
 
     // public function update(Request $request)

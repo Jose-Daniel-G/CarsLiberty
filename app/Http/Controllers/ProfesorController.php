@@ -57,7 +57,7 @@ class ProfesorController extends Controller
         Profesor::create($profesor);
         $usuario->assignRole('profesor');   // Asignar rol de 'profesor' al nuevo usuario
 
-        return redirect()->route('admin.profesores.index')->with(['info', 'Se registró el profesor de forma correcta','icono', 'success']);
+        return redirect()->route('admin.profesores.index')->with(['toast'=> 2,'info'=> 'Se registró el profesor de forma correcta','icon'=> 'success']);
     }
 
 
@@ -93,20 +93,20 @@ class ProfesorController extends Controller
 
         $usuario->save(); // Guardar cambios del usuario
 
-        return redirect()->route('admin.profesores.index')->with('info', 'Profesor actualizado correctamente.','icono', 'success');
+        return redirect()->route('admin.profesores.index')->with(['toast'=> 2,'title'=>'Exito!','info'=> 'Profesor actualizado correctamente.','icon'=> 'success']);
     }
 
     public function destroy(Profesor $profesor)
     {   // Verificar si el profesor tiene agendas asociados
         if ($profesor->agendas()->exists()) {
-            return redirect()->route('admin.profesores.index')->with('title', 'Error al eliminar profesor')
-                ->with(['info', 'No se puede eliminar el profesor porque tiene agendas asociados.','icono', 'error']);
+            return redirect()->route('admin.profesores.index')
+                ->with(['toast'=> 2,'title'=>'Error al eliminar profesor','info'=> 'No se puede eliminar el profesor porque tiene agendas asociados.','icon'=> 'error']);
         }
 
         if ($profesor->user) {$profesor->user->delete();}$profesor->delete(); //// Eliminar el profesor y usuario asociado
 
         return redirect()->route('admin.profesores.index')
-            ->with(['info', 'El profesor se eliminó con éxito','icono', 'success']);
+            ->with(['toast'=> 2,'title'=>'Exito!','info'=> 'El profesor se eliminó con éxito','icon'=> 'success']);
     }
 
     public function reportes() {return view('admin.profesores.reportes'); }
@@ -142,12 +142,12 @@ class ProfesorController extends Controller
                 ->get();
      
             if ($profesores->isEmpty()) {
-                return response()->json(['message' => 'No se encontraron profesores para este curso.'], 404);
+                return response()->json(['title' => 'Error','error' => 'No se encontraron profesores para este curso.','icon'=> 'error'], 404);
             }
     
             return response()->json($profesores); // Devuelves la lista de profesores en formato JSON
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al cargar los profesores: ' . $e->getMessage()], 500);
+            return response()->json(['title' => 'Error','error' => 'Error al cargar los profesores: ' . $e->getMessage(),'icon'=> 'error'], 500);
         }
     }
     public function toggleStatus($id) //DEACTIVATE

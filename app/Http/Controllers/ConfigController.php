@@ -54,7 +54,7 @@ class ConfigController extends Controller
             Image::create(['url' => $url, 'imageable_id' => $imagen_id, 'imageable_type' => Config::class]); // $post->image()->create(['url' => $url]);
         }
 
-        return redirect()->route('admin.config.index')->with(['title', 'Exito', 'info', 'Configuración creada', 'icono', 'success']);
+        return redirect()->route('admin.config.index')->with(['toast'=>2,'title'=>'Exito', 'info'=>'Configuración creada', 'icon'=>'success']);
     }
 
     public function edit(Config $config)
@@ -87,7 +87,7 @@ class ConfigController extends Controller
         }
         $config->save();
 
-        return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración actualizada exitosamente']);
+        return redirect()->route('admin.config.index')->with(['toast'=>2,'title'=>'Exito', 'icon'=>'success', 'info'=>'Configuración actualizada exitosamente']);
     }
 
     public function destroy(Config $config) // Eliminar el logo si existe
@@ -101,6 +101,6 @@ class ConfigController extends Controller
 
         $config->delete();  // Eliminar la configuración
 
-        return redirect()->route('admin.config.index')->with(['title', 'Exito', 'icono', 'success', 'info', 'Configuración eliminada correctamente']);
+        return redirect()->route('admin.config.index')->with(['toast'=>2,'title'=> 'Exito', 'icon'=>'success', 'info'=> 'Configuración eliminada correctamente']);
     }
 }

@@ -42,9 +42,7 @@ class VehiculoController extends Controller
         Vehiculo::create($vehiculos);
 
         return redirect()->route('admin.vehiculos.index')
-            ->with('title', 'Éxito')
-            ->with('icon', 'success')
-            ->with('info', 'Vehículo creado correctamente.');
+            ->with(['toast'=>2,'title'=> 'Éxito','icon'=> 'success','info'=> 'Vehículo creado correctamente.']);
     }
 
     public function show(Vehiculo $vehiculo)
@@ -52,7 +50,7 @@ class VehiculoController extends Controller
         // Cargar relaciones tipo y profesor
         $vehiculo->load(['tipo', 'profesor']);
 
-        \Log::info('vehiculo', [$vehiculo]);
+        // \Log::info('vehiculo', [$vehiculo]);
 
         return response()->json([ 'vehiculo' => $vehiculo ]);
     }
@@ -64,7 +62,7 @@ class VehiculoController extends Controller
         $vehiculo->load(['tipo', 'profesor']);
         
         $profesores = Profesor::all();
-        \Log::info('profesores', [$profesores]);
+        // \Log::info('profesores', [$profesores]);
 
         $tipos = TipoVehiculo::all();
 
@@ -94,9 +92,7 @@ class VehiculoController extends Controller
         $vehiculo->update($data);
 
         return redirect()->route('admin.vehiculos.index')
-            ->with('title', 'Éxito')
-            ->with('info', 'Vehículo actualizado correctamente.')
-            ->with('icon', 'success');
+            ->with(['toast'=>2,'title'=> 'Éxito','info'=> 'Vehículo actualizado correctamente.','icon'=> 'success']);
     }
 
 
@@ -105,8 +101,6 @@ class VehiculoController extends Controller
         $vehiculo->delete();
 
         return redirect()->route('admin.vehiculos.index')
-            ->with('title', 'Éxito')
-            ->with('info', 'El vehículo ha sido eliminado exitosamente.')
-            ->with('icon', 'success');
+            ->with(['toast'=>2,'title'=>'Éxito','info'=>'El vehículo ha sido eliminado exitosamente.','icon'=>'success']);
     }
 }
