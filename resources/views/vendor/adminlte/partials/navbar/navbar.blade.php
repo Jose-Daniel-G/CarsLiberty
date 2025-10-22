@@ -22,7 +22,7 @@
         {{-- Configured right links --}}
         @each('adminlte::partials.navbar.menu-item', $adminlte->menu('navbar-right'), 'item')
         {{-- 🔔 Notificaciones --}}
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-bell"></i>
                 @if (auth()->user()->unreadNotifications->count())
@@ -52,7 +52,7 @@
                     Ver todas
                 </a>
             </div>
-        </li>
+        </li> --}}
         {{-- User menu link --}}
         @if(Auth::user())
             @if(config('adminlte.usermenu_enabled'))

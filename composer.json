@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.0",
         "spatie/laravel-permission": "^6.9",
+        "twilio/sdk": "^8.8",
         "yajra/laravel-datatables-oracle": "^10.11"
     },
     "require-dev": {

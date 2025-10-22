@@ -228,3 +228,6 @@ users, posts, categories
 
 ## CHECK HOW MANY QUERYS REALIZED 
 composer require barryvdh/laravel-debugbar
+## MENSAJE POR WPP 
+composer require twilio/sdk
+

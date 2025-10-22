@@ -7,10 +7,11 @@ use App\Http\Controllers\Admin\HomeController;
 
 use App\Http\Controllers\Admin\HorarioController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\CitaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; 
-use App\Models\Post; 
-
+use App\Models\Post;
+use Twilio\Rest\Client;
 
 Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
 Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
@@ -32,9 +33,30 @@ Route::middleware(['auth'])->group(function () { // Es para leer las notificacio
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
 
-
+Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
+Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 // Route::post('/historial/registrar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'registrarCursoCompletado']);
 // Route::get('/historial/completar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'completarCurso']);
 // Route::get('/historial/listar/{clienteId}', [HistorialCursoController::class, 'listarCursosCompletados']);
 // Route::get('/admin/profesores/reportes', [ProfesorController::class, 'reportes'])->name('admin.profesores.reportes');
 
+Route::get('/test-whatsapp', function () {
+    $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+
+    $message = $twilio->messages->create(
+        'whatsapp:+573147072792', // tu número en formato internacional
+        [
+            'from' => env('TWILIO_WHATSAPP_FROM'),
+            'body' => '🚗 Hola! Tu cita ha sido agendada para el 25 de octubre a las 3:00 PM.'
+        ]
+    );
+
+    return $message;
+});
+Route::get('/test-whatsapp-tokens', function () {
+    dd([
+        'sid' => env('TWILIO_SID'),
+        'token' => env('TWILIO_TOKEN'),
+        'from' => env('TWILIO_WHATSAPP_FROM')
+    ]);
+});

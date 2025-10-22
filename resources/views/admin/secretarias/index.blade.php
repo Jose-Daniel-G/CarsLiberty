@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="row">
-        <h1>Listado de secretarias</h1>
+        <h1>Listado de programadores</h1>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -192,7 +192,7 @@
 
                 },
                 error: function(xhr) {
-                    console.error('Error al cargar los datos de la secretaria:', xhr);
+                    console.error('Error al cargar los datos deel programador:', xhr);
                 }
             });
         });

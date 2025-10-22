@@ -56,9 +56,9 @@ class SecretariaController extends Controller
             $usuario->assignRole('secretaria');
 
             return redirect()->route('admin.secretarias.index')
-                ->with(['toast'=>2, 'title' => 'Exito', 'info' => 'Se registro a la secretaria de forma correcta', 'icon' => 'success']);
+                ->with(['toast'=>2, 'title' => 'Exito', 'info' => 'Se registro ael programador de forma correcta', 'icon' => 'success']);
         } catch (\Exception $exception) {
-                return back()->withInput()->with(['toast'=>2, 'title' => 'Error','info'  => 'No se registró la secretaria. ' . $exception->getMessage(),'icon' => 'error','openModal' => 'createModal' ]);// <- clave para reabrir el modal // return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
+                return back()->withInput()->with(['toast'=>2, 'title' => 'Error','info'  => 'No se registróel programador. ' . $exception->getMessage(),'icon' => 'error','openModal' => 'createModal' ]);// <- clave para reabrir el modal // return back()->withErrors(['error' => 'Ocurrió un error inesperado.'])->withInput();
         }
     }
 
@@ -99,7 +99,7 @@ class SecretariaController extends Controller
         $usuario->email = $request->email;
         if ($request->filled('password')) {$usuario->password = Hash::make($request->password);}
         $usuario->save();
-        return redirect()->route('admin.secretarias.index')->with(['toast'=>2, 'title' => 'Exito', 'info' => 'Se actualizo la secretaria de forma correcta', 'icon' => 'success']);
+        return redirect()->route('admin.secretarias.index')->with(['toast'=>2, 'title' => 'Exito', 'info' => 'Se actualizo el programador de forma correcta', 'icon' => 'success']);
     }
     public function toggleStatus($id) //DEACTIVATE
     {
@@ -107,7 +107,7 @@ class SecretariaController extends Controller
         $user->status = !$user->status;
         $user->save();
 
-        return redirect()->back()->with(['toast'=>2, 'success' => 'Estado del usuario actualizado.']);
+        return redirect()->back()->with(['toast'=>2, 'info' => 'Estado del usuario actualizado.']);
     }
     public function destroy(Secretaria $secretaria)
     {
@@ -116,6 +116,6 @@ class SecretariaController extends Controller
         $secretaria->delete();
 
         return redirect()->route('admin.secretarias.index')
-            ->with(['toast'=>2, 'title', 'Exito','info', 'La secretaria se eliminó con éxito','icon', 'success']);
+            ->with(['toast'=>2, 'title'=> 'Exito','info'=> 'La secretaria se eliminó con éxito','icon'=>'success']);
     }
 }

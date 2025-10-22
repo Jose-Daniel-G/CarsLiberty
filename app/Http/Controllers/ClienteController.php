@@ -138,6 +138,6 @@ class ClienteController extends Controller
     // {
     //     if ($Cliente->user) {$Cliente->user->delete();} // Si existe un usuario asociado, eliminarlo
     //     $Cliente->delete();// Eliminar el Cliente
-    //     return redirect()->route('admin.clientes.index')->with(['title', 'Exito', 'info', 'El Cliente se eliminó con éxito', 'icon', 'success']);
+    //     return redirect()->route('admin.clientes.index')->with(['title'=> 'Exito', 'info'=>'El Cliente se eliminó con éxito', 'icon', 'success']);
     // }
 }

@@ -120,8 +120,7 @@ class HorarioController extends Controller
 
             return redirect()->back()
                 ->withInput()
-                ->with('info', 'El profesor ya tiene asignado un horario en ese rango de tiempo.')
-                ->with('icon', 'error');
+                ->with(['info'=>'El profesor ya tiene asignado un horario en ese rango de tiempo.' ,'icon'=> 'error']);
         }
         // 
         try {
@@ -185,13 +184,13 @@ class HorarioController extends Controller
         );
 
         return redirect()->route('admin.horarios.index')
-            ->with(['info', 'Horario actualizado correctamente.', 'icon', 'success']);
+            ->with(['info'=>'Horario actualizado correctamente.', 'icon', 'success']);
     }
 
 
     public function destroy(Horario $horario)
     {
         $horario->delete();
-        return redirect()->route('admin.horarios.index')->with(['title', 'Exito', 'info', 'El horario se eliminó con éxito', 'icon', 'success']);
+        return redirect()->route('admin.horarios.index')->with(['title'=> 'Exito', 'info'=>'El horario se eliminó con éxito', 'icon', 'success']);
     }
 }

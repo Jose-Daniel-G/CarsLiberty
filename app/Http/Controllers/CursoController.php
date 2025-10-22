@@ -159,7 +159,7 @@ public function estadisticas()
         $curso->delete(); // Eliminar el curso
 
         return redirect()->route('admin.cursos.index')
-            ->with(['title', 'Exito', 'info', 'El curso se eliminó con éxito', 'icon', 'success']);
+            ->with(['title'=> 'Exito', 'info'=>'El curso se eliminó con éxito', 'icon', 'success']);
     }
     public function toggleStatus($id) //DEACTIVATE
     {
@@ -167,7 +167,7 @@ public function estadisticas()
         $curso->estado = !$curso->estado;
         $curso->save();
 
-        return redirect()->back()->with(['toast'=>2,'success' => 'Estado del usuario actualizado.']);
+        return redirect()->back()->with(['toast'=>2,'info' => 'Estado del usuario actualizado.']);
     }
     public function obtenerCursos($clienteId)
     {

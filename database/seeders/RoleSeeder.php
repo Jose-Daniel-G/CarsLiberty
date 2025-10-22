@@ -76,6 +76,9 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.horarios.store'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.horarios.show'])->syncRoles([$superAdmin, $admin, $secretaria]);
         Permission::create(['name' => 'admin.horarios.edit'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.horarios.update'])->syncRoles([$superAdmin, $admin, $secretaria]);
+        Permission::create(['name' => 'admin.horarios.destroy'])->syncRoles([$superAdmin, $admin, $secretaria]);
+
         // rutas para AGENDAS
         Permission::create(['name' => 'admin.agendas.index'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);
         Permission::create(['name' => 'admin.agendas.create'])->syncRoles([$superAdmin, $admin, $secretaria, $cliente]);

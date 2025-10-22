@@ -154,5 +154,7 @@ class ProfesorController extends Controller
     {  $user = User::findOrFail($id);
         $user->status = !$user->status;
         $user->save();
+        return redirect()->back()->with(['toast'=>2,'info' => 'Estado del usuario actualizado.']);
+        
     }
 }
