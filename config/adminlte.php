@@ -464,6 +464,56 @@ return [
 
         ],
         [
+            'text' => 'Ecommerce',
+            'icon' => 'fa-solid fa-shop',
+            'can'  => 'admin.config.index',
+            'submenu' => [
+                    [
+                        'text' => 'Familias de productos',
+                        'icon'        => 'fa-solid fa-box-open',
+                        'url' => 'admin.families.index',
+                    ],
+                    [
+                        'text' => 'Categorias',
+                        'icon' => 'fa-solid fa-tags', 
+                        'url' => 'admin.categories.index',
+                    ],
+                    [
+                        'text' => 'Subcategorias',
+                        'icon' => 'fa-solid fa-tag',
+                        'url' => 'admin.subcategories.index',
+                    ],
+                    [
+                        'text' => 'Productos',
+                        'icon' => 'fa-solid fa-box',
+                        'url' => 'admin.products.index',
+                    ],
+                    [
+                        'text' => 'Portadas',
+                        'icon' => 'fa-solid fa-images', 
+                        'url' => 'admin.covers.index',
+                    ],
+                    [
+                        'text' => 'Conductores',
+                        'icon' => 'fa-solid fa-car',
+                        'url'  => '#',
+                        // 'route' => 'admin.drives.index',
+                    ],
+                    [
+                        'text' => 'Ordenes',
+                        'icon' => 'fa-solid fa-shopping-cart',
+                        'url'  => '#',
+                        // 'route' => 'admin.orders.index',
+                    ],
+                    [
+                        'text' => 'Envios',
+                        'icon' => 'fa-solid fa-truck-fast',
+                        'url'  => '#',
+                        // 'route' => 'admin.drives.index',
+                    ],
+            ],
+        ],
+        [
             'text' => 'News-post',
             'icon' => 'fa-regular fa-circle-question',
             'can'  => 'admin.config.index',

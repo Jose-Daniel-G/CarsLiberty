@@ -1,5 +1,6 @@
 # Software para una Academia Automovilística
 Este proyecto es un software para una academia automovilística, diseñado para llevar un registro detallado de las clases de cada alumno. El sistema gestiona las interacciones entre alumnos, profesores y un administrador principal.
+ademas tiene envio de mensajeria por wpp
 
 ---
 ##### **FIRST OF ALL: CREATE A DATABASE MANUALLY CALLED `cars_liberty`**
@@ -230,4 +231,7 @@ users, posts, categories
 composer require barryvdh/laravel-debugbar
 ## MENSAJE POR WPP 
 composer require twilio/sdk
+
+## DELETE INIT
+rm -Recurse -Force .git
 

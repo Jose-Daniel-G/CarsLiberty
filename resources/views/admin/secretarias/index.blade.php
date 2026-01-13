@@ -68,7 +68,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-danger btn-delete"
-                                                    data-id="{{ $curso->id }}"
+                                                    data-id="{{ $secretaria->id }}"
                                                     data-text="¿Estás seguro de que deseas eliminar este programador?">
                                                     <i class="fas fa-trash"></i>
                                         </form> --}}
