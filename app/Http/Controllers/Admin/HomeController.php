@@ -81,30 +81,62 @@ class HomeController extends Controller
     }
 
 
-    public function show_reserva_profesores() //calendar
-    {
-        try {
-            // Verifica si el usuario autenticado es un administrador
-            if (Auth::user()->hasRole('superAdmin') ||  Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria')) {
-                // Obtener todos los agendas del profesor específico
-                $agendas = Agenda::with(['profesor', 'cliente'])->get();
-                return response()->json($agendas);
-            } else {
+// 1. Agrega (Request $request) para poder leer lo que envía JS
+public function show_reserva_profesores(Request $request) 
+{
+    try {
+        // Capturamos el ID que viene de FullCalendar (extraParams)
+        $profesorId = $request->query('profesor_id');
 
-                $agendas = Agenda::with(['profesor', 'cliente'])
-                    ->join('users as profesores', 'profesores.id', '=', 'agendas.profesor_id')
-                    ->join('clientes', 'clientes.id', '=', 'agendas.cliente_id')
-                    ->join('users as clientes_users', 'clientes.user_id', '=', 'clientes_users.id')
-                    ->where('clientes.user_id', Auth::id())
-                    ->select('agendas.*')
-                    ->get();
+        $query = Agenda::with(['profesor', 'cliente']);
 
-                return response()->json($agendas);
+        // Si el usuario es administrativo
+        if (Auth::user()->hasAnyRole(['superAdmin', 'admin', 'secretaria'])) {
+            
+            // Si seleccionó un profesor, filtramos por él. Si no, traemos todo.
+            if ($profesorId) {
+                $query->where('profesor_id', $profesorId);
             }
-        } catch (\Exception $exception) {
-            return response()->json(['mensaje' => 'Error: ' . $exception->getMessage()]);
+            
+            $agendas = $query->get();
+
+        } else {
+            // SI ES UN ESTUDIANTE:
+            // Queremos ver las mías (en verde) Y las de otros (en azul/gris) del profesor seleccionado
+            if (!$profesorId) {
+                return response()->json([]); // Si no hay profesor seleccionado, no mostramos nada
+            }
+
+            $agendas = $query->where('profesor_id', $profesorId)->get();
         }
+
+        // --- FORMATEO PARA FULLCALENDAR ---
+        // Esto es vital para que se pinten los colores que quieres
+        $eventos = $agendas->map(function ($agenda) {
+            $es_mio = $agenda->cliente->user_id == Auth::id();
+
+            return [
+                'id' => $agenda->id,
+                'title' => $es_mio ? "Mi Clase" : "Ocupado",
+                'start' => $agenda->start, // Asegúrate de que sean objetos Carbon o strings ISO
+                'end' => $agenda->end,
+                'backgroundColor' => $es_mio ? '#28a745' : '#007bff', // Verde mío, Azul otros
+                'borderColor' => $es_mio ? '#1e7e34' : '#0062cc',
+                'textColor' => '#ffffff',
+                'extendedProps' => [
+                    'profesor' => $agenda->profesor,
+                    'cliente' => $es_mio ? $agenda->cliente : ['nombres' => 'No disponible'],
+                    'es_mio' => $es_mio
+                ]
+            ];
+        });
+
+        return response()->json($eventos);
+
+    } catch (\Exception $exception) {
+        return response()->json(['mensaje' => 'Error: ' . $exception->getMessage()], 500);
     }
+}
 
     public function message_landing_page(Request $request)
     {

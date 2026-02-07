@@ -64,7 +64,7 @@ return [
     */
 
     'logo' => '<b>Liberty</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/HEBRON.png',
+    'logo_img' => 'vendor/adminlte/dist/img/libertad.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -86,7 +86,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/Hebron.png',
+            'path' => 'vendor/adminlte/dist/img/libertad.png',
             'alt' => 'Auth Logo',
             'class' => 'brand-image img-circle elevation-3', // 'class' => '',// JD
             'width' => 50,
@@ -112,8 +112,8 @@ return [
     'preloader' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/HEBRON.png',
-            'alt' => 'HEBRON',
+            'path' => 'vendor/adminlte/dist/img/libertad.png',
+            'alt' => 'libertad',
             'effect' => 'animation__shake',
             'width' => 60,
             'height' => 60,

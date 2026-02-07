@@ -57,12 +57,15 @@ luego dirigirse a esta ruta y editar el siguiente archivo
         DocumentRoot "/xampp/htdocs/www/carsliberty/public"
     </VirtualHost>
     ````
-**Project URL/creation date**
+**Git commands**
 - git remote get-url origin
 - git remote -v
 - git log --reverse
+- git commit --amend --no-edit
 **Branches**
 - git remote show origin
+## DELETE INIT
+- rm -Recurse -Force .git
 ***LIBRERIA SLUG***
 - https://leocaseiro.com.br/jquery-plugin-string-to-slug/#
 
@@ -102,7 +105,7 @@ php artisan lang:update
  php artisan optimize
  composer dump-autoload
  composer install --ignore-platform-reqs
- git rm --cached DB_HEBRON.jpg
+ git rm --cached DB_libertad.jpg
 
 ```
 ###### CLEAN GRABAGE
@@ -232,6 +235,5 @@ composer require barryvdh/laravel-debugbar
 ## MENSAJE POR WPP 
 composer require twilio/sdk
 
-## DELETE INIT
-rm -Recurse -Force .git
+
 

@@ -139,167 +139,75 @@
             </div>
         @endcan
         {{-- Completados --}}
-        {{-- @can('admin.cursos.completados') --}}
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    @if (Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria'))
-                        <h4>Estadísticas</h4>
-                        <h5 class="mb-2">(Cursos)</h5>
-                        <br>
-                    @else
-                        <div>
-                            <h3>{{ $total_cursos }}</h3>
-                            <p>Cursos </p>
-                        </div>
-                    @endif
+        @can('admin.cursos.completados')
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        @if (Auth::user()->hasRole('superAdmin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('secretaria'))
+                            <h4>Estadísticas</h4>
+                            <h5 class="mb-2">(Cursos)</h5>
+                            <br>
+                        @else
+                            <div>
+                                <h3>{{ $total_cursos }}</h3>
+                                <p>Cursos </p>
+                            </div>
+                        @endif
 
-                </div>
-                <div class="icon"> <i class="fa-regular fa-check-circle"></i>
-                </div>
-                <a href="{{ route('admin.cursos.completados') }}" class="small-box-footer">Mas info <i
-                        class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        {{-- @endcan --}}
-        @if (Auth::user()->hasRole('cliente'))
-            <div class="col-md-2 col-sm-4 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Likes</span>
-                        <span class="info-box-number">93,139</span>
                     </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-            </div>
-            <div class="col-md-2 col-sm-4 col-6">
-                <div class="info-box">
-                    <!-- ROMBO -->
-                    <div class="shape-item shape-sm">
-                        <div class="diamond badge-shape">
-                            <span class="diamond-text"><i class="far fa-star"></i></span>
-                        </div>
+                    <div class="icon"> <i class="fa-regular fa-check-circle"></i>
                     </div>
-                    <div class="info-box-content"> Insign Rombo</div>
+                    <a href="{{ route('admin.cursos.completados') }}" class="small-box-footer">Mas info <i
+                            class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <div class="col-md-2 col-sm-4 col-6">
-                <div class="info-box">
-                    <div class="shape-item shape-sm">
-                        <div class="octagon badge-shape">
-                            <span class="octagon-text">Oct</span>
-                        </div>
-                    </div>
-                    <div class="shape-label">Octagono</div>
-                </div>
-            </div>
-            <div class="col-md-2 col-sm-4 col-6">
-                <div class="info-box">
-                    <div class="shape-item shape-sm">
-                        <div class="shield badge-shape">
-                            <span class="shield-text">Escudo</span>
-                        </div>
-                    </div>
-                    <div class="shape-label">Escudo</div>
-                </div>
-            </div>
-            {{-- <div class="col-lg-2 col-2"> 
-                <div class="shape-item shape-sm">
-                    <div class="pentagon">
-                        <span class="pentagon-text">PREMIUM</span>
-                    </div>
-                    <div class="shape-label">Pentágono</div>
-                </div>
-            </div> --}}
-    @endif
-
-
+        @endcan
     </div>
     <div class="card card-primary card-outline card-tabs">
-        <div class="card-header p-0 pt-1 border-bottom-0">
-            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                @can('show_datos_cursos')
-                    <li class="nav-item">
-                        <a class="nav-link active" id="custom-tabs-three-profile-tab" data-toggle="pill"
-                            href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile"
-                            aria-selected="false">Calendario de reserva</a>
-                    </li>
-                @endcan
-                <li class="nav-item">
-                    <a class="nav-link " id="custom-tabs-three-home-tab" data-toggle="pill"
-                        href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home"
-                        aria-selected="false">Horario de
-                        profesores</a>
-                </li>
-            </ul>
-        </div>
         <div class="card-body">
-            <div class="tab-content" id="custom-tabs-three-tabContent">
-                <div class="tab-pane fade" id="custom-tabs-three-home" role="tabpanel"
-                    aria-labelledby="custom-tabs-three-home-tab">
+            <div class="row">
+                <div class="col-12">
                     <div class="row">
                         <div class="col-md-6">
-                            <h3 class="card-title">Calendario de atencion de profesores </h3>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#claseModal">
+                                Agendar
+                            </button>
+                            <a href="{{ route('admin.home.show') }}" class="btn btn-success">
+                                <i class="bi bi-calendar-check"></i>Ver las reservas
+                            </a>
                         </div>
-                        <div class="col-md d-flex justify-content-end">
+                        <div class="col-md-2 d-flex justify-content-end">
                             <label for="curso_id">Cursos </label><b class="text-danger">*</b>
                         </div>
                         <div class="col-md-4">
                             <select name="curso_id" id="profesor_select" class="form-control">
-                                <option value="" selected disabled>Seleccione una opción</option>
+                                <option value="" selected disabled>Seleccione</option>
                                 @foreach ($profesorSelect as $curso)
                                     <option value="{{ $curso->id }}">
                                         {{ $curso->cursos . ' - ' . $curso->nombres }} </option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md">
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#claseModal">
-                                Agendar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <hr>
-                            <div id="curso_info"></div>
-                        </div>
 
                     </div>
                 </div>
-                @can('show_datos_cursos')
-                    <div class="tab-pane fade active show" id="custom-tabs-three-profile" role="tabpanel"
-                        aria-labelledby="custom-tabs-three-profile-tab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#claseModal"> Agendar Clase</button>
 
-                                <a href="{{ route('admin.home.show') }}" class="btn btn-success">
-                                    <i class="bi bi-calendar-check"></i>Ver las reservas
-                                </a>
-                            </div>
+            </div>
+            <div class="row">
 
-                            <!-- Incluir Modal INFO-->
-                            @include('admin.agenda-modal.show')
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="profesor_info"></div>
-                                <div id="calendar"></div>
-                            </div>
-                        </div>
-                    </div>
-                @endcan
-                @include('admin.agenda-modal.agenda')
+                <div class="col-12">
+                    <div id="profesor_info"></div>
+                    <div id="calendar" style="min-height: 500px;"></div>
+                </div>
             </div>
         </div>
-    </div>{{-- PROFESORES AGENDA --}}
+    </div>
+
+    </div>
+
+    @include('admin.agenda-modal.agenda')
+    </div>
+    {{-- PROFESORES AGENDA --}}
     @if (Auth::check() && Auth::user()->profesor)
         <div class="row">
             <div class="col-md-12">

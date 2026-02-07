@@ -14,19 +14,19 @@
         <tbody>
             @php
                 $horas = [
-                    '06:00 am - 07:00 am',
-                    '07:00 am - 08:00 am',
-                    '08:00 am - 09:00 am',
-                    '09:00 am - 10:00 am',
-                    '10:00 am - 11:00 am',
-                    '11:00 am - 12:00 pm', 
-                    '01:00 pm - 02:00 pm',
-                    '02:00 pm - 03:00 pm',
-                    '03:00 pm - 04:00 pm',
-                    '04:00 pm - 05:00 pm',
-                    '05:00 pm - 06:00 pm',
-                    '06:00 pm - 07:00 pm',
-                    '07:00 pm - 08:00 pm',
+                    '06 am - 07 am',
+                    '07 am - 08 am',
+                    '08 am - 09 am',
+                    '09 am - 10 am',
+                    '10 am - 11 am',
+                    '11 am - 12 pm', 
+                    '01 pm - 02 pm',
+                    '02 pm - 03 pm',
+                    '03 pm - 04 pm',
+                    '04 pm - 05 pm',
+                    '05 pm - 06 pm',
+                    '06 pm - 07 pm',
+                    '07 pm - 08 pm',
                 ];
             @endphp
 
@@ -37,7 +37,7 @@
                     $hora_fin_24 = date('H:i', strtotime($tiempo));
                 @endphp
                 <tr>
-                    <td scope="row" class="fw-bold">{{ $hora }}</td>
+                    <td scope="row" class="fw-bold" style="font-size: 12px;">{{ $hora }}</td>
 
                     @foreach ($diasSemana as $dia)
                         @php

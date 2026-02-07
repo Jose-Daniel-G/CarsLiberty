@@ -8,16 +8,14 @@ import esLocale from '@fullcalendar/core/locales/es';
 export { };
 
 declare const Swal: any; // Si usas SweetAlert2 por CDN, deja esto. Si lo importas con npm, quítalo e importa arriba: import Swal from 'sweetalert2';
+declare const $: any; // Asegúrate de tener jQuery disponible para los modales de Bootstrap
 
 declare global {
     interface Window {
         Laravel: {
             isAdmin: boolean;
             routes: {
-                horariosShowReservaProfesores: string;
-                // showDatosCursos: string;
-                // obtenerProfesores: string;
-                // obtenerCursos: string;
+                horariosShowReservaProfesores: string; // showDatosCursos: string; obtenerProfesores: string;  obtenerCursos: string;
             };
         };
     }
@@ -27,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const horaFinInput = document.getElementById('tiempo') as HTMLInputElement | null;
     const horaInicioInput = document.getElementById('hora_inicio') as HTMLInputElement | null;
+    const profesorSelect = document.getElementById('profesor_select') as HTMLSelectElement | null; // ID del select de profesores
     const fechaReserva = document.getElementById('fecha_reserva') as HTMLInputElement | null;
     const isAdmin = window.Laravel?.isAdmin ?? false;
 
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!isAdmin && horaFinInput) {
         horaFinInput.addEventListener('input', function (this: HTMLInputElement) {
             const selected = parseInt(this.value);
-            
+
             // Comprobar si es un número válido y si está fuera del rango
             if (this.value && (selected < 2 || selected > 4)) {
                 // Simplemente muestra el error al usuario
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.classList.add('is-invalid');   // Opcional: podrías usar una clase CSS para resaltarlo
 
             } else if (this.value) {
-                
+
                 this.classList.remove('is-invalid');// Si el valor es válido, quita la marca de error.
             }
         });
@@ -136,9 +135,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (calendarEl) {
         const calendar = new Calendar(calendarEl, {
             plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-            initialView: 'dayGridMonth',
+            // initialView: 'dayGridMonth',
+            initialView: 'timeGridWeek',
             locale: esLocale,
+            slotMinTime: '06:00:00',
+            slotMaxTime: '21:00:00', // Extendí a las 9pm para que se vea el bloque de las 8pm
+            allDaySlot: false,
+            selectable: true, // Permite seleccionar espacios vacíos
             headerToolbar: {
+                left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,listWeek'
             },
@@ -157,23 +162,46 @@ document.addEventListener('DOMContentLoaded', function () {
                 (document.getElementById('hora_fin1') as HTMLElement).textContent = end.toLocaleTimeString();
 
                 ($("#mdalSelected") as any).modal("show");
+            },
+            // 2. AL HACER CLIC EN UN ESPACIO VACÍO (Para agendar)
+            dateClick: function (info) {
+                if (fechaReserva && horaInicioInput) {
+                    const fechaSeleccionada = info.dateStr.split('T')[0];
+                    const horaSeleccionada = info.dateStr.split('T')[1].substring(0, 5);
+
+                    // Validar que no sea fecha pasada antes de abrir modal
+                    if (fechaSeleccionada < getLocalDate()) return;
+
+                    fechaReserva.value = fechaSeleccionada;
+                    horaInicioInput.value = horaSeleccionada;
+
+                    // Abrir el modal de creación (ajusta el ID según tu HTML, ej: #modalCreate)
+                    $("#claseModal").modal("show");
+                }
             }
         });
 
         calendar.render();
 
-        // Cargar eventos desde Laravel
-        $.ajax({
-            url: window.Laravel.routes.horariosShowReservaProfesores,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data: any) {
-                calendar.addEventSource(data);
-            },
-            error: function () {
-                alert('Error al obtener datos del profesor');
-            }
-        });
+// 3. ESCUCHAR CAMBIO DE PROFESOR
+        if (profesorSelect) {
+            profesorSelect.addEventListener('change', function() {
+                const selectedId = this.value;
+
+                // Limpiar eventos actuales
+                calendar.removeAllEventSources();
+
+                if (selectedId) {
+                    // Cargar nuevos eventos con el parámetro profesor_id
+                    calendar.addEventSource({
+                        url: window.Laravel.routes.horariosShowReservaProfesores,
+                        extraParams: {
+                            profesor_id: selectedId
+                        }
+                    });
+                }
+            });
+        }
     }
 
     // ---------------------------------------
@@ -196,6 +224,6 @@ document.addEventListener('DOMContentLoaded', function () {
             paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
         }
     });
-    
-    
+
+
 }); 

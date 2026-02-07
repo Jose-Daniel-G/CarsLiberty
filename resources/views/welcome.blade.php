@@ -3,9 +3,10 @@
 <html>
 <head>
 
-<title>Corsa Racer a Gaming Category Flat Bootstrap Responsive Website Template | :: W3layouts</title>
+<title> Libertad Landing Page </title>
 
 <!-- For-Mobile-Apps -->
+	<link rel="icon" href="template/images/favicon_io/favicon.ico" type="image/x-icon">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="keywords" content="Corsa Racer a Responsive Web Template, Bootstrap Web Templates, Flat Web Templates, Android Compatible Web Template, Smartphone Compatible Web Template, Free Webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola Web Design" />
