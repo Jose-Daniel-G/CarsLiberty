@@ -1,0 +1,99 @@
+/* ===================================================================
+   ESTILOS PARA EVENTOS DE DISPONIBILIDAD EN FULLCALENDAR
+   =================================================================== */
+
+/* ✅ CRÍTICO: Hacer los eventos de fondo MUCHO más visibles */
+.fc .fc-bg-event {
+    opacity: 1 !important;
+    background-color: rgba(99, 179, 237, 0.2) !important;
+    border: 2px solid #63b3ed !important;
+    border-radius: 4px;
+    min-height: 40px !important;
+}
+
+/* Asegurar que los slots tengan altura suficiente */
+.fc-timegrid-slot {
+    height: 3.5em !important;
+}
+
+/* Estilo para el contenedor del calendario */
+#calendar {
+    min-height: 600px;
+}
+
+/* Labels de eventos de fondo - ahora gestionados por eventDidMount */
+.fc-bg-event-label {
+    /* Estilos aplicados inline en el JS */
+}
+
+/* Asegurar que eventos normales estén por encima del fondo */
+.fc-timegrid-event:not(.fc-bg-event) {
+    z-index: 5 !important;
+    border: 2px solid !important;
+}
+
+/* Eventos normales - Reservas */
+.fc-timegrid-event {
+    border-radius: 4px !important;
+}
+
+/* Mejorar legibilidad del texto en eventos */
+.fc-event-title,
+.fc-event-time {
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Efecto hover para eventos clickeables */
+.fc-event:not(.fc-bg-event):hover {
+    opacity: 0.9;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+/* Asegurar que el contenido del evento sea visible */
+.fc-event-main {
+    padding: 4px 6px !important;
+}
+
+/* Vista de semana - asegurar altura mínima para celdas */
+.fc-timegrid-event-harness {
+    min-height: 30px !important;
+}
+
+/* Mejorar contraste de los eventos de fondo en hover */
+.fc-bg-event:hover {
+    background-color: rgba(99, 179, 237, 0.3) !important;
+}
+
+/* Responsive: Ajustes para móviles */
+@media (max-width: 768px) {
+    .fc-bg-event-label {
+        font-size: 9px !important;
+        padding: 2px 4px !important;
+    }
+    
+    .fc-event-title {
+        font-size: 10px !important;
+    }
+    
+    .fc-timegrid-slot {
+        height: 2.5em !important;
+    }
+}
+
+/* Vista de día - espaciado mejorado */
+.fc-timeGridDay-view .fc-timegrid-slot {
+    height: 4em !important;
+}
+
+/* Asegurar que el eje del tiempo sea visible */
+.fc-timegrid-axis {
+    border-right: 1px solid #ddd !important;
+}
+
+/* Debug: Resaltar eventos de fondo para verificación */
+/* Descomenta esta línea si quieres ver un borde rojo durante pruebas */
+/* .fc-bg-event { border: 3px solid red !important; } */

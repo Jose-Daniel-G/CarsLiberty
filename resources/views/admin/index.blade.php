@@ -14,7 +14,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{ $total_configuraciones }}</h3>
+                        <h3>{{ $t_configuraciones }}</h3>
                         <p>Configuracion</p>
                     </div>
                     <div class="icon">
@@ -30,7 +30,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{ $total_secretarias }}</h3>
+                        <h3>{{ $t_secretarias }}</h3>
                         <p>Programador</p>
                     </div>
                     <div class="icon">
@@ -46,7 +46,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>{{ $total_clientes }}</h3>
+                        <h3>{{ $t_clientes }}</h3>
                         <p>Clientes</p>
                     </div>
                     <div class="icon">
@@ -62,7 +62,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>{{ $total_cursos }}</h3>
+                        <h3>{{ $t_cursos }}</h3>
                         <p>Cursos</p>
                     </div>
                     <div class="icon">
@@ -78,7 +78,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-primary">
                     <div class="inner">
-                        <h3>{{ $total_profesores }}</h3>
+                        <h3>{{ $t_profesores }}</h3>
                         <p>Profesores</p>
                     </div>
                     <div class="icon"><i class="fa-solid fa-chalkboard-user"></i>
@@ -93,7 +93,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-secondary">
                     <div class="inner">
-                        <h3>{{ $total_horarios }}</h3>
+                        <h3>{{ $t_horarios }}</h3>
 
                         <p>{{ __('actions.schedules') }}</p>
                     </div>
@@ -110,7 +110,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-secondary">
                     <div class="inner">
-                        <h3>{{ $total_agendas }}</h3>
+                        <h3>{{ $t_agendas }}</h3>
 
                         <p>Reservas</p>
                     </div>
@@ -126,7 +126,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{ $total_vehiculos }}</h3>
+                        <h3>{{ $t_vehiculos }}</h3>
 
                         <p>Vehiculos</p>
                     </div>
@@ -149,7 +149,7 @@
                             <br>
                         @else
                             <div>
-                                <h3>{{ $total_cursos }}</h3>
+                                <h3>{{ $t_cursos }}</h3>
                                 <p>Cursos </p>
                             </div>
                         @endif
@@ -180,7 +180,7 @@
                             <label for="curso_id">Cursos </label><b class="text-danger">*</b>
                         </div>
                         <div class="col-md-4">
-                            <select name="curso_id" id="profesor_select" class="form-control">
+                            <select name="curso_id" id="profesor_id" class="form-control">
                                 <option value="" selected disabled>Seleccione</option>
                                 @foreach ($profesorSelect as $curso)
                                     <option value="{{ $curso->id }}">
@@ -276,20 +276,7 @@
     <script>
         // ---------------------------------------
         // Cargar contenido dinámico en selects
-        // ---------------------------------------
-        $('#profesor_select').on('change', function() {
-            const curso_id = $(this).val();
-            console.log(curso_id);
-            const url = "{{ route('admin.horarios.show_datos_cursos', ':id') }}".replace(':id', curso_id);
-            if (!curso_id) {
-                $('#curso_info').html('');
-                return;
-            }
-            $.get(url, function(data) {
-                $('#curso_info').html(data);
-            }).fail(() => alert('Error al obtener datos del curso'));
-        });
-
+        // --------------------------------------- 
         $('#cursoid').on('change', function() {
             const cursoid = $(this).val();
             if (!cursoid) return;

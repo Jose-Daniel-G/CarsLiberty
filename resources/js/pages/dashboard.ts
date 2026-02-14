@@ -7,223 +7,129 @@ import esLocale from '@fullcalendar/core/locales/es';
 
 export { };
 
-declare const Swal: any; // Si usas SweetAlert2 por CDN, deja esto. Si lo importas con npm, quítalo e importa arriba: import Swal from 'sweetalert2';
-declare const $: any; // Asegúrate de tener jQuery disponible para los modales de Bootstrap
+declare const Swal: any; 
+declare const $: any; 
 
 declare global {
     interface Window {
         Laravel: {
             isAdmin: boolean;
             routes: {
-                horariosShowReservaProfesores: string; // showDatosCursos: string; obtenerProfesores: string;  obtenerCursos: string;
+                horariosShowReservaProfesores: string;
             };
         };
     }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
     const horaFinInput = document.getElementById('tiempo') as HTMLInputElement | null;
     const horaInicioInput = document.getElementById('hora_inicio') as HTMLInputElement | null;
-    const profesorSelect = document.getElementById('profesor_select') as HTMLSelectElement | null; // ID del select de profesores
+    const profesorSelect = document.getElementById('profesor_id') as HTMLSelectElement | null; 
     const fechaReserva = document.getElementById('fecha_reserva') as HTMLInputElement | null;
-    const isAdmin = window.Laravel?.isAdmin ?? false;
 
-    // ---------------------------------------
-    // Validación de cantidad de horas
-    // --------------------------------------- 
-    if (!isAdmin && horaFinInput) {
-        horaFinInput.addEventListener('input', function (this: HTMLInputElement) {
-            const selected = parseInt(this.value);
-
-            // Comprobar si es un número válido y si está fuera del rango
-            if (this.value && (selected < 2 || selected > 4)) {
-                // Simplemente muestra el error al usuario
-                Swal.fire({
-                    text: "Solo puede agendar hasta máximo 4 horas y mínimo 2",
-                    icon: "error",
-                    toast: true, // Sugerencia: usa toast para ser menos intrusivo
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-                this.classList.add('is-invalid');   // Opcional: podrías usar una clase CSS para resaltarlo
-
-            } else if (this.value) {
-
-                this.classList.remove('is-invalid');// Si el valor es válido, quita la marca de error.
-            }
-        });
-    }
-
-    // ---------------------------------------
-    // Función auxiliar: fecha local en YYYY-MM-DD
-    // ---------------------------------------
-    function getLocalDate(): string {
-        const today = new Date();
-        return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    }
-
-    // ---------------------------------------
-    // Validar fecha pasada
-    // ---------------------------------------
-    if (fechaReserva) {
-        fechaReserva.addEventListener('change', function (this: HTMLInputElement) {
-            if (this.value < getLocalDate()) {
-                this.value = '';
-                Swal.fire({
-                    title: "No es posible",
-                    text: "No se puede seleccionar una fecha pasada",
-                    icon: "warning"
-                });
-            }
-        });
-    }
-
-    // ---------------------------------------
-    // Validar hora
-    // ---------------------------------------
-    if (horaInicioInput) {
-        horaInicioInput.addEventListener('change', function (this: HTMLInputElement) {
-            let selectedTime = this.value;
-            const now = new Date();
-
-            if (selectedTime) {
-                const [hour] = selectedTime.split(':');
-                selectedTime = `${hour.padStart(2, '0')}:00`;
-                this.value = selectedTime;
-
-                const [selectedHour, selectedMinutes] = selectedTime.split(':').map(Number);
-
-                // Rango permitido (06:00 - 20:00)
-                if (selectedHour < 6 || selectedHour > 20) {
-                    this.value = '';
-                    Swal.fire({
-                        title: "No es posible",
-                        text: "Seleccione una hora entre las 06:00 am y las 8:00 pm.",
-                        icon: "warning"
-                    });
-                    return;
-                }
-
-                // Verificar si es la fecha de hoy
-                const selectedDate = fechaReserva?.value ?? null;
-                const today = now.toISOString().slice(0, 10);
-
-                if (selectedDate === today) {
-                    const currentHour = now.getHours();
-                    const currentMinutes = now.getMinutes();
-
-                    if (
-                        selectedHour < currentHour ||
-                        (selectedHour === currentHour && selectedMinutes < currentMinutes)
-                    ) {
-                        Swal.fire({
-                            text: "No puede seleccionar una hora que ya ha pasado.",
-                            icon: "error"
-                        });
-                    }
-                }
-            }
-        });
-    }
-
-    // ---------------------------------------
-    // FullCalendar
-    // ---------------------------------------
     const calendarEl = document.getElementById('calendar');
-    if (calendarEl) {
-        const calendar = new Calendar(calendarEl, {
-            plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-            // initialView: 'dayGridMonth',
-            initialView: 'timeGridWeek',
-            locale: esLocale,
-            slotMinTime: '06:00:00',
-            slotMaxTime: '21:00:00', // Extendí a las 9pm para que se vea el bloque de las 8pm
-            allDaySlot: false,
-            selectable: true, // Permite seleccionar espacios vacíos
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,listWeek'
+    if (!calendarEl) return;
+
+    const calendar = new Calendar(calendarEl, {
+        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+        initialView: 'timeGridWeek',
+        locale: esLocale,
+        slotMinTime: '06:00:00',
+        slotMaxTime: '21:00:00',
+        allDaySlot: false,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
+        // Esto permite que los eventos se vean correctamente
+        eventDisplay: 'block',
+        // Esto ayuda a que los eventos de fondo no se vean "transparentes" si hay errores
+        nextDayThreshold: '00:00:00',
+                    // Forzar que se vean los títulos en eventos de fondo (Disponibilidad)
+            eventContent: function(arg) {
+                if (arg.event.display === 'background') {
+                    let container = document.createElement('div');
+                    container.classList.add('fc-bg-event-label');
+                    container.style.fontSize = '11px';
+                    container.style.padding = '4px';
+                    container.style.fontWeight = 'bold';
+                    container.style.color = '#555';
+                    container.innerText = arg.event.title;
+                    return { domNodes: [container] };
+                }
+                return null; // Reservas normales usan renderizado estándar
             },
-            events: [],
+
             eventClick: function (info: any) {
+                if (info.event.display === 'background') return;
+
                 const agenda = info.event;
-                const start = agenda.start;
-                const end = agenda.end;
-                const prof = agenda.extendedProps.profesor || {};
-                const cliente = agenda.extendedProps.cliente || {};
+                const props = agenda.extendedProps;
 
-                (document.getElementById('nombres_cliente') as HTMLElement).textContent = `${cliente.nombres || 'No disponible'} ${cliente.apellidos || ''}`;
-                (document.getElementById('nombres_teacher') as HTMLElement).textContent = `${prof.nombres || 'No disponible'} ${prof.apellidos || ''}`;
-                (document.getElementById('fecha_reserva1') as HTMLElement).textContent = start.toISOString().split('T')[0];
-                (document.getElementById('hora_inicio1') as HTMLElement).textContent = start.toLocaleTimeString();
-                (document.getElementById('hora_fin1') as HTMLElement).textContent = end.toLocaleTimeString();
+                // Llenar modal de detalles
+                $('#nombres_cliente').text(props.cliente?.nombres || 'N/A');
+                $('#nombres_teacher').text(props.profesor?.nombres || 'N/A');
+                $('#fecha_reserva1').text(agenda.startStr.split('T')[0]);
+                $('#hora_inicio1').text(agenda.start?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+                $('#hora_fin1').text(agenda.end?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
 
-                ($("#mdalSelected") as any).modal("show");
+                $("#mdalSelected").modal("show");
             },
-            // 2. AL HACER CLIC EN UN ESPACIO VACÍO (Para agendar)
+
             dateClick: function (info) {
-                if (fechaReserva && horaInicioInput) {
-                    const fechaSeleccionada = info.dateStr.split('T')[0];
-                    const horaSeleccionada = info.dateStr.split('T')[1].substring(0, 5);
+                const today = new Date().toISOString().split('T')[0];
+                const fechaSeleccionada = info.dateStr.split('T')[0];
+                
+                if (fechaSeleccionada < today) return;
 
-                    // Validar que no sea fecha pasada antes de abrir modal
-                    if (fechaSeleccionada < getLocalDate()) return;
-
-                    fechaReserva.value = fechaSeleccionada;
-                    horaInicioInput.value = horaSeleccionada;
-
-                    // Abrir el modal de creación (ajusta el ID según tu HTML, ej: #modalCreate)
-                    $("#claseModal").modal("show");
+                if (fechaReserva) fechaReserva.value = fechaSeleccionada;
+                if (horaInicioInput && info.dateStr.includes('T')) {
+                    horaInicioInput.value = info.dateStr.split('T')[1].substring(0, 5);
                 }
+
+                $("#claseModal").modal("show");
             }
-        });
-
-        calendar.render();
-
-// 3. ESCUCHAR CAMBIO DE PROFESOR
-        if (profesorSelect) {
-            profesorSelect.addEventListener('change', function() {
-                const selectedId = this.value;
-
-                // Limpiar eventos actuales
-                calendar.removeAllEventSources();
-
-                if (selectedId) {
-                    // Cargar nuevos eventos con el parámetro profesor_id
-                    calendar.addEventSource({
-                        url: window.Laravel.routes.horariosShowReservaProfesores,
-                        extraParams: {
-                            profesor_id: selectedId
-                        }
-                    });
-                }
-            });
-        }
-    }
-
-    // ---------------------------------------
-    // DataTables
-    // ---------------------------------------
-    new (window as any).DataTable('#reservas', {
-        responsive: true,
-        autoWidth: false,
-        dom: 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
-        language: {
-            emptyTable: "No hay datos disponibles en la tabla",
-            info: "Mostrando _START_ a _END_ de _TOTAL_ reservas",
-            infoEmpty: "Mostrando 0 a 0 de 0 reservas",
-            infoFiltered: "(filtrado de _MAX_ reservas totales)",
-            lengthMenu: "Mostrar _MENU_ reservas",
-            loadingRecords: "Cargando...",
-            search: "Buscar:",
-            zeroRecords: "No se encontraron registros",
-            paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
-        }
     });
 
+    calendar.render();
 
-}); 
+    if (profesorSelect) {
+        $(profesorSelect).on('change', function (e: any) {
+            const selectedId = e.target.value;
+
+            // 1. Limpiar fuentes previas
+            calendar.removeAllEventSources();
+
+            if (selectedId) {
+                // 2. Cargar nuevos datos
+                calendar.addEventSource({
+                    url: window.Laravel.routes.horariosShowReservaProfesores,
+                    method: 'GET',
+                    extraParams: {
+                        profesor_id: selectedId
+                    },
+                    success: function () {
+                        console.log("Eventos cargados con éxito");
+                    },
+                    failure: function (error: any) {
+                        console.error("Error de carga:", error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudieron cargar los horarios. Verifica la consola del navegador (F12).'
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // --- DATATABLES (Si existe en la vista) ---
+    if (document.getElementById('reservas')) {
+        new (window as any).DataTable('#reservas', {
+            responsive: true,
+            language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' }
+        });
+    }
+});

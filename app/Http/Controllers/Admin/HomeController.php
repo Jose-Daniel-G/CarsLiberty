@@ -82,61 +82,63 @@ class HomeController extends Controller
 
 
 // 1. Agrega (Request $request) para poder leer lo que envía JS
-public function show_reserva_profesores(Request $request) 
-{
-    try {
-        // Capturamos el ID que viene de FullCalendar (extraParams)
-        $profesorId = $request->query('profesor_id');
+    // 1. Agrega (Request $request) para poder leer lo que envía JS
+    public function show_reserva_profesores(Request $request, $id = null)
+    {
+        // Si viene de la ruta es $id, si viene de FullCalendar es profesor_id
+        $profesorId = $id ?? $request->query('profesor_id');
 
-        $query = Agenda::with(['profesor', 'cliente']);
+        if (!$profesorId) return response()->json([]);
 
-        // Si el usuario es administrativo
-        if (Auth::user()->hasAnyRole(['superAdmin', 'admin', 'secretaria'])) {
-            
-            // Si seleccionó un profesor, filtramos por él. Si no, traemos todo.
-            if ($profesorId) {
-                $query->where('profesor_id', $profesorId);
-            }
-            
-            $agendas = $query->get();
+        // Disponibilidad (Fondo)
+        $horarios = Horario::whereHas('profesores', function ($q) use ($profesorId) {
+            $q->where('profesor_id', $profesorId);
+        })->get();
 
-        } else {
-            // SI ES UN ESTUDIANTE:
-            // Queremos ver las mías (en verde) Y las de otros (en azul/gris) del profesor seleccionado
-            if (!$profesorId) {
-                return response()->json([]); // Si no hay profesor seleccionado, no mostramos nada
-            }
+        // Agendas (Eventos visibles)
+        $agendas = DB::table('agendas')
+            ->join('cursos', 'agendas.curso_id', '=', 'cursos.id')
+            ->where('agendas.profesor_id', $profesorId)
+            ->select('agendas.id', 'agendas.start', 'agendas.end', 'cursos.nombre as curso_nombre')
+            ->get();
 
-            $agendas = $query->where('profesor_id', $profesorId)->get();
+        $eventos = [];
+
+        // Mapeo para disponibilidad
+        $dias_map = ['LUNES' => [1], 'MARTES' => [2], 'MIERCOLES' => [3], 'JUEVES' => [4], 'VIERNES' => [5], 'SABADO' => [6], 'DOMINGO' => [0]];
+
+        foreach ($horarios as $h) {
+            // Usamos carbon o date para asegurar que solo enviamos "HH:mm:ss"
+            $inicio = date('H:i:s', strtotime($h->hora_inicio));
+            $fin = date('H:i:s', strtotime($h->tiempo));
+
+            $eventos[] = [
+                'daysOfWeek' => $dias_map[strtoupper($h->dia)] ?? [],
+                'startTime' => $inicio, // Ahora enviará ej: "11:00:00"
+                'endTime' => $fin,     // Ahora enviará ej: "19:00:00"
+                'display' => 'background',
+                'color' => '#d4edda'
+            ];
         }
 
-        // --- FORMATEO PARA FULLCALENDAR ---
-        // Esto es vital para que se pinten los colores que quieres
-        $eventos = $agendas->map(function ($agenda) {
-            $es_mio = $agenda->cliente->user_id == Auth::id();
-
-            return [
-                'id' => $agenda->id,
-                'title' => $es_mio ? "Mi Clase" : "Ocupado",
-                'start' => $agenda->start, // Asegúrate de que sean objetos Carbon o strings ISO
-                'end' => $agenda->end,
-                'backgroundColor' => $es_mio ? '#28a745' : '#007bff', // Verde mío, Azul otros
-                'borderColor' => $es_mio ? '#1e7e34' : '#0062cc',
+        foreach ($agendas as $a) {
+            $eventos[] = [
+                'id' => $a->id,
+                'title' => $a->curso_nombre,
+                'start' => $a->start,
+                'end' => $a->end,
+                'backgroundColor' => '#ff0000',
+                'borderColor' => '#b30000',
                 'textColor' => '#ffffff',
                 'extendedProps' => [
-                    'profesor' => $agenda->profesor,
-                    'cliente' => $es_mio ? $agenda->cliente : ['nombres' => 'No disponible'],
-                    'es_mio' => $es_mio
+                    'tipo' => 'agenda',
+                    'cliente' => $a->cliente_nombre ?? 'Estudiante'
                 ]
             ];
-        });
+        }
 
         return response()->json($eventos);
-
-    } catch (\Exception $exception) {
-        return response()->json(['mensaje' => 'Error: ' . $exception->getMessage()], 500);
     }
-}
 
     public function message_landing_page(Request $request)
     {
