@@ -79,22 +79,25 @@ document.addEventListener('DOMContentLoaded', function () {
             return { domNodes: [mainContainer] };
         },
 
-        eventClick: function (info: any) {
-            if (info.event.display === 'background') return;
+            eventClick: function (info: any) {
+                const agenda = info.event;
+                const start = agenda.start;
+                const end = agenda.end;
+                const prof = agenda.extendedProps.profesor || {};
+                const cliente = agenda.extendedProps.cliente || {};
 
-            const agenda = info.event;
-            const props = agenda.extendedProps;
-            // Acceder a los datos según el JSON que enviamos arriba
-            const prof = props.profesor || {};
-            const cliente = props.cliente || {};
-            // Llenar modal de detalles
-            $('#nombres_cliente').text(`${cliente.nombres || ''} ${cliente.apellidos || ''}`);
-            $('#nombres_teacher').text(`${prof.nombres || ''} ${prof.apellidos || ''}`);
-            $('#fecha_reserva1').text(agenda.startStr.split('T')[0]);
-            $('#hora_inicio1').text(agenda.start?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-            $('#hora_fin1').text(agenda.end?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                (document.getElementById('nombres_cliente') as HTMLElement).textContent = `${cliente.nombres || 'No disponible'} ${cliente.apellidos || ''}`;
+                (document.getElementById('nombres_teacher') as HTMLElement).textContent = `${prof.nombres || 'No disponible'} ${prof.apellidos || ''}`;
+                (document.getElementById('fecha_reserva1') as HTMLElement).textContent = start.toISOString().split('T')[0];
+                (document.getElementById('hora_inicio1') as HTMLElement).textContent = start.toLocaleTimeString();
+                (document.getElementById('hora_fin1') as HTMLElement).textContent = end.toLocaleTimeString();
 
-            $("#mdalSelected").modal("show");
+                ($("#mdalSelected") as any).modal("show");
+            },
+        eventDidMount: function(info) {
+            if (info.event.extendedProps.curso) {
+                info.el.title = info.event.extendedProps.curso;
+            }
         },
 
         dateClick: function (info) {

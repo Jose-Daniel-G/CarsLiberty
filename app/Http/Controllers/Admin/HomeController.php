@@ -90,26 +90,40 @@ class HomeController extends Controller
             $profesorId = $id ?? $request->query('profesor_id');
             $eventos = [];
 
-            // 1. DETERMINAR QUÉ AGENDAS BUSCAR
+            // 1. DETERMINAR QUÉ AGENDAS BUSCAR 
             if ($profesorId) {
-                // Si hay profesor seleccionado (vía select), traemos TODAS las de ese profesor
+                // 1. Cargamos al profesor con sus horarios Y los cursos asociados a esos horarios
+                $profesor = Profesor::with(['horarios.cursos'])->find($profesorId);
+
+                // 2. Traemos las agendas (Eventos Rojos)
                 $agendas = Agenda::with(['profesor.user', 'cliente.user', 'curso'])
                     ->where('profesor_id', $profesorId)
                     ->get();
 
-                // Aprovechamos para traer la DISPONIBILIDAD (Fondo Verde) del profesor
-                $horarios = Horario::whereHas('profesores', function ($q) use ($profesorId) {
-                    $q->where('profesor_id', $profesorId);
-                })->get();
-
                 $dias_map = ['LUNES' => [1], 'MARTES' => [2], 'MIERCOLES' => [3], 'JUEVES' => [4], 'VIERNES' => [5], 'SABADO' => [6], 'DOMINGO' => [0]];
-                foreach ($horarios as $h) {
+
+
+                // 3. Mapeo de Disponibilidad (Eventos Verdes)
+                foreach ($profesor->horarios as $h) {
+                    // Buscamos el curso asociado a este profesor y este horario específico
+                    // a través de la relación que definiste en el modelo
+                    $cursoAsociado = $profesor->cursos()
+                        ->wherePivot('horario_id', $h->id)
+                        ->first();
+
+                    $nombreCurso = $cursoAsociado ? $cursoAsociado->nombre : 'Clase';
+
                     $eventos[] = [
                         'daysOfWeek' => $dias_map[strtoupper($h->dia)] ?? [],
                         'startTime' => date('H:i:s', strtotime($h->hora_inicio)),
                         'endTime' => date('H:i:s', strtotime($h->tiempo)),
                         'display' => 'background',
-                        'color' => '#d4edda'
+                        'color' => '#d4edda',
+                        'title' => 'Disponible: ' . $nombreCurso,
+                        'extendedProps' => [
+                            'tipo' => 'disponibilidad',
+                            'curso' => $nombreCurso
+                        ]
                     ];
                 }
             } elseif ($user->hasRole('cliente')) {
@@ -117,7 +131,6 @@ class HomeController extends Controller
                 $agendas = Agenda::with(['profesor.user', 'cliente.user', 'curso'])
                     ->where('cliente_id', $user->cliente->id)
                     ->get();
-                    
             } else {
                 // Si no hay profesor y no es cliente (ej. admin sin filtrar), no mostramos nada
                 return response()->json([]);
@@ -144,22 +157,22 @@ class HomeController extends Controller
                     'id' => $a->id,
                     'title' => $titulo,
                     'start' => $a->start,
-                    'end' => $a->end,
+                    'end' => $a->end->addMinutes(60), // Asumiendo duración de 30 mins, ajusta según tu lógica
                     'backgroundColor' => $colorFondo,
                     'borderColor' => $colorBorde,
                     'textColor' => '#ffffff',
+                    'display' => 'block',
+
                     'extendedProps' => [
-                        'tipo' => 'agenda',
-                        'esPropia' => $esMiReserva,
-                        'curso' => ($esMiReserva || $esAdmin) ? ($a->curso->nombre ?? 'N/A') : 'Ocupado',
                         'profesor' => [
-                            'nombres' => $a->profesor->user->nombres ?? '',
-                            'apellidos' => $a->profesor->user->apellidos ?? ''
+                            'nombres'   => $a->profesor->nombres ?? 'No asignado',
+                            'apellidos' => $a->profesor->apellidos ?? '',
                         ],
-                        'cliente' => ($esMiReserva || $esAdmin) ? [
-                            'nombres' => $a->cliente->user->nombres ?? '',
-                            'apellidos' => $a->cliente->user->apellidos ?? ''
-                        ] : null
+                        'cliente' => [
+                            'nombres'   => $a->cliente->nombres ?? 'No asignado',
+                            'apellidos' => $a->cliente->apellidos ?? '',
+                        ],
+                        'tipo' => 'reserva'
                     ]
                 ];
             }
@@ -169,7 +182,19 @@ class HomeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
+    private function getDiaNumero($dia)
+    {
+        $map = [
+            'DOMINGO' => [0],
+            'LUNES' => [1],
+            'MARTES' => [2],
+            'MIERCOLES' => [3],
+            'JUEVES' => [4],
+            'VIERNES' => [5],
+            'SABADO' => [6]
+        ];
+        return $map[$dia] ?? [];
+    }
     public function message_landing_page(Request $request)
     {
         $valid[] = $request->validate([

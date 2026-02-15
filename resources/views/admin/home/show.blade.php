@@ -4,13 +4,12 @@
 @section('css')
 @stop
 @section('content_header')
-    <h1>Listado de reservas</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-outline card-primary">
+            <div class="card card-outline card-dark">
                 <div class="card-header">
                     <h3 class="card-title">Reservas registradas</h3>
                 </div>
@@ -41,8 +40,10 @@
                             @foreach ($agendas as $agenda)
                                 <tr>
                                     <td scope="row">{{ $contador++ }}</td>
-                                    <td scope="row">{{ $agenda->profesor->nombres . ' ' . $agenda->profesor->apellidos }}</td>
-                                    <td scope="row">{{ $agenda->cliente->nombres . ' ' . $agenda->cliente->apellidos }}</td>
+                                    <td scope="row">{{ $agenda->profesor->nombres . ' ' . $agenda->profesor->apellidos }}
+                                    </td>
+                                    <td scope="row">{{ $agenda->cliente->nombres . ' ' . $agenda->cliente->apellidos }}
+                                    </td>
                                     <td scope="row" class="text-center">{{ $agenda->curso->nombre }}</td>
                                     <td scope="row" class="text-center">{{ $agenda->start->format('d M, Y') }}</td>
                                     <td scope="row" class="text-center">{{ $agenda->start->format('H:i') }}</td>
@@ -59,19 +60,15 @@
                                                     data-id="{{ $agenda->id }}" data-toggle="modal" data-target="#editModal"
                                                     title="Editar"> <i class="fas fa-edit"></i></a>
                                                 {{-- <a href=""  class="btn btn-info btn-sm">Ver</a> --}}
-                                                <div class="btn-group" role="group" aria-label="basic example">
-                                                    <form id="delete-form-{{ $agenda->id }}"
-                                                        action="{{ route('admin.agendas.destroy', $agenda->id) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                <button type="button" class="btn btn-danger btn-delete"
-                                                    data-id="{{ $agenda->id }}"
-                                                    data-text="¿Estás seguro de eliminar esta  reserva?">
-                                                    <i class="fas fa-trash"></i>
-                                        </form>
-                                                    </form>
-                                                </div>
+                                                <form id="delete-form-{{ $agenda->id }}"
+                                                    action="{{ route('admin.agendas.destroy', $agenda->id) }}" method="POST"
+                                                    class="d-inline form-eliminar"> @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                        data-id="{{ $agenda->id }}" title="Eliminar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     @endcan
@@ -97,12 +94,30 @@
                 extend: 'collection',
                 text: 'Reportes',
                 orientation: 'landscape',
-                buttons: [{extend: 'copyHtml5',text: '<i class="bi bi-clipboard-check"></i> Copiar'}, // Added btn-sm for better consistency
-                          {extend: 'csvHtml5',text: '<i class="bi bi-filetype-csv"></i> CSV'},
-                          {extend: 'excelHtml5',text: '<i class="bi bi-file-earmark-excel"></i> Excel'},
-                          {extend: 'pdfHtml5',text: '<i class="bi bi-filetype-pdf"></i> PDF'},
-                          {extend: 'print',text: '<i class="bi bi-printer"></i> Imprimir' },
-                          {extend: 'colvis'}],
+                buttons: [{
+                        extend: 'copyHtml5',
+                        text: '<i class="bi bi-clipboard-check"></i> Copiar'
+                    }, // Added btn-sm for better consistency
+                    {
+                        extend: 'csvHtml5',
+                        text: '<i class="bi bi-filetype-csv"></i> CSV'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="bi bi-file-earmark-excel"></i> Excel'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="bi bi-filetype-pdf"></i> PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer"></i> Imprimir'
+                    },
+                    {
+                        extend: 'colvis'
+                    }
+                ],
             }, ],
             "language": {
                 "decimal": "",

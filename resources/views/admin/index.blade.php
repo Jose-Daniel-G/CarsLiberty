@@ -3,6 +3,17 @@
 @section('title', 'CarsLiberty'){{-- @section('plugins.Sweetalert2', true) --}}
 @section('css')
     @vite('resources/css/items.css')
+<style>
+    /* Esto "obliga" a FullCalendar a mostrar el título en el área verde */
+    .fc-bg-event .fc-event-title {
+        display: block !important;
+        padding: 5px 10px !important;
+        font-weight: bold !important;
+        color: #155724 !important; /* Verde oscuro */
+        font-size: 12px !important;
+        z-index: 1 !important;
+    }
+</style>
 @stop
 
 @section('content_header'){{-- <h1><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}</h1> --}}
