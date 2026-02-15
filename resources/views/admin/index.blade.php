@@ -176,18 +176,20 @@
                                 <i class="bi bi-calendar-check"></i>Ver las reservas
                             </a>
                         </div>
+                        @can('admin.horarios.show')
                         <div class="col-md-2 d-flex justify-content-end">
                             <label for="curso_id">Cursos </label><b class="text-danger">*</b>
                         </div>
-                        <div class="col-md-4">
-                            <select name="curso_id" id="profesor_id" class="form-control">
-                                <option value="" selected disabled>Seleccione</option>
-                                @foreach ($profesorSelect as $curso)
-                                    <option value="{{ $curso->id }}">
-                                        {{ $curso->cursos . ' - ' . $curso->nombres }} </option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <div class="col-md-4">
+                                <select name="curso_id" id="profesor_id" class="form-control">
+                                    <option value="" selected disabled>Seleccione</option>
+                                    @foreach ($profesorSelect as $curso)
+                                        <option value="{{ $curso->id }}">
+                                            {{ $curso->cursos . ' - ' . $curso->nombres }} </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endcan
 
                     </div>
                 </div>

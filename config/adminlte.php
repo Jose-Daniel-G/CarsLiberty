@@ -343,29 +343,13 @@ return [
             'icon' => 'fas fa-laptop',
             // 'label_color' => 'warning',
             'can' => 'admin.secretarias.index',
-            'submenu' => [
-                // ['text' => 'Creacion de programador','icon' => 'far fa-circle nav-icon','route' => 'admin.secretarias.create',],
-                [
-                    'text' => 'Listado de programador',
-                    'icon' => 'far fa-circle nav-icon',
-                    'route' => 'admin.secretarias.index',
-                ],
-
-            ],
+            'route' => 'admin.secretarias.index',
         ],
         [
             'text' => 'Clientes',
             'icon' => 'fas fa-users mr-2',
             'can' => 'admin.clientes.index',
-            'submenu' => [
-                // ['text' => 'Creacion de clientes','icon'=> 'far fa-circle nav-icon','route' => 'admin.clientes.create',],
-                [
-                    'text' => 'Listado de clientes',
-                    'icon' => 'far fa-circle nav-icon',
-                    'route' => 'admin.clientes.index',
-                ],
-
-            ],
+            'route' => 'admin.clientes.index',
         ],
         [
             'text' => 'Cursos',
@@ -373,29 +357,13 @@ return [
             // 'label' => 'check cr activo',
             // 'label_color' => 'primary',
             'can' => 'admin.cursos.index',
-            'submenu' => [
-                // ['text' => 'Creacion de cursos','icon'=> 'far fa-circle nav-icon','route' => 'admin.cursos.create', ],
-                [
-                    'text' => 'Listado de cursos',
-                    'icon'        => 'far fa-circle nav-icon',
-                    'route' => 'admin.cursos.index',
-                ],
-
-            ],
+            'route' => 'admin.cursos.index',
         ],
         [
             'text' => 'Profesores',
             'icon' => 'fa-solid fa-chalkboard-user',
             'can' => 'admin.profesores.index',
-            'submenu' => [
-                // ['text' => 'Creacion de profesores','icon' => 'far fa-circle nav-icon','route' => 'admin.profesores.create', ],
-                [
-                    'text'  => 'Listado de profesores',
-                    'icon'  => 'far fa-circle nav-icon',
-                    'route' => 'admin.profesores.index',
-                ],
-                // [ 'text'  => 'Reportes',  'icon'  => 'far fa-circle nav-icon', 'route' => 'admin.profesores.reportes', ],
-            ],
+            'route' => 'admin.profesores.index',
         ],
         [
             'text' => 'Horarios',
@@ -468,49 +436,49 @@ return [
             'icon' => 'fa-solid fa-shop',
             'can'  => 'admin.config.index',
             'submenu' => [
-                    [
-                        'text' => 'Familias de productos',
-                        'icon'        => 'fa-solid fa-box-open',
-                        'url' => 'admin.families.index',
-                    ],
-                    [
-                        'text' => 'Categorias',
-                        'icon' => 'fa-solid fa-tags', 
-                        'url' => 'admin.categories.index',
-                    ],
-                    [
-                        'text' => 'Subcategorias',
-                        'icon' => 'fa-solid fa-tag',
-                        'url' => 'admin.subcategories.index',
-                    ],
-                    [
-                        'text' => 'Productos',
-                        'icon' => 'fa-solid fa-box',
-                        'url' => 'admin.products.index',
-                    ],
-                    [
-                        'text' => 'Portadas',
-                        'icon' => 'fa-solid fa-images', 
-                        'url' => 'admin.covers.index',
-                    ],
-                    [
-                        'text' => 'Conductores',
-                        'icon' => 'fa-solid fa-car',
-                        'url'  => '#',
-                        // 'route' => 'admin.drives.index',
-                    ],
-                    [
-                        'text' => 'Ordenes',
-                        'icon' => 'fa-solid fa-shopping-cart',
-                        'url'  => '#',
-                        // 'route' => 'admin.orders.index',
-                    ],
-                    [
-                        'text' => 'Envios',
-                        'icon' => 'fa-solid fa-truck-fast',
-                        'url'  => '#',
-                        // 'route' => 'admin.drives.index',
-                    ],
+                [
+                    'text' => 'Familias de productos',
+                    'icon'        => 'fa-solid fa-box-open',
+                    'url' => 'admin.families.index',
+                ],
+                [
+                    'text' => 'Categorias',
+                    'icon' => 'fa-solid fa-tags',
+                    'url' => 'admin.categories.index',
+                ],
+                [
+                    'text' => 'Subcategorias',
+                    'icon' => 'fa-solid fa-tag',
+                    'url' => 'admin.subcategories.index',
+                ],
+                [
+                    'text' => 'Productos',
+                    'icon' => 'fa-solid fa-box',
+                    'url' => 'admin.products.index',
+                ],
+                [
+                    'text' => 'Portadas',
+                    'icon' => 'fa-solid fa-images',
+                    'url' => 'admin.covers.index',
+                ],
+                [
+                    'text' => 'Conductores',
+                    'icon' => 'fa-solid fa-car',
+                    'url'  => '#',
+                    // 'route' => 'admin.drives.index',
+                ],
+                [
+                    'text' => 'Ordenes',
+                    'icon' => 'fa-solid fa-shopping-cart',
+                    'url'  => '#',
+                    // 'route' => 'admin.orders.index',
+                ],
+                [
+                    'text' => 'Envios',
+                    'icon' => 'fa-solid fa-truck-fast',
+                    'url'  => '#',
+                    // 'route' => 'admin.drives.index',
+                ],
             ],
         ],
         [
@@ -588,30 +556,30 @@ return [
             'active' => true,
             'files' => [
                 // 1. CORE - DataTables base (PRIMERO)
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js'],
 
                 // 2. LIBRERÍAS NECESARIAS (jszip, pdfmake)
-                ['type' => 'js','asset' => true,'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js'],
 
                 // 3. BUTTONS (después de jszip y pdfmake)
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js'],
 
                 // 4. RESPONSIVE (opcional)
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js'],
-                ['type' => 'js','asset' => true,'location' => '//cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => '//cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js'],
 
                 // 5. CSS (al final)
-                ['type' => 'css','asset' => true,'location' => '//cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css'],
-                ['type' => 'css','asset' => true,'location' => '//cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap4.min.css'],
-                ['type' => 'css','asset' => true,'location' => '//cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css'],
-                ['type' => 'css','asset' => true,'location' => '//cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css'],
+                ['type' => 'css', 'asset' => true, 'location' => '//cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css'],
+                ['type' => 'css', 'asset' => true, 'location' => '//cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap4.min.css'],
+                ['type' => 'css', 'asset' => true, 'location' => '//cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css'],
+                ['type' => 'css', 'asset' => true, 'location' => '//cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css'],
             ],
         ],
         'Select2' => [

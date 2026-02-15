@@ -83,85 +83,92 @@ class HomeController extends Controller
 
 
     // 1. Agrega (Request $request) para poder leer lo que envía JS
-public function show_reserva_profesores(Request $request, $id = null)
-{
-    try {
-        $user = Auth::user();
-        $profesorId = $id ?? $request->query('profesor_id');
+    public function show_reserva_profesores(Request $request, $id = null)
+    {
+        try {
+            $user = Auth::user();
+            $profesorId = $id ?? $request->query('profesor_id');
+            $eventos = [];
 
-        if (!$profesorId) return response()->json([]);
-
-        // 1. Disponibilidad (Fondo Verde)
-        $horarios = Horario::whereHas('profesores', function ($q) use ($profesorId) {
-            $q->where('profesor_id', $profesorId);
-        })->get();
-
-        // 2. Agendas (Traemos TODAS las del profesor para que el alumno vea qué horas están tomadas)
-        $agendas = Agenda::with(['profesor.user', 'cliente.user', 'curso'])
+            // 1. DETERMINAR QUÉ AGENDAS BUSCAR
+            if ($profesorId) {
+                // Si hay profesor seleccionado (vía select), traemos TODAS las de ese profesor
+                $agendas = Agenda::with(['profesor.user', 'cliente.user', 'curso'])
                     ->where('profesor_id', $profesorId)
                     ->get();
 
-        $eventos = [];
+                // Aprovechamos para traer la DISPONIBILIDAD (Fondo Verde) del profesor
+                $horarios = Horario::whereHas('profesores', function ($q) use ($profesorId) {
+                    $q->where('profesor_id', $profesorId);
+                })->get();
 
-        // Mapeo de Disponibilidad
-        $dias_map = ['LUNES' => [1], 'MARTES' => [2], 'MIERCOLES' => [3], 'JUEVES' => [4], 'VIERNES' => [5], 'SABADO' => [6], 'DOMINGO' => [0]];
-        foreach ($horarios as $h) {
-            $eventos[] = [
-                'daysOfWeek' => $dias_map[strtoupper($h->dia)] ?? [],
-                'startTime' => date('H:i:s', strtotime($h->hora_inicio)),
-                'endTime' => date('H:i:s', strtotime($h->tiempo)),
-                'display' => 'background',
-                'color' => '#d4edda'
-            ];
-        }
-
-        // 3. Mapeo de Agendas con lógica de colores
-        foreach ($agendas as $a) {
-            // Verificamos si la reserva pertenece al usuario actual
-            $esMiReserva = ($a->cliente && $a->cliente->user_id == $user->id);
-            $esAdmin = $user->hasRole(['superAdmin', 'admin', 'secretaria']);
-
-            // Definimos colores y títulos según quién mira
-            if ($esMiReserva || $esAdmin) {
-                $colorFondo = '#ff0000'; // Rojo (Tu clase o vista admin)
-                $colorBorde = '#b30000';
-                $titulo = $a->curso->nombre ?? 'Mi Clase';
+                $dias_map = ['LUNES' => [1], 'MARTES' => [2], 'MIERCOLES' => [3], 'JUEVES' => [4], 'VIERNES' => [5], 'SABADO' => [6], 'DOMINGO' => [0]];
+                foreach ($horarios as $h) {
+                    $eventos[] = [
+                        'daysOfWeek' => $dias_map[strtoupper($h->dia)] ?? [],
+                        'startTime' => date('H:i:s', strtotime($h->hora_inicio)),
+                        'endTime' => date('H:i:s', strtotime($h->tiempo)),
+                        'display' => 'background',
+                        'color' => '#d4edda'
+                    ];
+                }
+            } elseif ($user->hasRole('cliente')) {
+                // Si NO hay profesor pero es CLIENTE, cargamos sus clases por defecto
+                $agendas = Agenda::with(['profesor.user', 'cliente.user', 'curso'])
+                    ->where('cliente_id', $user->cliente->id)
+                    ->get();
+                    
             } else {
-                $colorFondo = '#6c757d'; // Gris (Ocupado por otro)
-                $colorBorde = '#495057';
-                $titulo = 'Ocupado'; // No mostramos el nombre del curso por privacidad
+                // Si no hay profesor y no es cliente (ej. admin sin filtrar), no mostramos nada
+                return response()->json([]);
             }
 
-            $eventos[] = [
-                'id' => $a->id,
-                'title' => $titulo,
-                'start' => $a->start,
-                'end' => $a->end,
-                'backgroundColor' => $colorFondo,
-                'borderColor' => $colorBorde,
-                'textColor' => '#ffffff',
-                'extendedProps' => [
-                    'tipo' => 'agenda',
-                    'esPropia' => $esMiReserva,
-                    'curso' => ($esMiReserva || $esAdmin) ? ($a->curso->nombre ?? 'N/A') : 'Ocupado',
-                    'profesor' => [
-                        'nombres' => $a->profesor->user->nombres ?? '',
-                        'apellidos' => $a->profesor->user->apellidos ?? ''
-                    ],
-                    'cliente' => ($esMiReserva || $esAdmin) ? [
-                        'nombres' => $a->cliente->user->nombres ?? '',
-                        'apellidos' => $a->cliente->user->apellidos ?? ''
-                    ] : null
-                ]
-            ];
-        }
-        return response()->json($eventos);
+            // 3. Mapeo de Agendas con lógica de colores
+            foreach ($agendas as $a) {
+                // Verificamos si la reserva pertenece al usuario actual
+                $esMiReserva = ($a->cliente && $a->cliente->user_id == $user->id);
+                $esAdmin = $user->hasRole(['superAdmin', 'admin', 'secretaria']);
 
-    } catch (\Exception $e) {
-        Log::error('Error al procesar eventos para profesor_id ' . $profesorId, ['error' => $e->getMessage()]);
-        return response()->json(['error' => $e->getMessage()], 500);
+                // Definimos colores y títulos según quién mira
+                if ($esMiReserva || $esAdmin) {
+                    $colorFondo = '#ff0000'; // Rojo (Tu clase o vista admin)
+                    $colorBorde = '#b30000';
+                    $titulo = $a->curso->nombre ?? 'Mi Clase';
+                } else {
+                    $colorFondo = '#6c757d'; // Gris (Ocupado por otro)
+                    $colorBorde = '#495057';
+                    $titulo = 'Ocupado'; // No mostramos el nombre del curso por privacidad
+                }
+
+                $eventos[] = [
+                    'id' => $a->id,
+                    'title' => $titulo,
+                    'start' => $a->start,
+                    'end' => $a->end,
+                    'backgroundColor' => $colorFondo,
+                    'borderColor' => $colorBorde,
+                    'textColor' => '#ffffff',
+                    'extendedProps' => [
+                        'tipo' => 'agenda',
+                        'esPropia' => $esMiReserva,
+                        'curso' => ($esMiReserva || $esAdmin) ? ($a->curso->nombre ?? 'N/A') : 'Ocupado',
+                        'profesor' => [
+                            'nombres' => $a->profesor->user->nombres ?? '',
+                            'apellidos' => $a->profesor->user->apellidos ?? ''
+                        ],
+                        'cliente' => ($esMiReserva || $esAdmin) ? [
+                            'nombres' => $a->cliente->user->nombres ?? '',
+                            'apellidos' => $a->cliente->user->apellidos ?? ''
+                        ] : null
+                    ]
+                ];
+            }
+            return response()->json($eventos);
+        } catch (\Exception $e) {
+            Log::error('Error al procesar eventos para profesor_id ' . $profesorId, ['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
 
     public function message_landing_page(Request $request)
     {

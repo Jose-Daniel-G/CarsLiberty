@@ -26,11 +26,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const horaInicioInput = document.getElementById('hora_inicio') as HTMLInputElement | null;
     const profesorSelect = document.getElementById('profesor_id') as HTMLSelectElement | null;
     const fechaReserva = document.getElementById('fecha_reserva') as HTMLInputElement | null;
+    const isAdmin = window.Laravel?.isAdmin ?? false;
 
     const calendarEl = document.getElementById('calendar');
     if (!calendarEl) return;
 
     const calendar = new Calendar(calendarEl, {
+        events: window.Laravel.routes.horariosShowReservaProfesores,
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
         initialView: 'timeGridWeek',
         locale: esLocale,
@@ -47,12 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         displayEventTime: true,          // Muestra la hora (ej: 06:00)
         dayMaxEvents: false,             // No colapsar eventos
-        eventTimeFormat: {
-            hour: '2-digit',
-            minute: '2-digit',
-            meridiem: false,
-            hour12: false
-        },
+        eventTimeFormat: {hour: '2-digit',minute: '2-digit',meridiem: false,hour12: true}, // Formato de hora (ej: 06:00)
         // Forzar que se vean los títulos en eventos de fondo (Disponibilidad)
         eventContent: function (arg) {
             // 1. Lógica para los espacios disponibles (VERDES)
@@ -144,6 +141,104 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     }
                 });
+            }
+        });
+    }
+    // VALIDACIONES DE HORA DE RESERVA
+    // ---------------------------------------
+    // Validación de cantidad de horas
+    // --------------------------------------- 
+    if (!isAdmin && horaFinInput) {
+        horaFinInput.addEventListener('input', function (this: HTMLInputElement) {
+            const selected = parseInt(this.value);
+            
+            // Comprobar si es un número válido y si está fuera del rango
+            if (this.value && (selected < 2 || selected > 4)) {
+                // Simplemente muestra el error al usuario
+                Swal.fire({
+                    text: "Solo puede agendar hasta máximo 4 horas y mínimo 2",
+                    icon: "error",
+                    toast: true, // Sugerencia: usa toast para ser menos intrusivo
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                this.classList.add('is-invalid');   // Opcional: podrías usar una clase CSS para resaltarlo
+
+            } else if (this.value) {
+                
+                this.classList.remove('is-invalid');// Si el valor es válido, quita la marca de error.
+            }
+        });
+    }
+
+    // ---------------------------------------
+    // Función auxiliar: fecha local en YYYY-MM-DD
+    // ---------------------------------------
+    function getLocalDate(): string {
+        const today = new Date();
+        return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    }
+
+    // ---------------------------------------
+    // Validar fecha pasada
+    // ---------------------------------------
+    if (fechaReserva) {
+        fechaReserva.addEventListener('change', function (this: HTMLInputElement) {
+            if (this.value < getLocalDate()) {
+                this.value = '';
+                Swal.fire({
+                    title: "No es posible",
+                    text: "No se puede seleccionar una fecha pasada",
+                    icon: "warning"
+                });
+            }
+        });
+    }
+
+    // ---------------------------------------
+    // Validar hora
+    // ---------------------------------------
+    if (horaInicioInput) {
+        horaInicioInput.addEventListener('change', function (this: HTMLInputElement) {
+            let selectedTime = this.value;
+            const now = new Date();
+
+            if (selectedTime) {
+                const [hour] = selectedTime.split(':');
+                selectedTime = `${hour.padStart(2, '0')}:00`;
+                this.value = selectedTime;
+
+                const [selectedHour, selectedMinutes] = selectedTime.split(':').map(Number);
+
+                // Rango permitido (06:00 - 20:00)
+                if (selectedHour < 6 || selectedHour > 20) {
+                    Swal.fire({
+                        title: "No es posible",
+                        text: "Seleccione una hora entre las 06:00 am y las 8:00 pm.",
+                        icon: "warning"
+                    });
+                    return;
+                }
+
+                // Verificar si es la fecha de hoy
+                const selectedDate = fechaReserva?.value ?? null;
+                const today = now.toISOString().slice(0, 10);
+
+                if (selectedDate === today) {
+                    const currentHour = now.getHours();
+                    const currentMinutes = now.getMinutes();
+
+                    if (
+                        selectedHour < currentHour ||
+                        (selectedHour === currentHour && selectedMinutes < currentMinutes)
+                    ) {
+                        Swal.fire({
+                            text: "No puede seleccionar una hora que ya ha pasado.",
+                            icon: "error"
+                        });
+                    }
+                }
             }
         });
     }
