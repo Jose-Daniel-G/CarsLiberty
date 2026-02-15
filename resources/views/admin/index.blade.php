@@ -203,10 +203,9 @@
         </div>
     </div>
 
-    </div>
 
     @include('admin.agenda-modal.agenda')
-    </div>
+    @include('admin.agenda-modal.show')
     {{-- PROFESORES AGENDA --}}
     @if (Auth::check() && Auth::user()->profesor)
         <div class="row">

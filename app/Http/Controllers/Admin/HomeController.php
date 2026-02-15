@@ -17,6 +17,7 @@ use App\Notifications\PostNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class HomeController extends Controller
@@ -29,16 +30,16 @@ class HomeController extends Controller
 
     public function index()
     {
-        $total_usuarios = User::count();
-        $total_secretarias = Secretaria::count();
-        $total_clientes = Cliente::count();
-        $total_vehiculos = Vehiculo::count();
+        $t_usuarios = User::count();
+        $t_secretarias = Secretaria::count();
+        $t_clientes = Cliente::count();
+        $t_vehiculos = Vehiculo::count();
 
-        $total_profesores = Profesor::count();
-        $total_horarios = Horario::count();
-        $total_agendas = Agenda::count();
-        $total_configuraciones = Config::count();
-        $total_cursos = Curso::count();
+        $t_profesores = Profesor::count();
+        $t_horarios = Horario::count();
+        $t_agendas = Agenda::count();
+        $t_configuraciones = Config::count();
+        $t_cursos = Curso::count();
 
         $profesores = Profesor::all();
         $agendas = Agenda::all();
@@ -55,14 +56,14 @@ class HomeController extends Controller
 
             $role = 'admin';
 
-            return view('admin.index', compact('total_usuarios', 'total_cursos', 'total_vehiculos', 'total_secretarias', 'total_clientes', 'total_profesores', 'total_horarios', 'total_agendas', 'cursosDisponibles', 'profesores', 'profesorSelect', 'clientes', 'agendas', 'total_configuraciones', 'role'));
+            return view('admin.index', compact('t_usuarios', 't_cursos', 't_vehiculos', 't_secretarias', 't_clientes', 't_profesores', 't_horarios', 't_agendas', 'cursosDisponibles', 'profesores', 'profesorSelect', 'clientes', 'agendas', 't_configuraciones', 'role'));
         } else {
             $clienteId = Auth::user()->cliente->id;
             $cursos = Auth::user()->cliente->cursos;
             $data = $this->handleClientRole($clienteId);
             extract($data);
 
-            return view('admin.index', compact('total_usuarios', 'total_secretarias', 'total_clientes', 'total_cursos', 'total_profesores', 'total_horarios', 'total_agendas', 'cursos', 'profesorSelect', 'agendas', 'cursosDisponibles', 'total_configuraciones'));
+            return view('admin.index', compact('t_usuarios', 't_secretarias', 't_clientes', 't_cursos', 't_profesores', 't_horarios', 't_agendas', 'cursos', 'profesorSelect', 'agendas', 'cursosDisponibles', 't_configuraciones'));
         }
     }
 
@@ -81,64 +82,86 @@ class HomeController extends Controller
     }
 
 
-// 1. Agrega (Request $request) para poder leer lo que envía JS
     // 1. Agrega (Request $request) para poder leer lo que envía JS
-    public function show_reserva_profesores(Request $request, $id = null)
-    {
-        // Si viene de la ruta es $id, si viene de FullCalendar es profesor_id
+public function show_reserva_profesores(Request $request, $id = null)
+{
+    try {
+        $user = Auth::user();
         $profesorId = $id ?? $request->query('profesor_id');
 
         if (!$profesorId) return response()->json([]);
 
-        // Disponibilidad (Fondo)
+        // 1. Disponibilidad (Fondo Verde)
         $horarios = Horario::whereHas('profesores', function ($q) use ($profesorId) {
             $q->where('profesor_id', $profesorId);
         })->get();
 
-        // Agendas (Eventos visibles)
-        $agendas = DB::table('agendas')
-            ->join('cursos', 'agendas.curso_id', '=', 'cursos.id')
-            ->where('agendas.profesor_id', $profesorId)
-            ->select('agendas.id', 'agendas.start', 'agendas.end', 'cursos.nombre as curso_nombre')
-            ->get();
+        // 2. Agendas (Traemos TODAS las del profesor para que el alumno vea qué horas están tomadas)
+        $agendas = Agenda::with(['profesor.user', 'cliente.user', 'curso'])
+                    ->where('profesor_id', $profesorId)
+                    ->get();
 
         $eventos = [];
 
-        // Mapeo para disponibilidad
+        // Mapeo de Disponibilidad
         $dias_map = ['LUNES' => [1], 'MARTES' => [2], 'MIERCOLES' => [3], 'JUEVES' => [4], 'VIERNES' => [5], 'SABADO' => [6], 'DOMINGO' => [0]];
-
         foreach ($horarios as $h) {
-            // Usamos carbon o date para asegurar que solo enviamos "HH:mm:ss"
-            $inicio = date('H:i:s', strtotime($h->hora_inicio));
-            $fin = date('H:i:s', strtotime($h->tiempo));
-
             $eventos[] = [
                 'daysOfWeek' => $dias_map[strtoupper($h->dia)] ?? [],
-                'startTime' => $inicio, // Ahora enviará ej: "11:00:00"
-                'endTime' => $fin,     // Ahora enviará ej: "19:00:00"
+                'startTime' => date('H:i:s', strtotime($h->hora_inicio)),
+                'endTime' => date('H:i:s', strtotime($h->tiempo)),
                 'display' => 'background',
                 'color' => '#d4edda'
             ];
         }
 
+        // 3. Mapeo de Agendas con lógica de colores
         foreach ($agendas as $a) {
+            // Verificamos si la reserva pertenece al usuario actual
+            $esMiReserva = ($a->cliente && $a->cliente->user_id == $user->id);
+            $esAdmin = $user->hasRole(['superAdmin', 'admin', 'secretaria']);
+
+            // Definimos colores y títulos según quién mira
+            if ($esMiReserva || $esAdmin) {
+                $colorFondo = '#ff0000'; // Rojo (Tu clase o vista admin)
+                $colorBorde = '#b30000';
+                $titulo = $a->curso->nombre ?? 'Mi Clase';
+            } else {
+                $colorFondo = '#6c757d'; // Gris (Ocupado por otro)
+                $colorBorde = '#495057';
+                $titulo = 'Ocupado'; // No mostramos el nombre del curso por privacidad
+            }
+
             $eventos[] = [
                 'id' => $a->id,
-                'title' => $a->curso_nombre,
+                'title' => $titulo,
                 'start' => $a->start,
                 'end' => $a->end,
-                'backgroundColor' => '#ff0000',
-                'borderColor' => '#b30000',
+                'backgroundColor' => $colorFondo,
+                'borderColor' => $colorBorde,
                 'textColor' => '#ffffff',
                 'extendedProps' => [
                     'tipo' => 'agenda',
-                    'cliente' => $a->cliente_nombre ?? 'Estudiante'
+                    'esPropia' => $esMiReserva,
+                    'curso' => ($esMiReserva || $esAdmin) ? ($a->curso->nombre ?? 'N/A') : 'Ocupado',
+                    'profesor' => [
+                        'nombres' => $a->profesor->user->nombres ?? '',
+                        'apellidos' => $a->profesor->user->apellidos ?? ''
+                    ],
+                    'cliente' => ($esMiReserva || $esAdmin) ? [
+                        'nombres' => $a->cliente->user->nombres ?? '',
+                        'apellidos' => $a->cliente->user->apellidos ?? ''
+                    ] : null
                 ]
             ];
         }
-
         return response()->json($eventos);
+
+    } catch (\Exception $e) {
+        Log::error('Error al procesar eventos para profesor_id ' . $profesorId, ['error' => $e->getMessage()]);
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
     public function message_landing_page(Request $request)
     {
@@ -205,7 +228,7 @@ class HomeController extends Controller
             ->limit(100)
             ->get();
 
-        $total_cursos = DB::table('cliente_curso')
+        $t_cursos = DB::table('cliente_curso')
             ->join('cursos', 'cliente_curso.curso_id', '=', 'cursos.id')
             ->where('cliente_curso.cliente_id', $clienteId)
             ->whereColumn('cliente_curso.horas_realizadas', '>=', 'cursos.horas_requeridas')
@@ -221,7 +244,7 @@ class HomeController extends Controller
         }
         return [
             'profesorSelect'   => $profesorSelect,
-            'total_cursos'     => $total_cursos,
+            't_cursos'     => $t_cursos,
             'cursosDisponibles' => $cursosDisponibles,
         ];
     }

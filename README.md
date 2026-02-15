@@ -115,6 +115,7 @@ php artisan route:clear
 php artisan view:clear
 php artisan cache:clear 
 composer clear-cache 
+npm run dev
 ```
 ##### EN EL ARCHIVO APP.JS PONER
 
