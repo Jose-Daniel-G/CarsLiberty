@@ -131,11 +131,12 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         dateClick: function (info) {
-            const today = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            const hoy = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
             const fechaSeleccionada = info.dateStr.split('T')[0];
 
-            // Bloquear fechas pasadas
-            if (fechaSeleccionada < today) return;
+            // ✅ Solo bloquear días anteriores, NO horas pasadas de hoy
+            if (fechaSeleccionada < hoy) return;
 
             const clickedDate = info.date;
             const diaSemana = clickedDate.getDay(); // 0=Dom, 1=Lun...
