@@ -238,6 +238,10 @@ composer require barryvdh/laravel-debugbar
 composer require twilio/sdk
 
 
+# Deployment in Dockerhub
 
-## NOTA: 
-- Subir por filezila, sin node_modules ni vendor inicialmente y luego subirlos
+<<<<<<< HEAD
+docker login
+docker build -t juandago/cars-liberty-app:v1 .
+docker push juandago/cars-liberty-app:v1
+>>>>>>>>> Temporary merge branch 2
