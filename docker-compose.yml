@@ -33,9 +33,12 @@ services:
 
   # Servicio Laravel App (PHP + Composer)
   laravel_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+
+    # Instead of 'build: .', you use the image from the cloud
+    image: your_username/cars-liberty-app:v1
     container_name: laravel_app
     volumes:
       - ./:/var/www/html
