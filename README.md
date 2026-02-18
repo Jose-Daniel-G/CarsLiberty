@@ -115,7 +115,8 @@ php artisan route:clear
 php artisan view:clear
 php artisan cache:clear 
 composer clear-cache 
-npm run dev
+npm run dev 
+ 
 ```
 ##### EN EL ARCHIVO APP.JS PONER
 
@@ -239,6 +240,11 @@ composer require twilio/sdk
 
 # Deployment in Dockerhub
 
+<<<<<<< HEAD
 docker login
 docker build -t juandago/cars-liberty-app:v1 .
 docker push juandago/cars-liberty-app:v1
+=======
+## NOTA: 
+- Subir por filezila, sin node_modules ni vendor inicialmente y luego subirlos
+>>>>>>> 863684ddd1c0f34d7fef15e53a9d78bfa35e78ac
