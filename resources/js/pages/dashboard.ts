@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const isAdmin = window.Laravel?.isAdmin ?? false;
 
     const calendarEl = document.getElementById('calendar');
+    let disponibilidades: any[] = []; // Variable global para almacenar disponibilidades (eventos de fondo)
     if (!calendarEl) return;
 
     const calendar = new Calendar(calendarEl, {
@@ -49,12 +50,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         displayEventTime: true,          // Muestra la hora (ej: 06:00)
         dayMaxEvents: false,             // No colapsar eventos
-        eventTimeFormat: {hour: '2-digit',minute: '2-digit',meridiem: false,hour12: true}, // Formato de hora (ej: 06:00)
+        eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false, hour12: true }, // Formato de hora (ej: 06:00)
         // Forzar que se vean los títulos en eventos de fondo (Disponibilidad)
         eventContent: function (arg) {
             // 1. Lógica para los espacios disponibles (VERDES)
             if (arg.event.display === 'background') {
-                let container = document.createElement('div'); 
+                let container = document.createElement('div');
                 container.innerText = arg.event.title || '';
                 return { domNodes: [container] };
             }
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
             mainContainer.style.color = '#fff'; // Texto blanco
 
             // Div para la hora (ej: 11:00 - 13:00)
-            let timeEl = document.createElement('div'); 
+            let timeEl = document.createElement('div');
             timeEl.innerText = arg.timeText; // FullCalendar genera esto automáticamente
 
             // Div para el título (ej: A1)
@@ -79,10 +80,38 @@ document.addEventListener('DOMContentLoaded', function () {
             return { domNodes: [mainContainer] };
         },
 
-            eventClick: function (info: any) {
-                const agenda = info.event;
-                const start = agenda.start;
-                const end = agenda.end;
+        eventClick: function (info: any) {
+            const agenda = info.event;
+            const start = agenda.start as Date;
+            const end = agenda.end as Date;
+            const tipo = agenda.extendedProps?.tipo;
+            const now = new Date();
+
+            // ✅ Si la fecha ya pasó, no hacer nada
+            if (start < now) {
+                return;
+            }
+
+            // ✅ Si es un evento de disponibilidad (verde), abrir formulario de nueva reserva
+            if (tipo === 'disponibilidad') {
+                // Formatear fecha y hora para pre-llenar el formulario
+                const fechaStr = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-${String(start.getDate()).padStart(2, '0')}`;
+                const horaStr = `${String(start.getHours()).padStart(2, '0')}:00`;
+
+                // Pre-llenar los campos del formulario si existen
+                const fechaInput = document.getElementById('fecha_reserva') as HTMLInputElement | null;
+                const horaInput = document.getElementById('hora_inicio') as HTMLInputElement | null;
+
+                if (fechaInput) fechaInput.value = fechaStr;
+                if (horaInput) horaInput.value = horaStr;
+
+                // Aquí abres tu modal de agendamiento, ajusta el ID según tu HTML
+                ($("#mdalAgendar") as any).modal("show");
+                return;
+            }
+
+            // ✅ Si es una reserva confirmada (rojo), mostrar info
+            if (tipo === 'reserva') {
                 const prof = agenda.extendedProps.profesor || {};
                 const cliente = agenda.extendedProps.cliente || {};
 
@@ -90,28 +119,56 @@ document.addEventListener('DOMContentLoaded', function () {
                 (document.getElementById('nombres_teacher') as HTMLElement).textContent = `${prof.nombres || 'No disponible'} ${prof.apellidos || ''}`;
                 (document.getElementById('fecha_reserva1') as HTMLElement).textContent = start.toISOString().split('T')[0];
                 (document.getElementById('hora_inicio1') as HTMLElement).textContent = start.toLocaleTimeString();
-                (document.getElementById('hora_fin1') as HTMLElement).textContent = end.toLocaleTimeString();
+                (document.getElementById('hora_fin1') as HTMLElement).textContent = end ? end.toLocaleTimeString() : '';
 
                 ($("#mdalSelected") as any).modal("show");
-            },
-        eventDidMount: function(info) {
+            }
+        },
+        eventDidMount: function (info) {
             if (info.event.extendedProps.curso) {
                 info.el.title = info.event.extendedProps.curso;
             }
         },
 
         dateClick: function (info) {
-            const today = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            const hoy = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
             const fechaSeleccionada = info.dateStr.split('T')[0];
 
-            if (fechaSeleccionada < today) return;
+            // ✅ Solo bloquear días anteriores, NO horas pasadas de hoy
+            if (fechaSeleccionada < hoy) return;
 
+            const clickedDate = info.date;
+            const diaSemana = clickedDate.getDay(); // 0=Dom, 1=Lun...
+            const horaClick = clickedDate.getHours();
+
+            // En vista mensual (dayGridMonth) el click no trae hora,
+            // solo verificamos el día de la semana
+            const esVistaMensual = calendar.view.type === 'dayGridMonth';
+
+            const hayDisponibilidad = disponibilidades.some((d: any) => {
+                const diasEvento: number[] = d.daysOfWeek ?? [];
+                if (!diasEvento.includes(diaSemana)) return false;
+
+                // En vista semanal/diaria también verificamos la hora
+                if (!esVistaMensual) {
+                    const [hIni] = (d.startTime as string).split(':').map(Number);
+                    const [hFin] = (d.endTime as string).split(':').map(Number);
+                    return horaClick >= hIni && horaClick < hFin;
+                }
+
+                return true; // En vista mensual, con el día es suficiente
+            });
+
+            if (!hayDisponibilidad) return; // ❌ Sin disponibilidad, no abrir modal
+
+            // ✅ Hay disponibilidad, pre-llenar y abrir modal
             if (fechaReserva) fechaReserva.value = fechaSeleccionada;
             if (horaInicioInput && info.dateStr.includes('T')) {
                 horaInicioInput.value = info.dateStr.split('T')[1].substring(0, 5);
             }
 
-            $("#claseModal").modal("show");
+            ($("#claseModal") as any).modal("show");
         }
     });
 
@@ -132,8 +189,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     extraParams: {
                         profesor_id: selectedId
                     },
-                    success: function () {
+                    success: function (data: any) {
+                        disponibilidades = data.filter((e: any) => e.extendedProps?.tipo === 'disponibilidad');
+                        console.log('Disponibilidades cargadas:', disponibilidades.length);
                         console.log("Eventos cargados con éxito");
+                        return data;
                     },
                     failure: function (error: any) {
                         console.error("Error de carga:", error);
@@ -154,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!isAdmin && horaFinInput) {
         horaFinInput.addEventListener('input', function (this: HTMLInputElement) {
             const selected = parseInt(this.value);
-            
+
             // Comprobar si es un número válido y si está fuera del rango
             if (this.value && (selected < 2 || selected > 4)) {
                 // Simplemente muestra el error al usuario
@@ -169,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.classList.add('is-invalid');   // Opcional: podrías usar una clase CSS para resaltarlo
 
             } else if (this.value) {
-                
+
                 this.classList.remove('is-invalid');// Si el valor es válido, quita la marca de error.
             }
         });

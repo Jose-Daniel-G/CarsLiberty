@@ -157,7 +157,8 @@ class HomeController extends Controller
                     'id' => $a->id,
                     'title' => $titulo,
                     'start' => $a->start,
-                    'end' => $a->end->addMinutes(60), // Asumiendo duración de 30 mins, ajusta según tu lógica
+                    'end' => $a->end->copy()->addMinutes(60), // Asumiendo duración de 30 mins, ajusta según tu lógica
+                    // 'end' => $a->end->addMinutes(60), // Asumiendo duración de 30 mins, ajusta según tu lógica
                     'backgroundColor' => $colorFondo,
                     'borderColor' => $colorBorde,
                     'textColor' => '#ffffff',
