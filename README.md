@@ -244,7 +244,4 @@ composer require twilio/sdk
 docker login
 docker build -t juandago/cars-liberty-app:v1 .
 docker push juandago/cars-liberty-app:v1
-=======
-## NOTA: 
-- Subir por filezila, sin node_modules ni vendor inicialmente y luego subirlos
->>>>>>> 863684ddd1c0f34d7fef15e53a9d78bfa35e78ac
+>>>>>>>>> Temporary merge branch 2
