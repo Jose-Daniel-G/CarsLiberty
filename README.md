@@ -237,4 +237,8 @@ composer require barryvdh/laravel-debugbar
 composer require twilio/sdk
 
 
+# Deployment in Dockerhub
 
+docker login
+docker build -t juandago/cars-liberty-app:v1 .
+docker push juandago/cars-liberty-app:v1
