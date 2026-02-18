@@ -240,8 +240,7 @@ composer require twilio/sdk
 
 # Deployment in Dockerhub
 
-<<<<<<< HEAD
 docker login
 docker build -t juandago/cars-liberty-app:v1 .
 docker push juandago/cars-liberty-app:v1
->>>>>>>>> Temporary merge branch 2
+
