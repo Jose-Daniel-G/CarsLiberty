@@ -6,15 +6,28 @@ services:
     image: mysql:8.1.0
     container_name: liberty-container
     environment:
-      MYSQL_DATABASE: cars_liberty
-      MYSQL_PASSWORD: admin123
-      MYSQL_ROOT_PASSWORD: admin123
+    #   MYSQL_DATABASE: cars_liberty
+    #   MYSQL_PASSWORD: admin123
+    #   MYSQL_ROOT_PASSWORD: admin123
+
+    # Automatically creates the database name from your .env
+      MYSQL_DATABASE: ${DB_DATABASE}
+      # Sets the superuser (root) password
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      # Creates a specific application user
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - cars_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s  # Check every 10 seconds
+      timeout: 5s
+      retries: 10
 
   # Servicio phpMyAdmin
   phpmyadmin:
@@ -23,7 +36,8 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: admin123
+    #   MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Linked to your .env for consistency
     ports:
       - "8081:80"
     depends_on:
@@ -37,14 +51,17 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: laravel_app
+    restart: unless-stopped # Good for local stability and production
     volumes:
       - ./:/var/www/html
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy # This ensures DB is ready before PHP starts
     networks:
       - cars_net
+    user: "1000:1000" # Maps your Windows user to the Linux user
 
-  # Servicio Nginx
+  # Nginx Web Server
   nginx_car:
     image: nginx:latest
     container_name: nginx_car

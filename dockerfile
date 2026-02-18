@@ -1,6 +1,6 @@
 FROM php:8.2-fpm-alpine
 
-# Instalar dependencias necesarias
+# 1. Install system dependencies
 RUN apk add --no-cache \
     $PHPIZE_DEPS \
     linux-headers \
@@ -15,17 +15,28 @@ RUN apk add --no-cache \
     unzip \
     curl
 
-# Instalar extensiones de PHP
-RUN docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install -j$(nproc) pdo_mysql bcmath zip soap
-# Establecer permisos adecuados para Laravel
+# 2. Install and configure PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+    gd \
+    pdo_mysql \
+    bcmath \
+    zip \
+    soap
+
+# 3. Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# 4. Set working directory
+WORKDIR /var/www/html
+
+# 5. Copy existing application directory contents
+COPY . .
+
+# 6. Set permissions (Crucial to do this AFTER copying the code)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Copiar Composer desde la imagen oficial
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Definir directorio de trabajo
-WORKDIR /var/www/html
-
 EXPOSE 9000
+
+CMD ["php-fpm"]
