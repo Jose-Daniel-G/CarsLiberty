@@ -46,6 +46,6 @@ EXPOSE 10000
 
 # 8. Comando de inicio "Monolito" para Render
 # Esto corre las migraciones y levanta el servidor integrado de PHP que SÍ entiende HTTP.
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=10000
+CMD php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=1000
 
 # CMD ["php-fpm"]
