@@ -18,16 +18,21 @@ services:
 
   laravel_app:
     build: .
-    restart: unless-stopped
+    container_name: laravel_app
+    restart: always
     depends_on:
       db:
         condition: service_healthy
     networks:
       - cars_net
 
-  nginx:
+  nginx_car:
     image: nginx:alpine
     restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - laravel_app
     networks:

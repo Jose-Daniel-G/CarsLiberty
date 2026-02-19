@@ -81,4 +81,4 @@ jobs:
           context: .
           push: true
           # Se recomienda usar tags específicos o 'latest'
-          tags: ${{ secrets.DOCKER_USERNAME }}/cars-liberty-app:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/cars-liberty-app:v1
