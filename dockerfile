@@ -33,10 +33,15 @@ WORKDIR /var/www/html
 COPY . .
 
 # 6. Permisos para Laravel
-# Se recomienda que el usuario www-data sea el dueño para que Laravel pueda escribir logs y caché
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 9000
+# 7. Exponer el puerto que Render espera (10000 por defecto)
+EXPOSE 10000
 
-CMD ["php-fpm"]
+# 8. Comando de inicio "Monolito" para Render
+# Esto corre las migraciones y levanta el servidor integrado de PHP que SÍ entiende HTTP.
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=10000
+
+# CMD ["php-fpm"]
