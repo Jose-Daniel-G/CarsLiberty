@@ -1,70 +1,65 @@
 # version: '3.8'
 
 services:
-  # Servicio MySQL
-  mysql:
-    image: mysql:8.1.0
-    container_name: liberty-container
+  # -------------------------------------------------------
+  # BASE DE DATOS (PostgreSQL)
+  # -------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: liberty-db-postgres
     environment:
-    #   MYSQL_DATABASE: cars_liberty
-    #   MYSQL_PASSWORD: admin123
-    #   MYSQL_ROOT_PASSWORD: admin123
-
-    # Automatically creates the database name from your .env
-      MYSQL_DATABASE: ${DB_DATABASE}
-      # Sets the superuser (root) password
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      # Creates a specific application user
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
     networks:
       - cars_net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s  # Check every 10 seconds
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
 
-  # Servicio phpMyAdmin
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin_cars
+  # -------------------------------------------------------
+  # GESTOR DE BASE DE DATOS (pgAdmin)
+  # -------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_cars
     environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-    #   MYSQL_ROOT_PASSWORD: admin123
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Linked to your .env for consistency
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "8081:80"
     depends_on:
-      - mysql
+      - db
     networks:
       - cars_net
 
-  # Servicio Laravel App (PHP + Composer)
+  # -------------------------------------------------------
+  # APLICACIÓN LARAVEL
+  # -------------------------------------------------------
   laravel_app:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
-
-    # Instead of 'build: .', you use the image from the cloud
-    image: your_username/cars-liberty-app:v1
+    # Si vas a desarrollar localmente, podrías querer usar 'build: .'
+    # pero aquí mantenemos tu imagen de Docker Hub
+    image: juandago/cars-liberty-app:v1
     container_name: laravel_app
-    restart: unless-stopped # Good for local stability and production
+    restart: unless-stopped
     volumes:
       - ./:/var/www/html
     depends_on:
-      mysql:
-        condition: service_healthy # This ensures DB is ready before PHP starts
+      db:
+        condition: service_healthy
     networks:
       - cars_net
-    user: "1000:1000" # Maps your Windows user to the Linux user
+    user: "1000:1000"
 
-  # Nginx Web Server
+  # -------------------------------------------------------
+  # SERVIDOR WEB (Nginx)
+  # -------------------------------------------------------
   nginx_car:
     image: nginx:latest
     container_name: nginx_car
@@ -78,8 +73,49 @@ services:
     networks:
       - cars_net
 
+  # -------------------------------------------------------
+  # SERVICIOS OBSOLETOS / COMENTADOS (MySQL)
+  # -------------------------------------------------------
+  # mysql:
+  #   image: mysql:8.1.0
+  #   container_name: liberty-container
+  #   environment:
+  #     MYSQL_DATABASE: ${DB_DATABASE}
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+  #     MYSQL_USER: ${DB_USERNAME}
+  #     MYSQL_PASSWORD: ${DB_PASSWORD}
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   networks:
+  #     - cars_net
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin:latest
+  #   container_name: phpmyadmin_cars
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_PORT: 3306
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+  #   ports:
+  #     - "8081:80"
+  #   depends_on:
+  #     - mysql
+  #   networks:
+  #     - cars_net
+
+# -------------------------------------------------------
+# VOLÚMENES Y REDES
+# -------------------------------------------------------
 volumes:
-  mysql_data:
+  pg_data:
+  mysql_data: # Lo mantenemos por si quieres recuperar los datos viejos después
 
 networks:
   cars_net:

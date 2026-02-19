@@ -2,46 +2,69 @@ name: Laravel CI/CD
 
 on:
   push:
-    branches: [ main ] # Only push to Docker Hub when merging to main
+    branches: [ main ] # Solo sube a Docker Hub al hacer push/merge a main
 
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
+
     services:
-      mysql:
-        image: mysql:8.0
+      # --- COMENTADO: Servicio MySQL ---
+      # mysql:
+      #   image: mysql:8.0
+      #   env:
+      #     MYSQL_DATABASE: cars_liberty
+      #     MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      #   ports:
+      #     - 3306:3306
+      #   options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      # NUEVO: Servicio PostgreSQL para Tests
+      postgres:
+        image: postgres:15-alpine
         env:
-          MYSQL_DATABASE: cars_liberty
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          POSTGRES_DB: cars_liberty_test
+          POSTGRES_PASSWORD: password
         ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - 5432:5432
+        # Health check para asegurar que Postgres esté listo antes de los tests
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: dom, curl, libxml, mbstring, zip, pdo_mysql, bcmath, gd
+          # CAMBIO: Se añadió pdo_pgsql y se quitó pdo_mysql (opcional dejar ambos)
+          extensions: dom, curl, libxml, mbstring, zip, pdo_pgsql, bcmath, gd
 
       - name: Install Dependencies
         run: composer install --prefer-dist --no-interaction
 
       - name: Run Tests
         env:
-          DB_CONNECTION: mysql
+          # CAMBIO: Configuración para conectar con el servicio Postgres de arriba
+          DB_CONNECTION: pgsql
           DB_HOST: 127.0.0.1
-          DB_DATABASE: cars_liberty
+          DB_PORT: 5432
+          DB_DATABASE: cars_liberty_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: password
         run: |
           php -r "copy('.env.example', '.env');"
           php artisan key:generate
           php artisan migrate --force
           php artisan test
 
-  # NEW JOB: DEPLOY TO DOCKER HUB
+  # JOB: DEPLOY TO DOCKER HUB
   push-to-dockerhub:
-    needs: laravel-tests # Only runs if tests pass!
+    needs: laravel-tests # ¡Solo corre si los tests pasan!
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,5 +80,5 @@ jobs:
         with:
           context: .
           push: true
-          # Replace 'your_username/repo' with your actual info
+          # Se recomienda usar tags específicos o 'latest'
           tags: ${{ secrets.DOCKER_USERNAME }}/cars-liberty-app:latest
