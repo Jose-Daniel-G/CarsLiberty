@@ -32,6 +32,10 @@ WORKDIR /var/www/html
 # 5. Copiar el código del proyecto
 COPY . .
 
+# 5.1 INSTALAR DEPENDENCIAS DE COMPOSER (Añade esto aquí)
+# Usamos --no-dev para producción y optimizamos el autoload
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+
 # 6. Permisos para Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
