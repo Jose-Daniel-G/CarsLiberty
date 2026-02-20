@@ -24,7 +24,7 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['message_landing_page']); // Aplica el middleware 'auth' a todos los métodos excepto 'landing_page' 
+        $this->middleware('auth')->except(['message_landing_page']); // Aplica el middleware 'auth' a todos los métodos excepto 'landing_page'
         // $this->middleware('can:admin.show_reservas')->only('show');
     }
 
@@ -90,7 +90,7 @@ class HomeController extends Controller
             $profesorId = $id ?? $request->query('profesor_id');
             $eventos = [];
 
-            // 1. DETERMINAR QUÉ AGENDAS BUSCAR 
+            // 1. DETERMINAR QUÉ AGENDAS BUSCAR
             if ($profesorId) {
                 // 1. Cargamos al profesor con sus horarios Y los cursos asociados a esos horarios
                 $profesor = Profesor::with(['horarios.cursos'])->find($profesorId);
@@ -230,7 +230,8 @@ class HomeController extends Controller
                 'profesors.id',
                 'profesors.nombres',
                 'profesors.apellidos',
-                DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+                // DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+                DB::raw('STRING_AGG(DISTINCT cursos.nombre, \', \' ORDER BY cursos.nombre) as cursos')
             )
             ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
             ->limit(100)
@@ -255,7 +256,8 @@ class HomeController extends Controller
                 'profesors.id',
                 'profesors.nombres',
                 'profesors.apellidos',
-                DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+                // DB::raw('GROUP_CONCAT(DISTINCT cursos.nombre ORDER BY cursos.nombre SEPARATOR ", ") as cursos')
+                DB::raw('STRING_AGG(DISTINCT cursos.nombre, \', \' ORDER BY cursos.nombre) as cursos')
             )
             ->groupBy('profesors.id', 'profesors.nombres', 'profesors.apellidos')
             ->limit(100)

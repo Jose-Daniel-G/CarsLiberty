@@ -19,7 +19,8 @@ services:
     networks:
       - cars_net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      # test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      test: ["CMD-SHELL", "pg_isready -U root -d cars_liberty"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -50,9 +51,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./:/var/www/html
+      - laravel_build:/var/www/html/public/build
+      - /var/www/html/node_modules   # <--- (Opcional) Recomendado para que no choque con los de tu PC
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+      # db:
+      #   condition: service_healthy
     networks:
       - cars_net
     user: "1000:1000"
@@ -72,7 +76,9 @@ services:
       - "8080:80"
     volumes:
       - ./:/var/www/html
+      - laravel_build:/var/www/html/public/build
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./storage/app/public:/var/www/html/storage/app/public
     depends_on:
       - laravel_app
     networks:
@@ -82,7 +88,8 @@ services:
     image: mailhog/mailhog
     ports:
       - "8025:8025"
-
+    networks:
+      - cars_net
 
   # -------------------------------------------------------
   # SERVICIOS OBSOLETOS / COMENTADOS (MySQL)
@@ -128,7 +135,8 @@ services:
 
 volumes:
   pg_data:
-  mysql_data: # Lo mantenemos por si quieres recuperar los datos viejos después
+  laravel_build:
+  # mysql_data: # Lo mantenemos por si quieres recuperar los datos viejos después
 
 networks:
   cars_net:
