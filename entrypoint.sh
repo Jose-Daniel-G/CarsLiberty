@@ -56,6 +56,9 @@ php artisan view:clear
 echo "🔗 Generando enlace simbólico de storage..."
 php artisan storage:link --force
 
+echo "🎨 Publicando assets de la administración..."
+php artisan adminlte:install --only=assets --force
+
 # 7. Configuración de Nginx
 mkdir -p /run/nginx
 
