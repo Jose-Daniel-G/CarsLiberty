@@ -60,7 +60,8 @@ php artisan storage:link --force
 echo "🔐 Corrigiendo permisos para www-data..."
 chown -R www-data:www-data /var/www/html/storage \
                          /var/www/html/bootstrap/cache \
-                         /var/www/html/public
+                         /var/www/html/public \
+                         /var/www/html/vendor
 chmod -R 775 /var/www/html/storage \
              /var/www/html/bootstrap/cache \
              /var/www/html/public \
