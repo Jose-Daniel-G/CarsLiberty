@@ -11,10 +11,17 @@ echo "⏳ Esperando conexión a la base de datos..."
 #   sleep 3
 # done
 
-# Esperar hasta que la base de datos esté lista usando PHP
-until php -r "new PDO('pgsql:host=db;port=5432;dbname=cars_liberty', 'root', 'admin123');" > /dev/null 2>&1
+# # Esperar hasta que la base de datos esté lista usando PHP
+# until php -r "new PDO('pgsql:host=db;port=5432;dbname=cars_liberty', 'root', 'admin123');" > /dev/null 2>&1
+# do
+#   echo "⏳ Base de datos aún no lista (esperando conexión PDO)..."
+#   sleep 3
+# done
+
+# Cambia la línea del until por esta en render:
+until php -r "try { new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require', getenv('DB_USERNAME'), getenv('DB_PASSWORD')); exit(0); } catch (Exception \$e) { exit(1); }"
 do
-  echo "⏳ Base de datos aún no lista (esperando conexión PDO)..."
+  echo "⏳ Esperando conexión segura a Postgres en Render..."
   sleep 3
 done
 
