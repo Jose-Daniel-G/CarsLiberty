@@ -31,25 +31,27 @@ echo "✅ Base de datos lista!"
 echo "📦 Ejecutando migraciones..."
 php artisan migrate --force
 
-# 3. Seeders Inteligentes (Evita el error Unique Violation)
+# 3. Seeders Inteligentes
 echo "🌱 Verificando si es necesario ejecutar seeders..."
-# Cambiamos la lógica para detectar si ya existe el tipo 'sedan' en la tabla tipos_vehiculos
 if php artisan tinker --execute="echo \App\Models\TipoVehiculo::where('tipo', 'sedan')->count();" | grep -q '0'; then
     echo "🚀 Datos no encontrados. Ejecutando seeders..."
     php artisan db:seed --force
 else
-    echo "✅ Los datos ya existen. Saltando seeders para evitar errores de duplicidad."
+    echo "✅ Los datos ya existen. Saltando seeders."
 fi
 
-# 4. Publicar assets (Hacerlo ANTES de los permisos para que chown los incluya)
+# 4. Publicar assets de Administración y crear carpetas faltantes
 echo "🎨 Publicando assets de la administración..."
+# Forzamos la instalación de assets de AdminLTE para que existan en public/vendor
 php artisan adminlte:install --only=assets --force
+# Creamos la carpeta de favicons para evitar el 404 del log
+mkdir -p /var/www/html/public/favicons
 
-# 5. Enlace de Storage
+# 5. Enlace de Storage (Instrucción guardada: soluciona visualización de imágenes)
 echo "🔗 Generando enlace simbólico de storage..."
 php artisan storage:link --force
 
-# 6. CORRECCIÓN MASIVA DE PERMISOS (Ahora cubre TODO: storage, cache y public)
+# 6. CORRECCIÓN MASIVA DE PERMISOS (Vital para evitar el Error 500)
 echo "🔐 Corrigiendo permisos para www-data..."
 chown -R www-data:www-data /var/www/html/storage \
                          /var/www/html/bootstrap/cache \
@@ -58,7 +60,7 @@ chmod -R 775 /var/www/html/storage \
              /var/www/html/bootstrap/cache \
              /var/www/html/public
 
-# 7. Limpieza de caché (Hacerlo después de corregir permisos)
+# 7. Limpieza de caché
 echo "🧹 Limpiando caché..."
 php artisan config:clear
 php artisan route:clear
@@ -68,6 +70,11 @@ php artisan view:clear
 mkdir -p /run/nginx
 echo "📡 Iniciando Nginx en el puerto 10000..."
 nginx -g "daemon on;"
+
+# 9. Ejecutar Build de Vite (Instrucción guardada: soluciona ViteManifestNotFoundException)
+# Aunque suele estar en el Dockerfile, ponerlo aquí asegura que los archivos existan antes de arrancar FPM
+echo "📦 Compilando assets de Vite..."
+npm run build
 
 echo "🎯 Iniciando PHP-FPM..."
 exec php-fpm
