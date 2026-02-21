@@ -63,7 +63,9 @@ chmod -R 775 /var/www/html/storage \
 
 # 7. Optimización de producción (Cambio de clear a cache)
 echo "🧹 Optimizando caché de configuración..."
-php artisan config:cache
+# php artisan config:cache
+php artisan config:clear
+php artisan cache:clear
 php artisan route:cache
 php artisan view:cache
 
