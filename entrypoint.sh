@@ -40,18 +40,19 @@ else
     echo "✅ Los datos ya existen. Saltando seeders."
 fi
 
-# 4. Publicar assets de Administración y crear carpetas faltantes
+# 4. Publicar assets y ejecutar Build de Vite (ANTES de los permisos)
 echo "🎨 Publicando assets de la administración..."
-# Forzamos la instalación de assets de AdminLTE para que existan en public/vendor
 php artisan adminlte:install --only=assets --force
-# Creamos la carpeta de favicons para evitar el 404 del log
 mkdir -p /var/www/html/public/favicons
 
-# 5. Enlace de Storage (Instrucción guardada: soluciona visualización de imágenes)
+echo "📦 Compilando assets de Vite..."
+npm run build
+
+# 5. Enlace de Storage
 echo "🔗 Generando enlace simbólico de storage..."
 php artisan storage:link --force
 
-# 6. CORRECCIÓN MASIVA DE PERMISOS (Vital para evitar el Error 500)
+# 6. CORRECCIÓN MASIVA DE PERMISOS (Vital para quitar el 500 y 502)
 echo "🔐 Corrigiendo permisos para www-data..."
 chown -R www-data:www-data /var/www/html/storage \
                          /var/www/html/bootstrap/cache \
@@ -60,21 +61,16 @@ chmod -R 775 /var/www/html/storage \
              /var/www/html/bootstrap/cache \
              /var/www/html/public
 
-# 7. Limpieza de caché
-echo "🧹 Limpiando caché..."
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# 7. Optimización de producción (Cambio de clear a cache)
+echo "🧹 Optimizando caché de configuración..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
-# 8. Configuración de Nginx y arranque
+# 8. Arranque de servicios
 mkdir -p /run/nginx
 echo "📡 Iniciando Nginx en el puerto 10000..."
 nginx -g "daemon on;"
-
-# 9. Ejecutar Build de Vite (Instrucción guardada: soluciona ViteManifestNotFoundException)
-# Aunque suele estar en el Dockerfile, ponerlo aquí asegura que los archivos existan antes de arrancar FPM
-echo "📦 Compilando assets de Vite..."
-npm run build
 
 echo "🎯 Iniciando PHP-FPM..."
 exec php-fpm
