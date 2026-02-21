@@ -41,31 +41,33 @@ else
     echo "✅ Los datos ya existen. Saltando seeders para evitar errores de duplicidad."
 fi
 
-# 4. CORRECCIÓN CRÍTICA DE PERMISOS (Soluciona el Error 500)
-echo "🔐 Corrigiendo permisos de storage y cache para www-data..."
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# 4. Publicar assets (Hacerlo ANTES de los permisos para que chown los incluya)
+echo "🎨 Publicando assets de la administración..."
+php artisan adminlte:install --only=assets --force
 
-# 5. Limpieza de caché
-echo "🧹 Limpiando caché de configuración..."
+# 5. Enlace de Storage
+echo "🔗 Generando enlace simbólico de storage..."
+php artisan storage:link --force
+
+# 6. CORRECCIÓN MASIVA DE PERMISOS (Ahora cubre TODO: storage, cache y public)
+echo "🔐 Corrigiendo permisos para www-data..."
+chown -R www-data:www-data /var/www/html/storage \
+                         /var/www/html/bootstrap/cache \
+                         /var/www/html/public
+chmod -R 775 /var/www/html/storage \
+             /var/www/html/bootstrap/cache \
+             /var/www/html/public
+
+# 7. Limpieza de caché (Hacerlo después de corregir permisos)
+echo "🧹 Limpiando caché..."
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 
-# 6. Enlace de Storage (Instrucción guardada para imágenes)
-echo "🔗 Generando enlace simbólico de storage..."
-php artisan storage:link --force
-
-echo "🎨 Publicando assets de la administración..."
-php artisan adminlte:install --only=assets --force
-
-# 7. Configuración de Nginx
+# 8. Configuración de Nginx y arranque
 mkdir -p /run/nginx
-
-# 8. Iniciar Nginx en SEGUNDO PLANO
 echo "📡 Iniciando Nginx en el puerto 10000..."
 nginx -g "daemon on;"
 
-# 9. Iniciar PHP-FPM en PRIMER PLANO
 echo "🎯 Iniciando PHP-FPM..."
 exec php-fpm
