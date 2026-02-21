@@ -23,17 +23,39 @@ echo "🚀 Iniciando aplicación Laravel..."
 #   sleep 3
 # done
 
+# until php -r "
+# try {
+#     \$dsn = 'pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require';
+#     new PDO(\$dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+#     exit(0);
+# } catch (Exception \$e) {
+#     echo '❌ Error de conexión: ' . \$e->getMessage() . PHP_EOL;
+#     exit(1);
+# }"
+# do
+#   echo "⏳ Reintentando conexión..."
+#   sleep 5
+# done
+
 until php -r "
 try {
-    \$dsn = 'pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require';
-    new PDO(\$dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+    \$h = getenv('DB_HOST');
+    \$u = getenv('DB_USERNAME');
+    \$p = getenv('DB_PASSWORD');
+    \$db = getenv('DB_DATABASE');
+    \$port = getenv('DB_PORT') ?: '5432';
+
+    echo \"Probando con Usuario: \$u en Host: \$h \n\";
+
+    \$dsn = \"pgsql:host=\$h;port=\$port;dbname=\$db;sslmode=require\";
+    new PDO(\$dsn, \$u, \$p);
     exit(0);
 } catch (Exception \$e) {
-    echo '❌ Error de conexión: ' . \$e->getMessage() . PHP_EOL;
+    echo '❌ Error Detallado: ' . \$e->getMessage() . PHP_EOL;
     exit(1);
 }"
 do
-  echo "⏳ Reintentando conexión..."
+  echo "⏳ Reintentando en 5 segundos..."
   sleep 5
 done
 
