@@ -16,7 +16,8 @@ RUN apk add --no-cache \
     unzip \
     curl \
     nodejs \
-    npm
+    npm \
+    nginx
 
 # 2. Instalación de extensiones PHP
 RUN docker-php-ext-install -j$(nproc) \
@@ -34,6 +35,9 @@ RUN sed -i 's|listen = .*|listen = 0.0.0.0:9000|' /usr/local/etc/php-fpm.d/www.c
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
+
+# 2. Copia tu configuración de Nginx al contenedor
+COPY ./nginx/default.conf /etc/nginx/http.d/default.conf
 
 # 4. Copiar archivos de dependencias primero (Optimiza el tiempo de build)
 COPY composer.json composer.lock package.json package-lock.json ./
