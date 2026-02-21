@@ -40,10 +40,14 @@ else
     echo "✅ Los datos ya existen. Saltando seeders."
 fi
 
+echo "🔗 Asegurando enlaces de assets..."
+# Crea la carpeta favicons si no existe y enlaza el icono
+mkdir -p /var/www/html/public/favicons
+ln -sf /var/www/html/public/favicon.ico /var/www/html/public/favicons/favicon.ico
+
 # 4. Publicar assets y ejecutar Build de Vite (ANTES de los permisos)
 echo "🎨 Publicando assets de la administración..."
 php artisan adminlte:install --only=assets --force
-mkdir -p /var/www/html/public/favicons
 
 echo "📦 Compilando assets de Vite..."
 npm run build
@@ -59,14 +63,16 @@ chown -R www-data:www-data /var/www/html/storage \
                          /var/www/html/public
 chmod -R 775 /var/www/html/storage \
              /var/www/html/bootstrap/cache \
-             /var/www/html/public
+             /var/www/html/public \
+             /var/www/html/vendor
 
 # 7. Optimización de producción (Cambio de clear a cache)
 echo "🧹 Optimizando caché de configuración..."
 # php artisan config:cache
 php artisan config:clear
 php artisan cache:clear
-php artisan route:cache
+# Intentar cachear, pero no detener el proceso si falla (por ahora)
+php artisan route:cache || echo "⚠️ Advertencia: No se pudieron cachear las rutas por duplicados."
 php artisan view:cache
 
 # 8. Arranque de servicios

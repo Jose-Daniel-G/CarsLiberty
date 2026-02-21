@@ -14,7 +14,7 @@ use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\ProfesorController;
 use App\Http\Controllers\AgendaController;
-use App\Http\Controllers\PicoyplacaController;
+use App\Http\Controllers\PicoyPlacaController;
 
 // Route::get("/", [HomeController::class, "index"])->name("home")->middleware('can:home');
 //RUTAS TOGGLE ACTIVATE / DEACTIVATE
@@ -31,7 +31,7 @@ Route::get('/admin', [HomeController::class, 'index'])->name('index')->middlewar
 //esta ruta es para los profesore ver quien tiene una reserva con el
 Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('show_reservas');
 
-Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores']) //Esta ruta es para los estudiantes 
+Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores']) //Esta ruta es para los estudiantes
                                                         ->name('horarios.show_reserva_profesores'); //ver reservas tiene
 
 //RUTAS CONFIGURACIONES
@@ -52,7 +52,7 @@ Route::post('/admin/asistencia/habilitar/{id}', [AsistenciaController::class, 'h
 //RUTAS SECRETARIAS
 Route::resource('/secretarias', SecretariaController::class)->names('secretarias');
 
-// RUTAS PROFESORES (->parameters) para usar profesores en ves de profesore 
+// RUTAS PROFESORES (->parameters) para usar profesores en ves de profesore
 Route::resource('/profesores', ProfesorController::class)->names('profesores')->parameters(['profesores' => 'profesor']);
 
 //RUTAS CLIENTES
@@ -71,8 +71,8 @@ Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtener
 
 //RUTAS PARA LOS VEHICULOS
 Route::resource('vehiculos', VehiculoController::class)->names('vehiculos');
-Route::resource('picoyplaca', PicoyplacaController::class)->names('picoyplaca');
-Route::put('/picoyplaca', [PicoyPlacaController::class, 'update'])->name('picoyplaca.update');
+Route::resource('picoyplaca', PicoyPlacaController::class)->names('picoyplaca');
+// Route::put('/picoyplaca', [PicoyPlacaController::class, 'update'])->name('picoyplaca.update');
 
 Route::middleware('auth')->group(function () {
     //PERMISIONS ROUTE
