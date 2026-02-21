@@ -65,8 +65,22 @@ echo "✅ Base de datos lista!"
 echo "📦 Ejecutando migraciones..."
 php artisan migrate --force
 
-echo "🌱 Ejecutando seeders..."
-php artisan db:seed --force
+# echo "🌱 Ejecutando seeders..."
+# php artisan db:seed --force
+
+echo "🌱 Verificando si es necesario ejecutar seeders..."
+# Comprobamos si la tabla de usuarios (o la que prefieras) tiene datos
+if [ $(php artisan tinker --execute="echo \App\Models\User::count();") -eq 0 ]; then
+    echo "🚀 La base de datos está vacía. Ejecutando seeders..."
+    php artisan db:seed --force
+else
+    echo "✅ Ya existen datos en la base de datos. Saltando seeders para evitar duplicados."
+fi
+
+# Asegurar permisos justo antes de arrancar
+echo "🔐 Corrigiendo permisos de storage y cache..."
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # 3. Limpieza de caché (Asegura que se lea el .env de Render)
 echo "🧹 Limpiando caché..."
