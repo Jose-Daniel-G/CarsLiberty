@@ -9,14 +9,28 @@ use App\Http\Controllers\Admin\HorarioController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\CitaController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Twilio\Rest\Client;
 
 Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
 Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
 
-/**  LANDING  **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('welcome'); });
+// /**  LANDING  **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('welcome'); });
+
+// // Cambia tu ruta '/' por esta:
+// Route::get('/', function () {
+//     return Auth::check() ? redirect()->route('admin.home') : view('welcome');
+// });
+
+// Cambia tu ruta '/' por una simple redirección si ya están logueados
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('admin.home');
+    }
+    return view('welcome');
+});
+
 /** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
 /** REGISTER  **/Route::get('/register', function () {return redirect('/');});
 
