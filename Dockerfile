@@ -46,7 +46,7 @@ COPY composer.json composer.lock package.json package-lock.json ./
 COPY . .
 
 # 6. Instalar dependencias de PHP (sin scripts para evitar fallos si no hay código aún)
-RUN composer install --no-interaction --no-dev --no-scripts --no-autoloader
+RUN composer install --no-interaction --no-dev --no-scripts --no-autoloader --prefer-dist
 
 
 # 7. Finalizar Composer e instalar/compilar assets de Node
