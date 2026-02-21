@@ -40,10 +40,10 @@ else
     echo "✅ Los datos ya existen. Saltando seeders."
 fi
 
-echo "🔗 Asegurando enlaces de assets..."
-# Crea la carpeta favicons si no existe y enlaza el icono
-mkdir -p /var/www/html/public/favicons
-ln -sf /var/www/html/public/favicon.ico /var/www/html/public/favicons/favicon.ico
+# echo "🔗 Asegurando enlaces de assets..."
+# # Crea la carpeta favicons si no existe y enlaza el icono
+# mkdir -p /var/www/html/public/favicons
+# ln -sf /var/www/html/public/favicon.ico /var/www/html/public/favicons/favicon.ico
 
 # 4. Publicar assets y ejecutar Build de Vite (ANTES de los permisos)
 echo "🎨 Publicando assets de la administración..."
