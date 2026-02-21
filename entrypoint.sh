@@ -16,11 +16,25 @@ echo "🚀 Iniciando aplicación Laravel..."
 #   sleep 3
 # done
 
-# 1. Esperar conexión segura a Postgres (con SSL para Render)
-until php -r "try { new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require', getenv('DB_USERNAME'), getenv('DB_PASSWORD')); exit(0); } catch (Exception \$e) { exit(1); }"
+# # 1. Esperar conexión segura a Postgres (con SSL para Render)
+# until php -r "try { new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require', getenv('DB_USERNAME'), getenv('DB_PASSWORD')); exit(0); } catch (Exception \$e) { exit(1); }"
+# do
+#   echo "⏳ Esperando conexión segura a Postgres en Render..."
+#   sleep 3
+# done
+
+until php -r "
+try {
+    \$dsn = 'pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require';
+    new PDO(\$dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+    exit(0);
+} catch (Exception \$e) {
+    echo '❌ Error de conexión: ' . \$e->getMessage() . PHP_EOL;
+    exit(1);
+}"
 do
-  echo "⏳ Esperando conexión segura a Postgres en Render..."
-  sleep 3
+  echo "⏳ Reintentando conexión..."
+  sleep 5
 done
 
 echo "✅ Base de datos lista!"
