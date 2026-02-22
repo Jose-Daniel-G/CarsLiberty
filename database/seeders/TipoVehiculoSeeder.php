@@ -13,12 +13,20 @@ class TipoVehiculoSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('tipos_vehiculos')->insert([
-            ['tipo' => 'sedan'],
-            ['tipo' => 'suv'],
-            ['tipo' => 'pickup'],
-            ['tipo' => 'hatchback'],
-        ]);
+        $tipos = ['sedan', 'suv', 'pickup', 'hatchback'];
+
+        foreach ($tipos as $tipo) {
+            TipoVehiculo::updateOrCreate(
+                ['tipo' => $tipo],   // condición
+                ['tipo' => $tipo]    // valores si no existe
+            );
+        }
+        // DB::table('tipos_vehiculos')->insert([
+        //     ['tipo' => 'sedan'],
+        //     ['tipo' => 'suv'],
+        //     ['tipo' => 'pickup'],
+        //     ['tipo' => 'hatchback'],
+        // ]);
         // $tipos = ['sedan', 'suv', 'pickup', 'hatchback'];
 
         // foreach ($tipos as $tipo) {
