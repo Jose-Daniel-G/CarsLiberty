@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -25,8 +26,24 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/admin';
 
     /**
-     * Define your route model bindings, pattern filters, and other route configuration.
+     * Lógica de redirección por Rol
+     * Se coloca aquí para que sea accesible globalmente
      */
+    public static function redirectTo()
+    {
+        $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            return '/admin';
+        }
+
+        if ($user->hasRole('cliente')) {
+            // Mandamos al cliente a su perfil ya que no tiene permisos de admin
+            return '/admin/user/profile';
+        }
+
+        return self::HOME;
+    }
     public function boot(): void
     {
         $this->configureRateLimiting();

@@ -13,7 +13,12 @@ try {
 
     echo \"Probando conexión con Usuario: \$u en Host: \$h \n\";
 
-    \$dsn = \"pgsql:host=\$h;port=\$port;dbname=\$db;sslmode=require\";
+    // Comentado para local, activo en Render mediante 'prefer'
+    // \$dsn = \"pgsql:host=\$h;port=\$port;dbname=\$db;sslmode=require\";
+
+    \$dsn = \"pgsql:host=\$h;port=\$port;dbname=\$db;sslmode=prefer\";
+
+
     new PDO(\$dsn, \$u, \$p);
     exit(0);
 } catch (Exception \$e) {
@@ -31,18 +36,13 @@ echo "✅ Base de datos lista!"
 echo "🔍 DIAGNÓSTICO DE INICIO:"
 echo "👤 Usuario actual: $(whoami)"
 echo "🔑 ¿Tiene APP_KEY?: $(if [ -z "$APP_KEY" ]; then echo "NO"; else echo "SÍ"; fi)"
-echo "📂 Contenido de public/vendor:"
-ls -F /var/www/html/public/vendor/icheck-bootstrap/ || echo "❌ No existe iCheck"
 echo "👥 Permisos de storage:"
 ls -ld /var/www/html/storage
-echo "🔍 DIAGNÓSTICO DE INICIO:"
-echo "👤 Usuario actual: $(whoami)"
-echo "🔑 ¿Tiene APP_KEY?: $(if [ -z "$APP_KEY" ]; then echo "NO"; else echo "SÍ"; fi)"
+echo "🔑 ¿Tiene APP_KEY Local o .env?: $(grep -q "APP_KEY=base64" .env && echo "SÍ" || echo "NO")"
 # ---------------------------------------
 
 # 2. Migraciones
 echo "📦 Ejecutando migraciones..."
-php artisan session:table
 php artisan migrate --force
 
 # 3. Ejecutar seeders siempre
@@ -60,11 +60,6 @@ php artisan tinker --execute="echo \App\Models\User::where('email','jose.jdgo97@
 
 echo "🧪 Usuarios después del seed:"
 php artisan tinker --execute="echo \App\Models\User::all();"
-
-# echo "🔗 Asegurando enlaces de assets..."
-# # Crea la carpeta favicons si no existe y enlaza el icono
-# mkdir -p /var/www/html/public/favicons
-# ln -sf /var/www/html/public/favicon.ico /var/www/html/public/favicons/favicon.ico
 
 # 4. Publicar assets y ejecutar Build de Vite (ANTES de los permisos)
 echo "🎨 Publicando assets de la administración..."
@@ -97,10 +92,22 @@ php artisan cache:clear
 php artisan route:cache || echo "⚠️ Advertencia: No se pudieron cachear las rutas por duplicados."
 php artisan view:cache
 
+
+# 8. Arranque de servicios en Render, esto solo pasa en render
+if [ "$NODE_ENV" = "production" ] || [ "$RENDER" = "true" ]; then
+    echo "🌐 Entorno de Producción detectado (Render)..."
+    mkdir -p /run/nginx
+    echo "📡 Iniciando Nginx en el puerto 10000..."
+    nginx -g "daemon on;"
+else
+    echo "🏠 Entorno Local detectado. Nginx interno saltado."
+fi
+
 # 8. Arranque de servicios
-mkdir -p /run/nginx
-echo "📡 Iniciando Nginx en el puerto 10000..."
-nginx -g "daemon on;"
+# RENDER (Comentado para local porque usas un contenedor Nginx separado):
+# mkdir -p /run/nginx
+# echo "📡 Iniciando Nginx en el puerto 10000..."
+# nginx -g "daemon on;"
 
 echo "🎯 Iniciando PHP-FPM..."
 exec php-fpm

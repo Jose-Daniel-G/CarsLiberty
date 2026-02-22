@@ -55,6 +55,4 @@ class AdminSeeder extends Seeder
 
         $jose->syncRoles(['superAdmin']);
     }
-
-    }
 }

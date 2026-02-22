@@ -31,7 +31,7 @@ return [
     */
 
     'use_ico_only' => true,
-    'use_full_favicon' => true,
+    // 'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -265,7 +265,7 @@ return [
     // 'profile_url' => false,
 
     'use_route_url' => true,
-    'dashboard_url' => 'admin.index',
+    'dashboard_url' => 'admin.dashboard',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => false, //'register',
@@ -306,7 +306,7 @@ return [
 
         [
             'text'  => 'Dashboard',
-            'route' => 'admin.home',
+            'route' => 'admin.dashboard',
             'icon'  => 'fas fa-home fa-fw ',
         ],
         [
@@ -409,19 +409,22 @@ return [
                     'text'        => 'Usuarios',
                     'route'         => 'admin.users.index',
                     'icon' => 'fas fa-users fa-fw ',
-                    'permissions'  => 'admin.users.index',
+                    // 'permissions'  => 'admin.users.index',
+                    'can'  => 'admin.users.index',
                 ],
                 [
                     'text'        => 'permisos',
                     'route'         => 'admin.permissions.index',
                     'icon' => 'fas fa-key fa-fw ',
-                    'permissions'  => 'admin.users.index',
+                    // 'permissions'  => 'admin.users.index',
+                    'can'  => 'admin.users.index',
                 ],
                 [
                     'text'        => 'roles',
                     'route'         => 'admin.roles.index',
                     'icon' => 'fa-solid fa-address-book',
-                    'permissions'  => 'admin.roles.index',
+                    // 'permissions'  => 'admin.roles.index',
+                    'can'  => 'admin.roles.index',
                 ],
                 [
                     'text' => 'Configuracion',
@@ -488,12 +491,12 @@ return [
             'submenu' => [
                 [
                     'text'  => 'Categorias',
-                    'route' => 'categories.index',
+                    'route' => 'admin.categories.index',
                     'icon'  => 'fa-solid fa-layer-group',
                 ],
                 [
                     'text'  => 'Posts',
-                    'route' => 'posts.index',
+                    'route' => 'admin.posts.index',
                     'icon'  => 'nav-icon fas fa-copy',
                 ],
                 [
@@ -542,6 +545,17 @@ return [
     */
 
     'plugins' => [
+        'BootstrapIcons' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
+                ],
+            ],
+        ],
+
         'FontAwesome' => [
             'active' => true,
             'files' => [

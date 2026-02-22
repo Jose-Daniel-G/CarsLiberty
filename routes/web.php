@@ -14,8 +14,8 @@ use App\Models\Post;
 use Twilio\Rest\Client;
 use App\Models\User;
 
-Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
-Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
+// Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
+// Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
 
 // /**  LANDING  **/Route::get('/', function () {return Auth::check() ? app(HomeController::class)->index() : view('welcome'); });
 
@@ -23,18 +23,6 @@ Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
 // Route::get('/', function () {
 //     return Auth::check() ? redirect()->route('admin.home') : view('welcome');
 // });
-
-// Cambia tu ruta '/' por una simple redirección si ya están logueados
-Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('admin.index');
-    }
-    return view('welcome');
-});
-
-Route::get('/test-user', function () {
-    return User::all();
-});
 
 // /** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
 // /** REGISTER  **/Route::get('/register', function () {return redirect('/');});
@@ -62,22 +50,45 @@ Route::get('/test-user', function () {
 
 //---------------New code ---------------------------------------------------------------------
 
+/*
+|--------------------------------------------------------------------------
+| Rutas Públicas
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('admin.dashboard');
+    }
+    return view('welcome');
+});
+
 Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
+
 Route::get('/home', function () {
     $posts = Post::with(['category', 'image'])->latest()->get();
     return view('home', compact('posts'));
 })->name('home');
 
-// --- RUTAS PROTEGIDAS (LOGUEADOS) ---
-Route::middleware(['auth', 'verified'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Rutas Protegidas (Panel de Administración)
+|--------------------------------------------------------------------------
+*/
 
-    // CAMBIO CLAVE: Nombre 'index' para que con el prefijo sea 'admin.index'
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('index');
+Route::middleware(['auth', 'verified', config('jetstream.auth_session')])
+    ->prefix('admin') // Agregamos prefijo de URL /admin/...
+    ->name('admin.')   // Agregamos prefijo de nombre admin....
+    ->group(function () {
 
+    // Dashboard principal
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+
+    // Vista adicional
     Route::get('/adminz', [HomeController::class, 'show'])->name('home.show');
 
-    // Horarios
-    Route::resource('horarios', HorarioController::class)->names('horarios');
+    // Gestión de Horarios
+    Route::resource('horarios', HorarioController::class);
     Route::get('horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('horarios.show_datos_cursos');
 
     // Notificaciones
@@ -88,21 +99,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 
-    // News/Blog
-    Route::resource('categories', CategoriesController::class)->names('categories');
-    Route::resource('posts', PostController::class)->names('posts');
+    // News / Blog (CRUDs)
+    Route::resource('categories', CategoriesController::class);
+    Route::resource('posts', PostController::class);
 });
 
-// --- REGISTRO (DESACTIVADO) ---
+/*
+|--------------------------------------------------------------------------
+| Rutas de Utilidad / Test
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/register', function () {
     return redirect('/');
 });
 
-
-
-
-//-------------------------------------------------------------------------------
-
+Route::get('/test-user', function () {
+    return User::all();
+});
 
 
 Route::get('/test-whatsapp', function () {

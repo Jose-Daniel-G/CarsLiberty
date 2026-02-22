@@ -10,6 +10,7 @@ use App\Models\Secretaria;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class ClienteSeeder extends Seeder
 {
@@ -17,119 +18,136 @@ class ClienteSeeder extends Seeder
     {
         //--------------------------------------------]
         // -------------[ Cliente ]----------------------
-        User::create([
-            'name' => 'Cliente',
-            'email' => 'cliente@email.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('123123123'),
-        ])->assignRole('cliente');
+        // Datos de los clientes para iterar y evitar repetir código
+        $clientesData = [
+            [
+                'user' => [
+                    'name' => 'Cliente',
+                    'email' => 'cliente@email.com',
+                ],
+                'cliente' => [
+                    'nombres' => 'Cliente',
+                    'apellidos' => 'alracona',
+                    'cc' => '12312753',
+                    'genero' => 'M',
+                    'celular' => '12395113',
+                    'direccion' => 'Cll 9 oeste',
+                    'contacto_emergencia' => '65495113',
+                    'observaciones' => 'le irrita estar cerca del povo',
+                ],
+                'cursos' => [1, 2]
+            ],
+            [
+                'user' => [
+                    'name' => 'Fancisco Antonio Grijalba',
+                    'email' => 'francisco.grijalba@email.com',
+                ],
+                'cliente' => [
+                    'nombres' => 'Fancisco Antonio',
+                    'apellidos' => 'Grijalba',
+                    'cc' => '23548965',
+                    'genero' => 'M',
+                    'celular' => '987654321',
+                    'direccion' => 'Cll 7 oeste',
+                    'contacto_emergencia' => '65495113',
+                    'observaciones' => 'migrana',
+                ],
+                'cursos' => [1, 3]
+            ],
+            [
+                'user' => [
+                    'name' => 'ARGEMIRO ESCOBAR GUTIERRES',
+                    'email' => 'argemiro.escobar@email.com',
+                ],
+                'cliente' => [
+                    'nombres' => 'ARGEMIRO',
+                    'apellidos' => 'ESCOBAR',
+                    'cc' => '2354765',
+                    'genero' => 'M',
+                    'celular' => '987654321',
+                    'direccion' => 'Cll 7 oeste',
+                    'contacto_emergencia' => '65495113',
+                    'observaciones' => 'migrana',
+                ],
+                'cursos' => [3]
+            ],
+            [
+                'user' => [
+                    'name' => 'Gaspar',
+                    'email' => 'gaspar@email.com',
+                ],
+                'cliente' => [
+                    'nombres' => 'Gaspar',
+                    'apellidos' => 'Ijaji',
+                    'cc' => '23547657',
+                    'genero' => 'M',
+                    'celular' => '987654321',
+                    'direccion' => 'Cll 7 oeste',
+                    'contacto_emergencia' => '65495113',
+                    'observaciones' => 'migrana',
+                ],
+                'cursos' => [2]
+            ],
+            [
+                'user' => [
+                    'name' => 'Juan David Grijalba Osorio',
+                    'email' => 'juandavidgo1997@email.com',
+                ],
+                'cliente' => [
+                    'nombres' => 'Juan David',
+                    'apellidos' => 'Grijalba Osorio',
+                    'cc' => '357986644',
+                    'genero' => 'M',
+                    'celular' => '314756832',
+                    'direccion' => 'Cll 7 oeste',
+                    'contacto_emergencia' => '65495113',
+                    'observaciones' => 'migrana',
+                ],
+                'cursos' => [1, 2, 3]
+            ],
+        ];
 
-        $cliente = Cliente::create([
-            'nombres' => 'Cliente',
-            'apellidos' => 'alracona',
-            'cc' => '12312753',
-            'genero' => 'M',
-            'celular' => '12395113',
-            'direccion' => 'Cll 9 oeste',
-            'contacto_emergencia' => '65495113',
-            'observaciones' => 'le irrita estar cerca del povo',
-            'user_id' => '8',
-        ]);
-        // Relacionar con los cursos (asumiendo que los cursos ya existen)
-        $cursos = Curso::whereIn('id', [1, 2])->get(); // Obtener los cursos con ID 1 y 2
-        $cliente->cursos()->attach($cursos); // Crear las relaciones
+        foreach ($clientesData as $data) {
+            // 1. Crear o actualizar Usuario
+            $user = User::updateOrCreate(
+                ['email' => $data['user']['email']],
+                [
+                    'name' => $data['user']['name'],
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('123123123'),
+                ]
+            );
 
-        User::create([
-            'name' => 'Fancisco Antonio Grijalba',
-            'email' => 'francisco.grijalba@email.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('123123123'),
-        ])->assignRole('cliente');
-        $cliente = Cliente::create([
-            'nombres' => 'Fancisco Antonio',
-            'apellidos' => 'Grijalba',
-            'cc' => '23548965',
-            'genero' => 'M',
-            'celular' => '987654321',
-            'direccion' => 'Cll 7 oeste',
-            'contacto_emergencia' => '65495113',
-            'observaciones' => 'migrana',
-            'user_id' => '9',
-        ]);
-        // Relacionar con los cursos (asumiendo que los cursos ya existen)
-        $cursos = Curso::whereIn('id', [1, 3])->get(); // Obtener los cursos con ID 1 y 3
-        $cliente->cursos()->attach($cursos); // Crear las relaciones
+            // Asignar rol al usuario
+            if (!$user->hasRole('cliente')) {
+                $user->assignRole('cliente');
+            }
 
-        User::create([
-            'name' => 'ARGEMIRO ESCOBAR GUTIERRES',
-            'email' => 'argemiro.escobar@email.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('123123123'),
-        ])->assignRole('cliente');
+            // 2. Crear o actualizar Cliente usando el ID real del usuario
+            $cliente = Cliente::updateOrCreate(
+                ['user_id' => $user->id],
+                $data['cliente']
+            );
 
-        $cliente = Cliente::create([
-            'nombres' => 'ARGEMIRO',
-            'apellidos' => 'ESCOBAR',
-            'cc' => '2354765',
-            'genero' => 'M',
-            'celular' => '987654321',
-            'direccion' => 'Cll 7 oeste',
-            'contacto_emergencia' => '65495113',
-            'observaciones' => 'migrana',
-            'user_id' => '10',
-        ]);
-        $cursos = Curso::whereIn('id', [3])->get(); // Obtener los cursos con ID 3
-        $cliente->cursos()->attach($cursos); // Crear las relaciones
+            // 3. Sincronizar cursos (sync evita duplicados en la tabla pivote)
+            $cursos = Curso::whereIn('id', $data['cursos'])->get();
+            $cliente->cursos()->sync($cursos);
+        }
 
-        User::create([
-            'name' => 'Gaspar',
-            'email' => 'gaspar@email.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('123123123'),
-        ])->assignRole('cliente');
+        // --- ESPECTADOR ---
+        $espectador = User::updateOrCreate(
+            ['email' => 'espectador@email.com'],
+            [
+                'name' => 'Espectador',
+                'email_verified_at' => now(),
+                'password' => Hash::make('123123123'),
+            ]
+        );
 
-        $cliente = Cliente::create([
-            'nombres' => 'Gaspar',
-            'apellidos' => 'Ijaji',
-            'cc' => '23547657',
-            'genero' => 'M',
-            'celular' => '987654321',
-            'direccion' => 'Cll 7 oeste',
-            'contacto_emergencia' => '65495113',
-            'observaciones' => 'migrana',
-            'user_id' => '11',
-        ]);
+        if (!$espectador->hasRole('espectador')) {
+            $espectador->assignRole('espectador');
+        }
 
-        $cursos = Curso::whereIn('id', [2])->get(); // Obtener los cursos con ID 1 y 2
-        $cliente->cursos()->attach($cursos); // Crear las relaciones
-        User::create([
-            'name' => 'Juan David Grijalba Osorio',
-            'email' => 'juandavidgo1997@email.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('123123123'),
-        ])->assignRole('cliente');
-        
-        $cliente = Cliente::create([
-            'nombres' => 'Juan David',
-            'apellidos' => 'Grijalba Osorio',
-            'cc' => '357986644',
-            'genero' => 'M',
-            'celular' => '314756832',
-            'direccion' => 'Cll 7 oeste',
-            'contacto_emergencia' => '65495113',
-            'observaciones' => 'migrana',
-            'user_id' => '12',
-        ])->assignRole('cliente');
-        $cursos = Curso::whereIn('id', [1,2, 3])->get(); // Obtener los cursos con ID 1 y 3
-        $cliente->cursos()->attach($cursos); // Crear las relaciones
-
-        //-------------[ ESPECTADOR ]----------------]
-        User::create([
-            'name' => 'Espectador',
-            'email' => 'espectador@email.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('123123123'),
-        ])->assignRole('espectador');
         //-------------[ USUARIOS ]----------------]
 
         //         User::factory()->create([
