@@ -27,6 +27,16 @@ done
 
 echo "✅ Base de datos lista!"
 
+# --- SECCIÓN DE DIAGNÓSTICO TEMPORAL ---
+echo "🔍 DIAGNÓSTICO DE INICIO:"
+echo "👤 Usuario actual: $(whoami)"
+echo "🔑 ¿Tiene APP_KEY?: $(if [ -z "$APP_KEY" ]; then echo "NO"; else echo "SÍ"; fi)"
+echo "📂 Contenido de public/vendor:"
+ls -F /var/www/html/public/vendor/icheck-bootstrap/ || echo "❌ No existe iCheck"
+echo "👥 Permisos de storage:"
+ls -ld /var/www/html/storage
+# ---------------------------------------
+
 # 2. Migraciones
 echo "📦 Ejecutando migraciones..."
 php artisan migrate --force
