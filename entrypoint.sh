@@ -57,7 +57,7 @@ fi
 
 # 4. Publicar assets y ejecutar Build de Vite (ANTES de los permisos)
 echo "🎨 Publicando assets de la administración..."
-php artisan adminlte:install --only=assets --force --interactive=n
+php artisan adminlte:install --only=assets --force --interactive
 
 echo "📦 Compilando assets de Vite..."
 npm run build
