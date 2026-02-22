@@ -58,6 +58,9 @@ php artisan tinker --execute="echo \App\Models\User::where('email','jose.jdgo97@
 echo "🔑 Password hash:"
 php artisan tinker --execute="echo \App\Models\User::where('email','jose.jdgo97@gmail.com')->first()->password;"
 
+echo "🧪 Usuarios después del seed:"
+php artisan tinker --execute="echo \App\Models\User::all();"
+
 # echo "🔗 Asegurando enlaces de assets..."
 # # Crea la carpeta favicons si no existe y enlaza el icono
 # mkdir -p /var/www/html/public/favicons
