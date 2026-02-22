@@ -27,7 +27,7 @@ Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
 // Cambia tu ruta '/' por una simple redirección si ya están logueados
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route('admin.home');
+        return redirect()->route('admin.index');
     }
     return view('welcome');
 });
@@ -63,7 +63,7 @@ Route::get('/test-user', function () {
 //---------------New code ---------------------------------------------------------------------
 
 Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
-Route::get('/home', function(){
+Route::get('/home', function () {
     $posts = Post::with(['category', 'image'])->latest()->get();
     return view('home', compact('posts'));
 })->name('home');
@@ -71,16 +71,17 @@ Route::get('/home', function(){
 // --- RUTAS PROTEGIDAS (LOGUEADOS) ---
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard Principal
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');
-    Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
+    // CAMBIO CLAVE: Nombre 'index' para que con el prefijo sea 'admin.index'
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('index');
+
+    Route::get('/adminz', [HomeController::class, 'show'])->name('home.show');
 
     // Horarios
-    Route::resource('/admin/horarios', HorarioController::class)->names('admin.horarios');
-    Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('admin.horarios.show_datos_cursos');
+    Route::resource('horarios', HorarioController::class)->names('horarios');
+    Route::get('horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('horarios.show_datos_cursos');
 
     // Notificaciones
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
     // Citas
@@ -93,7 +94,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // --- REGISTRO (DESACTIVADO) ---
-Route::get('/register', function () { return redirect('/'); });
+Route::get('/register', function () {
+    return redirect('/');
+});
 
 
 

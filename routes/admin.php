@@ -94,7 +94,8 @@ Route::middleware(['auth'])->group(function () {
 
     // --- HOME & DASHBOARD ---
     // Asegúrate de que el nombre coincida con tus redirecciones (admin.home)
-    Route::get('/admin', [HomeController::class, 'index'])->name('admin.home');
+    // Route::get('/admin', [HomeController::class, 'index'])->name('admin.home');
+    Route::get('/', [HomeController::class, 'index'])->name('index');
     Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('show_reservas');
     Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores'])->name('horarios.show_reserva_profesores');
 
