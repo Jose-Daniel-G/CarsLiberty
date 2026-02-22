@@ -44,14 +44,9 @@ echo "🔑 ¿Tiene APP_KEY?: $(if [ -z "$APP_KEY" ]; then echo "NO"; else echo "
 echo "📦 Ejecutando migraciones..."
 php artisan migrate --force
 
-# 3. Seeders Inteligentes
-echo "🌱 Verificando si es necesario ejecutar seeders..."
-if php artisan tinker --execute="echo \App\Models\TipoVehiculo::where('tipo', 'sedan')->count();" | grep -q '0'; then
-    echo "🚀 Datos no encontrados. Ejecutando seeders..."
-    php artisan db:seed --force
-else
-    echo "✅ Los datos ya existen. Saltando seeders."
-fi
+# 3. Ejecutar seeders siempre
+echo "🌱 Ejecutando seeders..."
+php artisan db:seed --force
 
 # echo "🔗 Asegurando enlaces de assets..."
 # # Crea la carpeta favicons si no existe y enlaza el icono
