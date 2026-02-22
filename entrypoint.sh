@@ -42,6 +42,7 @@ echo "🔑 ¿Tiene APP_KEY?: $(if [ -z "$APP_KEY" ]; then echo "NO"; else echo "
 
 # 2. Migraciones
 echo "📦 Ejecutando migraciones..."
+php artisan session:table
 php artisan migrate --force
 
 # 3. Ejecutar seeders siempre
