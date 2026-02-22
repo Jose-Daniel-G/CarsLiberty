@@ -35,6 +35,9 @@ echo "📂 Contenido de public/vendor:"
 ls -F /var/www/html/public/vendor/icheck-bootstrap/ || echo "❌ No existe iCheck"
 echo "👥 Permisos de storage:"
 ls -ld /var/www/html/storage
+echo "🔍 DIAGNÓSTICO DE INICIO:"
+echo "👤 Usuario actual: $(whoami)"
+echo "🔑 ¿Tiene APP_KEY?: $(if [ -z "$APP_KEY" ]; then echo "NO"; else echo "SÍ"; fi)"
 # ---------------------------------------
 
 # 2. Migraciones
