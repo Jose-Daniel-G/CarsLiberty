@@ -36,28 +36,71 @@ Route::get('/test-user', function () {
     return User::all();
 });
 
-/** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
-/** REGISTER  **/Route::get('/register', function () {return redirect('/');});
+// /** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
+// /** REGISTER  **/Route::get('/register', function () {return redirect('/');});
 
-//RUTAS HORARIOS ADMIN
-Route::resource('/admin/horarios', HorarioController::class)->names('admin.horarios');
-Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('admin.horarios.show_datos_cursos');
+// //RUTAS HORARIOS ADMIN
+// Route::resource('/admin/horarios', HorarioController::class)->names('admin.horarios');
+// Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('admin.horarios.show_datos_cursos');
 
-Route::resource('categories',CategoriesController::class)->names('categories');
-Route::resource('posts', PostController::class)->names('posts');
-Route::get('home', function(){  $posts = Post::with(['category', 'image'])->latest()->get(); return view('home', compact('posts'));})->name('home');
+// Route::resource('categories',CategoriesController::class)->names('categories');
+// Route::resource('posts', PostController::class)->names('posts');
+// Route::get('home', function(){  $posts = Post::with(['category', 'image'])->latest()->get(); return view('home', compact('posts'));})->name('home');
 
-Route::middleware(['auth'])->group(function () { // Es para leer las notificaciones de los posts creados por otros
+// Route::middleware(['auth'])->group(function () { // Es para leer las notificaciones de los posts creados por otros
+//     Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+//     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+// });
+
+// Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
+// Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+// // Route::post('/historial/registrar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'registrarCursoCompletado']);
+// // Route::get('/historial/completar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'completarCurso']);
+// // Route::get('/historial/listar/{clienteId}', [HistorialCursoController::class, 'listarCursosCompletados']);
+// // Route::get('/admin/profesores/reportes', [ProfesorController::class, 'reportes'])->name('admin.profesores.reportes');
+
+
+//---------------New code ---------------------------------------------------------------------
+
+Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
+Route::get('/home', function(){
+    $posts = Post::with(['category', 'image'])->latest()->get();
+    return view('home', compact('posts'));
+})->name('home');
+
+// --- RUTAS PROTEGIDAS (LOGUEADOS) ---
+Route::middleware(['auth', 'verified'])->group(function () {
+
+    // Dashboard Principal
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');
+    Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
+
+    // Horarios
+    Route::resource('/admin/horarios', HorarioController::class)->names('admin.horarios');
+    Route::get('/admin/horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('admin.horarios.show_datos_cursos');
+
+    // Notificaciones
     Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+    // Citas
+    Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
+    Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+
+    // News/Blog
+    Route::resource('categories', CategoriesController::class)->names('categories');
+    Route::resource('posts', PostController::class)->names('posts');
 });
 
-Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
-Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
-// Route::post('/historial/registrar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'registrarCursoCompletado']);
-// Route::get('/historial/completar/{clienteId}/{cursoId}', [HistorialCursoController::class, 'completarCurso']);
-// Route::get('/historial/listar/{clienteId}', [HistorialCursoController::class, 'listarCursosCompletados']);
-// Route::get('/admin/profesores/reportes', [ProfesorController::class, 'reportes'])->name('admin.profesores.reportes');
+// --- REGISTRO (DESACTIVADO) ---
+Route::get('/register', function () { return redirect('/'); });
+
+
+
+
+//-------------------------------------------------------------------------------
+
+
 
 Route::get('/test-whatsapp', function () {
     $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));

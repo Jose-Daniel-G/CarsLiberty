@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Category;
-use App\Models\Tag;
-use App\Models\User;
+// use App\Models\Category;
+// use App\Models\Tag;
+// use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +18,21 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminSeeder::class,
         ]);
+
+        // 2. Datos de negocio (Descoméntalos si ya usan firstOrCreate)
+        $this->call([
+            TipoVehiculoSeeder::class,
+            SecretariaSeeder::class,
+            ProfesorSeeder::class,
+            CursoSeeder::class,
+            HorarioSeeder::class,
+            PicoyPlacaSeeder::class,
+            VehiculoSeeder::class,
+            ClienteSeeder::class,
+            // ClienteCursoSeeder::class, // Asegúrate de que este archivo exista
+        ]);
+
+
         // Storage::deleteDirectory('posts');
         // Storage::makeDirectory('posts');
                 // $this->call([
