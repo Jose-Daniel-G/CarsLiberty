@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Twilio\Rest\Client;
+use App\Models\User;
 
 Route::post('/message', [HomeController::class, 'message_landing_page'])->name('message.landing_page');
 Route::get('/adminz', [HomeController::class, 'show'])->name('admin.home.show');
@@ -29,6 +30,10 @@ Route::get('/', function () {
         return redirect()->route('admin.home');
     }
     return view('welcome');
+});
+
+Route::get('/test-user', function () {
+    return User::all();
 });
 
 /** DASHBOARD **/Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');});// ->group(function () {Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');});
