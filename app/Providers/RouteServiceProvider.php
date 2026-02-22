@@ -29,21 +29,23 @@ class RouteServiceProvider extends ServiceProvider
      * Lógica de redirección por Rol
      * Se coloca aquí para que sea accesible globalmente
      */
-    public static function redirectTo()
-    {
-        $user = Auth::user();
+    // public static function redirectTo()
+    // {
+    //     /** @var \App\Models\User|null $user */
+    //     $user = Auth::user();
 
-        if ($user->hasRole('admin')) {
-            return '/admin';
-        }
+    //     if ($user->hasRole('admin')) {
+    //         return '/admin';
+    //     }
 
-        if ($user->hasRole('cliente')) {
-            // Mandamos al cliente a su perfil ya que no tiene permisos de admin
-            return '/admin/user/profile';
-        }
+    //     if ($user->hasRole('cliente')) {
+    //         // Mandamos al cliente a su perfil ya que no tiene permisos de admin
+    //         return '/admin/user/profile';
+    //     }
 
-        return self::HOME;
-    }
+    //     return self::HOME;
+    // }
+
     public function boot(): void
     {
         $this->configureRateLimiting();
