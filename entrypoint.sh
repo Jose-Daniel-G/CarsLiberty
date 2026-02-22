@@ -44,6 +44,10 @@ echo "🔑 ¿Tiene APP_KEY?: $(if [ -z "$APP_KEY" ]; then echo "NO"; else echo "
 echo "📦 Ejecutando migraciones..."
 php artisan migrate --force
 
+php artisan tinker --execute="echo \App\Models\User::count();"
+php artisan tinker --execute="echo \App\Models\User::where('email','jose.jdgo97@gmail.com')->exists() ? 'EXISTE' : 'NO EXISTE';"
+php artisan tinker --execute="echo \App\Models\User::where('email','jose.jdgo97@gmail.com')->first()->password;"
+
 # 3. Ejecutar seeders siempre
 echo "🌱 Ejecutando seeders..."
 php artisan db:seed --force
