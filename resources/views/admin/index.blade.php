@@ -183,7 +183,8 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#claseModal">
                                 Agendar
                             </button>
-                            <a href="{{ route('admin.home.show') }}" class="btn btn-success">
+                            {{-- <a href="{{ route('admin.home.show') }}" class="btn btn-success"> --}}
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-success">
                                 <i class="bi bi-calendar-check"></i>Ver las reservas
                             </a>
                         </div>
@@ -288,7 +289,7 @@
     <script>
         // ---------------------------------------
         // Cargar contenido dinámico en selects
-        // --------------------------------------- 
+        // ---------------------------------------
         $('#cursoid').on('change', function() {
             const cursoid = $(this).val();
             if (!cursoid) return;

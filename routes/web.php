@@ -55,10 +55,12 @@ use App\Models\User;
 | Rutas Públicas
 |--------------------------------------------------------------------------
 */
-
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route('admin.dashboard');
+        // Redirección inteligente: si es admin al dashboard, si no al home público o perfil
+        return Auth::user()->hasRole('admin')
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('home');
     }
     return view('welcome');
 });
@@ -72,41 +74,50 @@ Route::get('/home', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Rutas Protegidas (Panel de Administración)
+| Rutas Protegidas (Panel de Administración y Usuario)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware(['auth', 'verified', config('jetstream.auth_session')])
-    ->prefix('admin') // Agregamos prefijo de URL /admin/...
-    ->name('admin.')   // Agregamos prefijo de nombre admin....
+    ->prefix('admin')
+    ->name('admin.')
     ->group(function () {
 
-    // Dashboard principal
+// 1. Redirección de la raíz del prefijo (/admin)
+    // Usamos una función anónima más limpia
+    Route::get('/', function () {
+        return Auth::user()->hasRole('admin')
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('home');
+    });
+
+    // 2. Rutas Administrativas
+    // Sugerencia: Si usas Spatie, podrías añadir ->middleware('role:admin') a este dashboard
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-    // Vista adicional
-    Route::get('/adminz', [HomeController::class, 'show'])->name('home.show');
-
-    // Gestión de Horarios
+    // Recursos
     Route::resource('horarios', HorarioController::class);
     Route::get('horarios/curso/{id}', [HorarioController::class, 'show_datos_cursos'])->name('horarios.show_datos_cursos');
+
+    Route::resource('categories', CategoriesController::class);
+    Route::resource('posts', PostController::class);
 
     // Notificaciones
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
-    // Citas
+    // 3. Rutas Compartidas (Ej: Citas)
+    // Aquí es importante que en el CitaController filtres los datos según el rol
     Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 
-    // News / Blog (CRUDs)
-    Route::resource('categories', CategoriesController::class);
-    Route::resource('posts', PostController::class);
+    // AQUÍ DEBES DEFINIR LA RUTA DE PERFIL SI LA VAS A USAR:
+    // Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Rutas de Utilidad / Test
+| Rutas de Utilidad
 |--------------------------------------------------------------------------
 */
 
@@ -114,28 +125,7 @@ Route::get('/register', function () {
     return redirect('/');
 });
 
+// TEST: Protege esto para que solo el admin vea los usuarios
 Route::get('/test-user', function () {
-    return User::all();
-});
-
-
-Route::get('/test-whatsapp', function () {
-    $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
-
-    $message = $twilio->messages->create(
-        'whatsapp:+573147072792', // tu número en formato internacional
-        [
-            'from' => env('TWILIO_WHATSAPP_FROM'),
-            'body' => '🚗 Hola! Tu cita ha sido agendada para el 25 de octubre a las 3:00 PM.'
-        ]
-    );
-
-    return $message;
-});
-Route::get('/test-whatsapp-tokens', function () {
-    dd([
-        'sid' => env('TWILIO_SID'),
-        'token' => env('TWILIO_TOKEN'),
-        'from' => env('TWILIO_WHATSAPP_FROM')
-    ]);
+    return (Auth::check() && Auth::user()->hasRole('admin')) ? User::all() : abort(403);
 });

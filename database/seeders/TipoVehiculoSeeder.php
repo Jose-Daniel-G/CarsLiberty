@@ -13,25 +13,17 @@ class TipoVehiculoSeeder extends Seeder
      */
     public function run(): void
     {
-        $tipos = ['sedan', 'suv', 'pickup', 'hatchback'];
+
+        $tipos = ['sedan', 'suv', 'pickup', 'hatchback', 'moto'];
 
         foreach ($tipos as $tipo) {
-            TipoVehiculo::updateOrCreate(
-                ['tipo' => $tipo],   // condición
-                ['tipo' => $tipo]    // valores si no existe
+            // updateOrInsert no busca timestamps (created_at/updated_at) por defecto
+            // lo que soluciona tu error anterior.
+            DB::table('tipos_vehiculos')->updateOrInsert(
+                ['tipo' => $tipo], // Lo que busca para saber si ya existe
+                ['tipo' => $tipo]  // Lo que inserta si no lo encuentra
             );
         }
-        // DB::table('tipos_vehiculos')->insert([
-        //     ['tipo' => 'sedan'],
-        //     ['tipo' => 'suv'],
-        //     ['tipo' => 'pickup'],
-        //     ['tipo' => 'hatchback'],
-        // ]);
-        // $tipos = ['sedan', 'suv', 'pickup', 'hatchback'];
-
-        // foreach ($tipos as $tipo) {
-        //     DB::table('tipos_vehiculos')->insert(['tipo' => $tipo]);
-        // }
 
     }
 }

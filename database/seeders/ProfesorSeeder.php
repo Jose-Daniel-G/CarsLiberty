@@ -68,29 +68,26 @@ class ProfesorSeeder extends Seeder
         //     'user_id' => '7',
         // ]);
         //--------------------------------------------]
-        // 1. Gestionar el usuario del profesor
-        $user = User::updateOrCreate(
-            ['email' => 'profesor@email.com'], // Lo busca por email
-            [
-                'name' => 'Profesor',
-                'email_verified_at' => now(),
-                'password' => Hash::make('123123123'),
-            ]
-        );
+        // En lugar de usar un ID fijo como 7...
+        // Buscamos el primer usuario que tenga el rol de profesor (o simplemente el último creado)
+        $user = User::where('name', 'Martin Profe')->first();
 
-        // Asignar rol si no lo tiene
-        if (!$user->hasRole('profesor')) {
-            $user->assignRole('profesor');
+        // Si no existe, lo creamos primero para asegurar el ID
+        if (!$user) {
+            $user = User::create([
+                'name' => 'Martin Profe',
+                'email' => 'martin@profe.com',
+                'password' => bcrypt('password'),
+            ]);
         }
 
-        // 2. Gestionar los datos del modelo Profesor
+        // Ahora usamos el ID real que generó la base de datos
         Profesor::updateOrCreate(
-            ['user_id' => $user->id], // Busca si este usuario ya es profesor
+            ['user_id' => $user->id], // Usamos el ID dinámico
             [
                 'nombres' => 'Martin Profe',
                 'apellidos' => 'Valdes',
                 'telefono' => '123123213',
-                'user_id' => '7',
             ]
         );
     }

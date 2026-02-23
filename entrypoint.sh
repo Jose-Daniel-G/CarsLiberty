@@ -109,5 +109,9 @@ fi
 # echo "📡 Iniciando Nginx en el puerto 10000..."
 # nginx -g "daemon on;"
 
-echo "🎯 Iniciando PHP-FPM..."
-exec php-fpm
+# echo "🎯 Iniciando PHP-FPM..."
+# exec php-fpm
+
+# Cambia la última línea por esto:
+echo "🎯 Iniciando PHP-FPM en modo red..."
+exec php-fpm -R -d listen=9000

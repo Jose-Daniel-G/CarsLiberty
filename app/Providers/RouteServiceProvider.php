@@ -19,32 +19,30 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
 
-    // public const HOME = '/';
+     public const HOME = '/admin/dashboard';
 
-    // Por esto:
-    // public const HOME = '/dashboard';
-    public const HOME = '/admin';
+     /**
+      * Lógica de redirección por Rol
+      */
+     public static function redirectTo()
+     {
+         $user = Auth::user();
 
-    /**
-     * Lógica de redirección por Rol
-     * Se coloca aquí para que sea accesible globalmente
-     */
-    // public static function redirectTo()
-    // {
-    //     /** @var \App\Models\User|null $user */
-    //     $user = Auth::user();
+         if (!$user) {
+             return self::HOME;
+         }
 
-    //     if ($user->hasRole('admin')) {
-    //         return '/admin';
-    //     }
+         // Usamos match o ifs, pero asegurando que las rutas existen
+         if ($user->hasRole('admin')) {
+             return '/admin/dashboard';
+         }
 
-    //     if ($user->hasRole('cliente')) {
-    //         // Mandamos al cliente a su perfil ya que no tiene permisos de admin
-    //         return '/admin/user/profile';
-    //     }
+         if ($user->hasRole('cliente')) {
+             return '/admin/user/profile';
+         }
 
-    //     return self::HOME;
-    // }
+         return self::HOME;
+     }
 
     public function boot(): void
     {

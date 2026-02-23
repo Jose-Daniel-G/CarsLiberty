@@ -31,7 +31,7 @@ use App\Http\Controllers\PicoyPlacaController;
 // //esta ruta es para los profesore ver quien tiene una reserva con el
 // Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('show_reservas');
 
-// Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores']) //Esta ruta es para los estudiantes
+// Route::get('horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores']) //Esta ruta es para los estudiantes
 //                                                         ->name('horarios.show_reserva_profesores'); //ver reservas tiene
 
 // //RUTAS CONFIGURACIONES
@@ -42,12 +42,12 @@ use App\Http\Controllers\PicoyPlacaController;
 // Route::put('/user/profile-password', [UserProfileController::class, 'updatePassword'])->name('user-profile-password.updatePassword');
 
 // // Rutas para profesores
-// Route::get('/admin/profesor/asistencia', [AsistenciaController::class, 'index'])->name('asistencias.index');
-// Route::post('/admin/asistencia/registrar', [AsistenciaController::class, 'store'])->name('asistencias.store');
+// Route::get('profesor/asistencia', [AsistenciaController::class, 'index'])->name('asistencias.index');
+// Route::post('asistencia/registrar', [AsistenciaController::class, 'store'])->name('asistencias.store');
 
 // // Rutas para secretarias
-// Route::get('/admin/secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('secretarias.inasistencias');
-// Route::post('/admin/asistencia/habilitar/{id}', [AsistenciaController::class, 'habilitarCliente'])->name('asistencia.habilitar');
+// Route::get('secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('secretarias.inasistencias');
+// Route::post('asistencia/habilitar/{id}', [AsistenciaController::class, 'habilitarCliente'])->name('asistencia.habilitar');
 
 // //RUTAS SECRETARIAS
 // Route::resource('/secretarias', SecretariaController::class)->names('secretarias');
@@ -66,8 +66,8 @@ use App\Http\Controllers\PicoyPlacaController;
 // Route::resource('/agendas', AgendaController::class)->names('agendas');
 
 // //RUTAS para desplegar select
-// Route::get('/admin/profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
-// Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtenerCursos'])->name('obtenerCursos');
+// Route::get('profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
+// Route::get('cursos/evente/{clienteId}', [CursoController::class, 'obtenerCursos'])->name('obtenerCursos');
 
 // //RUTAS PARA LOS VEHICULOS
 // Route::resource('vehiculos', VehiculoController::class)->names('vehiculos');
@@ -92,12 +92,23 @@ use App\Http\Controllers\PicoyPlacaController;
 // --- GRUPO PROTEGIDO POR AUTH ---
 Route::middleware(['auth'])->group(function () {
 
-    // --- HOME & DASHBOARD ---
-    // Asegúrate de que el nombre coincida con tus redirecciones (admin.home)
-    // Route::get('/admin', [HomeController::class, 'index'])->name('admin.home');
-    Route::get('/', [HomeController::class, 'index'])->name('index');
+    // --- LA RUTA QUE TE FALTA (Dashboard Principal) ---
+    // Esta ruta responde a /admin/dashboard
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+
+    // Esta es la ruta específica que te lanza el error:
+    Route::get('/adminz', [HomeController::class, 'show'])->name('home.show');
+
+    // Agregamos la ruta de cursos completados que también está en tu Blade:
+    Route::get('/cursos/completados', [CursoController::class, 'completados'])->name('cursos.completados');
+
+    // Redirección si entran a /admin a secas
+    Route::get('/', function() {
+        return redirect()->route('admin.dashboard');
+    });
+
     Route::get('/show_reservas/{id}', [HomeController::class, 'show_reservas'])->name('show_reservas');
-    Route::get('/admin/horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores'])->name('horarios.show_reserva_profesores');
+    Route::get('horarios/show_reserva_profesores', [HomeController::class, 'show_reserva_profesores'])->name('horarios.show_reserva_profesores');
 
     // --- TOGGLE STATUS ---
     Route::patch('/clientes/{id}/toggle-status', [ClienteController::class, 'toggleStatus'])->name('clientes.toggleStatus');
@@ -124,14 +135,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/user/profile-password', [UserProfileController::class, 'updatePassword'])->name('user-profile-password.updatePassword');
 
     // --- ASISTENCIAS ---
-    Route::get('/admin/profesor/asistencia', [AsistenciaController::class, 'index'])->name('asistencias.index');
-    Route::post('/admin/asistencia/registrar', [AsistenciaController::class, 'store'])->name('asistencias.store');
-    Route::get('/admin/secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('secretarias.inasistencias');
-    Route::post('/admin/asistencia/habilitar/{id}', [AsistenciaController::class, 'habilitarCliente'])->name('asistencia.habilitar');
+    Route::get('profesor/asistencia', [AsistenciaController::class, 'index'])->name('asistencias.index');
+    Route::post('asistencia/registrar', [AsistenciaController::class, 'store'])->name('asistencias.store');
+    Route::get('secretaria/inasistencias', [AsistenciaController::class, 'show'])->name('secretarias.inasistencias');
+    Route::post('asistencia/habilitar/{id}', [AsistenciaController::class, 'habilitarCliente'])->name('asistencia.habilitar');
 
     // --- SELECTS DINÁMICOS ---
-    Route::get('/admin/profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
-    Route::get('/admin/cursos/evente/{clienteId}', [CursoController::class, 'obtenerCursos'])->name('obtenerCursos');
+    Route::get('profesores/evente/{cursoId}', [ProfesorController::class, 'obtenerProfesores'])->name('obtenerProfesores');
+    Route::get('cursos/evente/{clienteId}', [CursoController::class, 'obtenerCursos'])->name('obtenerCursos');
 
     // --- ADMINISTRACIÓN DE ACCESOS (Roles/Permissions/Users) ---
     Route::resource('roles', RoleController::class)->names('roles');
