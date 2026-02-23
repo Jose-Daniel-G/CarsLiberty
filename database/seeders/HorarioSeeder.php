@@ -133,5 +133,6 @@ class HorarioSeeder extends Seeder
                 'curso_id' => $curso->id,
                 'profesor_id' => $profesor->id,
             ]);
+        }
     }
 }
