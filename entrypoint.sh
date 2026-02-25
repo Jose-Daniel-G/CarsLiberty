@@ -47,7 +47,7 @@ php artisan migrate --force
 
 # 3. Ejecutar seeders siempre
 echo "🌱 Ejecutando seeders..."
-php artisan db:seed --force
+    php artisan db:seed --force || echo "⚠️ Algunos seeders fallaron, revisa los logs."
 
 echo "👥 Usuarios en base:"
 php artisan tinker --execute="echo \App\Models\User::count();"
@@ -63,7 +63,7 @@ php artisan tinker --execute="echo \App\Models\User::all();"
 
 # 4. Publicar assets y ejecutar Build de Vite (ANTES de los permisos)
 echo "🎨 Publicando assets de la administración..."
-php artisan adminlte:install --only=assets --force --interactive
+php artisan adminlte:install --only=assets --force
 
 echo "📦 Compilando assets de Vite..."
 npm run build
