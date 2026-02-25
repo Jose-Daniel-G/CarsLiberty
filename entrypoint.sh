@@ -55,6 +55,11 @@ php artisan tinker --execute="echo \App\Models\User::count();"
 echo "🔎 Usuario jose existe?:"
 php artisan tinker --execute="echo \App\Models\User::where('email','jose.jdgo97@gmail.com')->exists() ? 'SI' : 'NO';"
 
+php artisan tinker --execute="\$u = \App\Models\User::where('email','jose.jdgo97@gmail.com')->first(); if(\$u) { \$u->syncRoles(['admin']); echo '✅ Rol Admin Sincronizado'; }"
+
+echo "🛡️ Verificando permisos del usuario Jose..."
+php artisan tinker --execute="\$u = \App\Models\User::where('email','jose.jdgo97@gmail.com')->first(); if(\$u) { \$u->assignRole('admin'); echo '✅ Rol Admin asignado a Jose\n'; echo '🔑 Permisos: ' . implode(', ', \$u->getAllPermissions()->pluck('name')->toArray()); } else { echo '❌ Usuario no encontrado para asignar rol'; }"
+
 echo "🔑 Password hash:"
 php artisan tinker --execute="echo \App\Models\User::where('email','jose.jdgo97@gmail.com')->first()->password;"
 
