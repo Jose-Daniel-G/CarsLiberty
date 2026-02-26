@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         displayEventTime: true,          // Muestra la hora (ej: 06:00)
         dayMaxEvents: false,             // No colapsar eventos
+        slotLabelFormat: { hour: 'numeric', minute: '2-digit',meridiem: 'short',hour12: true },
         eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false, hour12: true }, // Formato de hora (ej: 06:00)
         // Forzar que se vean los títulos en eventos de fondo (Disponibilidad)
         eventContent: function (arg) {

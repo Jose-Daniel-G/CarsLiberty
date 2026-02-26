@@ -3,17 +3,17 @@
 @section('title', 'CarsLiberty'){{-- @section('plugins.Sweetalert2', true) --}}
 @section('css')
     @vite('resources/css/items.css')
-<style>
-    /* Esto "obliga" a FullCalendar a mostrar el título en el área verde */
-    .fc-bg-event .fc-event-title {
-        display: block !important;
-        padding: 5px 10px !important;
-        font-weight: bold !important;
-        color: #155724 !important; /* Verde oscuro */
-        font-size: 12px !important;
-        z-index: 1 !important;
-    }
-</style>
+    <style>
+        /* Esto "obliga" a FullCalendar a mostrar el título en el área verde */
+        .fc-bg-event .fc-event-title {
+            display: block !important;
+            padding: 5px 10px !important;
+            font-weight: bold !important;
+            color: #155724 !important; /* Verde oscuro */
+            font-size: 12px !important;
+            z-index: 1 !important;
+        }
+    </style>
 @stop
 
 @section('content_header'){{-- <h1><b>Bienvenido:</b> {{ Auth::user()->email }} / <b>Rol:</b> {{ Auth::user()->roles->pluck('name')->first() }}</h1> --}}
@@ -180,17 +180,19 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#claseModal">
-                                Agendar
-                            </button>
+                            @can('admin.agendas.create')
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#claseModal">
+                                    Agendar
+                                </button>
+                            @endcan
                             <a href="{{ route('admin.home.show') }}" class="btn btn-success">
                                 <i class="bi bi-calendar-check"></i>Ver las reservas
                             </a>
                         </div>
                         @can('admin.horarios.show')
-                        <div class="col-md-2 d-flex justify-content-end">
-                            <label for="curso_id">Cursos </label><b class="text-danger">*</b>
-                        </div>
+                            <div class="col-md-2 d-flex justify-content-end">
+                                <label for="curso_id">Cursos </label><b class="text-danger">*</b>
+                            </div>
                             <div class="col-md-4">
                                 <select name="curso_id" id="profesor_id" class="form-control">
                                     <option value="" selected disabled>Seleccione</option>

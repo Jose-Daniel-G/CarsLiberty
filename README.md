@@ -39,7 +39,7 @@ ademas tiene envio de mensajeria por wpp
 
 ####  USE THIS TEMPLATE TO CREATE GREAT APPLICATIONS 
 ###### CREATE LOCAL SERVER CON XAMMP
-como administrador habre este documento
+como administrador abre notepad y busca este documento
 -   C:\Windows\System32\drivers\etc\hosts
 ##### **`Adicionar estas lineas`**
 -   127.0.0.1 laravel9.test
@@ -83,8 +83,16 @@ php artisan adminlte:plugins
 npm install jquery-ui
 npm install jquery
 npm install toastr
-
 ```
+###### Biometric authentication 
+```
+composer require asbiin/laravel-webauthn
+php artisan vendor:publish
+php artisan migrate
+```
+escribir 48 y luego ejecutas los dos anteriores comando y al final escribes 49 pur ultimo enter
+
+
 ###### FILES ROUTE
 - php artisan storage:link 
 
@@ -239,5 +247,9 @@ composer require twilio/sdk
 
 
 
-## NOTA: 
+## NOTA EN EL SERVIDOR: 
 - Subir por filezila, sin node_modules ni vendor inicialmente y luego subirlos
+- INGRESAR Y BORRAR EL CONTENIDO  
+   * /htdocs/lmschool/bootstrap/cache/
+   * /htdocs/lmschool/storage/framework/views/
+   * /htdocs/lmschool/bootstrap/cache/services.php
