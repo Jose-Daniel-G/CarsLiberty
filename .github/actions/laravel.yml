@@ -2,22 +2,22 @@ name: Laravel Tests
 
 on:
   push:
-    # branches: [ "main", "develop" ]
-    branches: [ "main" ]
+    branches: [ "main", "master", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2' # Cambia a tu versión
+        php-version: '8.2'
         extensions: mbstring, dom, curl, libxml, sqlite3
         coverage: none
 
@@ -29,8 +29,8 @@ jobs:
         cp .env.example .env
         php artisan key:generate
 
-    - name: Execute Tests (Unit and Feature)
+    - name: Execute Tests
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: ":memory:" # Base de datos en memoria, súper veloz
+        DB_DATABASE: ":memory:"
       run: php vendor/bin/phpunit

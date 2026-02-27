@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Profesor;
 use App\Models\Cliente;
 use App\Models\Curso;
+use App\Models\Agenda;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AgendaFactory extends Factory
