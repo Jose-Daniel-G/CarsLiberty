@@ -31,7 +31,7 @@ return [
     */
 
     'use_ico_only' => true,
-    'use_full_favicon' => true,
+    // 'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------

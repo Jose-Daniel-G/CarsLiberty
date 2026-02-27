@@ -1,72 +1,55 @@
+# -----------------------------
+# 1️⃣ Stage Builder (Node + Composer)
+# -----------------------------
+FROM node:20-alpine AS node_builder
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+
+FROM composer:2 AS composer_builder
+
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+COPY . .
+RUN composer dump-autoload --optimize
+
+
+# -----------------------------
+# 2️⃣ Stage Final (Producción limpia)
+# -----------------------------
 FROM php:8.2-fpm-alpine
 
-# 1. Instalación de dependencias del sistema
-RUN apk add --no-cache \
+RUN apk update && apk upgrade --no-cache \
+    && apk add --no-cache \
     postgresql-dev \
-    $PHPIZE_DEPS \
-    linux-headers \
     libzip-dev \
-    zlib-dev \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
     oniguruma-dev \
-    libxml2-dev \
-    git \
-    unzip \
-    curl \
-    nodejs \
-    npm \
-    nginx
+    libxml2-dev
 
-# 2. Instalación de extensiones PHP
-RUN docker-php-ext-install -j$(nproc) \
-    pdo \
-    pdo_pgsql \
-    gd \
-    bcmath \
-    zip \
-    soap
-
-# Configuración de PHP-FPM
-RUN sed -i 's|listen = .*|listen = 0.0.0.0:9000|' /usr/local/etc/php-fpm.d/www.conf
-
-# 3. Traer Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN docker-php-ext-install pdo pdo_pgsql gd bcmath zip soap
 
 WORKDIR /var/www/html
 
-# 2. Copia tu configuración de Nginx al contenedor
-COPY ./nginx/default.conf /etc/nginx/http.d/default.conf
+# Copiamos solo lo necesario
+COPY --from=composer_builder /app /var/www/html
+COPY --from=node_builder /app/public/build /var/www/html/public/build
 
-# 4. Copiar archivos de dependencias primero (Optimiza el tiempo de build)
-COPY composer.json composer.lock package.json package-lock.json ./
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-# 5. Copiar el resto del código
-COPY . .
-
-# 6. Instalar dependencias de PHP (sin scripts para evitar fallos si no hay código aún)
-RUN composer install --no-interaction --no-dev --no-scripts --no-autoloader --prefer-dist
-
-
-# 7. Finalizar Composer e instalar/compilar assets de Node
-# Aquí es donde se soluciona automáticamente el error de Vite
-RUN composer dump-autoload --optimize \
-    && npm install \
-    && npm run build
-
-# -----------------------------------------------------------
-# 8. AJUSTE DE PERMISOS (Corregido)
-# -----------------------------------------------------------
-# Creamos la carpeta build por si npm no la creó, y asignamos dueños y permisos
-RUN mkdir -p /var/www/html/public/build \
-    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/build \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/build
-
-EXPOSE 9000
-
-# 9. Script de entrada
+# 🔥 ENTRYPOINT
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+EXPOSE 9000
+
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php-fpm"]
