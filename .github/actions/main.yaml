@@ -1,0 +1,35 @@
+name: Laravel Tests
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2' # Cambia a tu versión
+        extensions: mbstring, dom, curl, libxml, sqlite3
+        coverage: none
+
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+
+    - name: Prepare Laravel
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+
+    - name: Execute Tests (Unit and Feature)
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: ":memory:" # Base de datos en memoria, súper veloz
+      run: php vendor/bin/phpunit
