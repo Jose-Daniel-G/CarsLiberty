@@ -385,7 +385,8 @@ return [
         ],
         [
             'text' => 'Vehiculos',
-            'icon' => 'bi bi-car-front',
+            // 'icon' => 'bi bi-car-front',
+            'icon' => 'fas fa-car',
             'can'  => 'admin.vehiculos.index',
             'submenu' => [
                 [
@@ -402,26 +403,28 @@ return [
         ],
         [
             'text' => 'Configuraciones',
-            'icon' => 'bi bi-gear',
+            // 'icon' => 'bi bi-gear',
+            'icon' => 'fas fa-gear',
             'can'  => 'admin.config.index',
             'submenu' => [
                 [
                     'text'        => 'Usuarios',
                     'route'         => 'admin.users.index',
                     'icon' => 'fas fa-users fa-fw ',
-                    'permissions'  => 'admin.users.index',
+                    'can'  => 'admin.users.index',
                 ],
                 [
                     'text'        => 'permisos',
                     'route'         => 'admin.permissions.index',
                     'icon' => 'fas fa-key fa-fw ',
-                    'permissions'  => 'admin.users.index',
+                    // 'can'  => 'admin.users.index',
+                    'can'  => 'admin.permissions.index',
                 ],
                 [
                     'text'        => 'roles',
                     'route'         => 'admin.roles.index',
                     'icon' => 'fa-solid fa-address-book',
-                    'permissions'  => 'admin.roles.index',
+                    'can'  => 'admin.roles.index',
                 ],
                 [
                     'text' => 'Configuracion',
@@ -431,78 +434,6 @@ return [
             ],
 
         ],
-        [
-            'text' => 'Ecommerce',
-            'icon' => 'fa-solid fa-shop',
-            'can'  => 'admin.config.index',
-            'submenu' => [
-                [
-                    'text' => 'Familias de productos',
-                    'icon'        => 'fa-solid fa-box-open',
-                    'url' => 'admin.families.index',
-                ],
-                [
-                    'text' => 'Categorias',
-                    'icon' => 'fa-solid fa-tags',
-                    'url' => 'admin.categories.index',
-                ],
-                [
-                    'text' => 'Subcategorias',
-                    'icon' => 'fa-solid fa-tag',
-                    'url' => 'admin.subcategories.index',
-                ],
-                [
-                    'text' => 'Productos',
-                    'icon' => 'fa-solid fa-box',
-                    'url' => 'admin.products.index',
-                ],
-                [
-                    'text' => 'Portadas',
-                    'icon' => 'fa-solid fa-images',
-                    'url' => 'admin.covers.index',
-                ],
-                [
-                    'text' => 'Conductores',
-                    'icon' => 'fa-solid fa-car',
-                    'url'  => '#',
-                    // 'route' => 'admin.drives.index',
-                ],
-                [
-                    'text' => 'Ordenes',
-                    'icon' => 'fa-solid fa-shopping-cart',
-                    'url'  => '#',
-                    // 'route' => 'admin.orders.index',
-                ],
-                [
-                    'text' => 'Envios',
-                    'icon' => 'fa-solid fa-truck-fast',
-                    'url'  => '#',
-                    // 'route' => 'admin.drives.index',
-                ],
-            ],
-        ],
-        [
-            'text' => 'News-post',
-            'icon' => 'fa-regular fa-circle-question',
-            'can'  => 'admin.config.index',
-            'submenu' => [
-                [
-                    'text'  => 'Categorias',
-                    'route' => 'categories.index',
-                    'icon'  => 'fa-solid fa-layer-group',
-                ],
-                [
-                    'text'  => 'Posts',
-                    'route' => 'posts.index',
-                    'icon'  => 'nav-icon fas fa-copy',
-                ],
-                [
-                    'text'  => 'VER NOTICIAS/POSTS',
-                    'route' => 'home',
-                    'icon'  => 'fa-solid fa-newspaper',
-                ],
-            ],
-        ]
         // ['text'=> 'Agenda','route' => 'admin.users.index','icon' => 'fas fa-envelope',],
         // ['text' => 'information','icon_color' => 'cyan','url' => '#', ],
     ],
@@ -548,7 +479,7 @@ return [
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
                 ],
             ],
         ],
@@ -637,7 +568,7 @@ return [
                 ],
             ],
         ],
-        'toastr' => [ //it isnt working
+        'toastr' => [
             'active' => true,
             'files' => [
                 [
