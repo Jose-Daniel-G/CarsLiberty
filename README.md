@@ -253,3 +253,65 @@ composer require twilio/sdk
    * /htdocs/lmschool/bootstrap/cache/
    * /htdocs/lmschool/storage/framework/views/
    * /htdocs/lmschool/bootstrap/cache/services.php
+
+## Detectar errores en ByetHost
+
+- Crea un archivo `fix.php` en `/public` con el siguiente código:
+
+```php
+<?php
+// Cargar el autoload y la aplicación
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+
+try {
+    // 1. Limpiar la caché de configuración
+    $app->make(\Illuminate\Contracts\Console\Kernel::class)->call('config:clear');
+    echo "1. Configuración limpiada...<br>";
+
+    // 2. Intentar una consulta simple para probar la DB
+    $results = DB::select('SHOW TABLES');
+    echo "2. ¡CONEXIÓN EXITOSA! Tablas encontradas: " . count($results);
+} catch (\Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+```
+- Y en /public/index.php adicionar:
+```php
+<?php
+//     ////PRUEBA 1
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// echo("Hola, el PHP si esta funcionando | ");
+//     //PRUEBA 2
+// if (file_exists(__DIR__.'/../vendor/autoload.php')) {
+//    echo("El autoload existe, el problema es la base de datos o la cache. | ");
+// } else {
+//    echo("¡ERROR!: No se encuentra el archivo autoload.php. La subida de la carpeta vendor fallo. | ");
+// }
+// 	//PRUEBA 3
+// try {
+//     $db = mysqli_connect('TU_HOST_AQUI', 'TU_USUARIO', 'TU_PASSWORD', 'TU_BASE_DE_DATOS');
+//     if ($db) { die("¡Conexión a DB Exitosa! El problema es solo la caché de Laravel."); }
+// } catch (Exception $e) {
+//     die("Error de Base de Datos: " . $e->getMessage());
+// } 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+```
+### la ruta es
+- ####.byethost##.com/fix.php
+### *Y DE ESTA FORMA PODRAS DETECTARLOS*
+```javascript
+  console.log('Hello World')
+```
