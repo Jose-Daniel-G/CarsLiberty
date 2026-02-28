@@ -18,6 +18,7 @@ class CursoFactory extends Factory
     {
         return [
             //
+            'nombre' => $this->faker->sentence(3),
         ];
     }
 }
