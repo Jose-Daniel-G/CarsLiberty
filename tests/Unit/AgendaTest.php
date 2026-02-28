@@ -44,10 +44,14 @@ class AgendaTest extends TestCase
     /** @test */
     public function an_agenda_has_many_asistencias()
     {
+        // 1. Creamos la agenda (esto ya crea un cliente automáticamente por la factory)
         $agenda = Agenda::factory()->create();
 
-        // Crear 3 asistencias ligadas a esta agenda
-        Asistencia::factory()->count(3)->create(['agenda_id' => $agenda->id]);
+        // 2. Creamos las asistencias pasando el cliente_id de esa agenda
+        Asistencia::factory()->count(3)->create([
+            'agenda_id' => $agenda->id,
+            'cliente_id' => $agenda->cliente_id, // <--- ESTO SOLUCIONA EL ERROR
+        ]);
 
         $this->assertCount(3, $agenda->asistencias);
         $this->assertInstanceOf(Asistencia::class, $agenda->asistencias->first());

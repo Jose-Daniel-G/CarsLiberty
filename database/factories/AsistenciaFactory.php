@@ -19,6 +19,7 @@ class AsistenciaFactory extends Factory
         return [
             'agenda_id' => \App\Models\Agenda::factory(),
             'asistio' => $this->faker->boolean(),
+            'cliente_id' => \App\Models\Cliente::factory(),
             // otros campos...
         ];
     }
