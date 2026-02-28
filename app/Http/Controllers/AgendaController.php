@@ -99,7 +99,7 @@ class AgendaController extends Controller
         $agenda->title = $curso->nombre;
         $agenda->start = $fecha_hora_inicio;
         $agenda->end = $fecha_hora_fin;
-        $agenda->color = '#e82216';
+        // $agenda->color = '#e82216';
         $agenda->profesor_id = $request->profesorid;
         $agenda->curso_id = $cursoid;
 
