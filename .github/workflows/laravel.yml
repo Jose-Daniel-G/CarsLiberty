@@ -2,7 +2,7 @@ name: Laravel Tests
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "juan/dev" ]
   pull_request:
     branches: [ "main" ]
 
@@ -34,3 +34,8 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: ":memory:"
       run: php vendor/bin/phpunit
+    - name: Install NPM dependencies
+      run: npm install
+
+    - name: Build assets
+      run: npm run build

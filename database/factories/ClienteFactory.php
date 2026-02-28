@@ -11,12 +11,13 @@ class ClienteFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => \App\Models\User::factory(),
             'nombres' => $this->faker->name(),
             'apellidos' => $this->faker->lastName(),
             'cc' => $this->faker->unique()->numerify('########'),
             'genero' => $this->faker->randomElement(['M', 'F']),
             'celular' => $this->faker->phoneNumber(),
-            'email' => $this->faker->unique()->safeEmail(),
+            // 'email' => $this->faker->unique()->safeEmail(),
             'direccion' => $this->faker->address(),
             // 'grupo_sanguineo' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'O+', 'O-']),
             // 'alergias' => $this->faker->words(3, true),

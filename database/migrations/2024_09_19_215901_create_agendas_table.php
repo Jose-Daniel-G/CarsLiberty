@@ -13,11 +13,12 @@ return new class extends Migration
             $table->string("title",255);
             $table->dateTime('start');
             $table->dateTime('end');
-            $table->string('color');
+            // $table->string('color');
 
-            // $table->unsignedBigInteger('user_id');
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            
+            //this was comented
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //------------------------------------
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
 
@@ -26,7 +27,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('curso_id');
             $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');
-            
+
             $table->timestamps();
         });
     }

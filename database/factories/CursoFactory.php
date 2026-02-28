@@ -18,6 +18,8 @@ class CursoFactory extends Factory
     {
         return [
             //
+            'nombre' => $this->faker->sentence(3),
+            'horas_requeridas' => $this->faker->numberBetween(10, 40),
         ];
     }
 }
